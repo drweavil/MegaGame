@@ -20,6 +20,7 @@ public class PlayerScript : MonoBehaviour {
 	private GameObject player;
 	private Vector3 cameraPositionVector = new Vector3 (0, 0, -5);
 	private Transform cameraPosition;
+	private GameObject background;
 
 
 
@@ -28,6 +29,8 @@ public class PlayerScript : MonoBehaviour {
 		anim = gameObject.GetComponent<Animator> ();
 		player = GameObject.Find ("Player");
 		cameraPosition = Camera.main.transform;
+		background = GameObject.Find ("BackGround");
+
 	}
 
 	// Update is called once per frame
@@ -75,6 +78,8 @@ public class PlayerScript : MonoBehaviour {
 		cameraPositionVector.x = player.transform.position.x;
 		cameraPositionVector.y = player.transform.position.y;
 		cameraPosition.position = cameraPositionVector;
+		Vector3 backgroundPositinon = new Vector3 (player.transform.position.x - 2.5f, player.transform.position.y, 5);
+		background.transform.position = backgroundPositinon;
 	}
 
 	void FixedUpdate(){

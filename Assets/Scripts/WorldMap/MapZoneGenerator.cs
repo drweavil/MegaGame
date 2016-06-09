@@ -52,7 +52,7 @@ public class MapZoneGenerator : MonoBehaviour {
 		colors.Add (0, new Color (Random.value, Random.value, Random.value, 1.0f));
 	}
 
-	void Draw(Vector3 coord, int type){
+    void Draw(Vector3 coord, int type){
 		GameObject mapZone = Instantiate ((GameObject)Resources.Load("TestZone"));
 		mapZone.transform.position = new Vector3 (mapZone.transform.position.x + coord.x,
 			mapZone.transform.position.y + coord.y,

@@ -1,0 +1,466 @@
+fileFormatVersion: 2
+guid: cba0c2476f0a17643b5b9af94a2d2c32
+timeCreated: 1463577021
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: tors_m
+    21300002: tirs_f
+    21300004: tors_w
+    21300006: head
+    21300008: legs_m
+    21300010: leg_f
+    21300012: r_leg_w
+    21300014: l_leg_w
+    21300016: wrist
+    21300018: wrist90
+    21300020: w_wrist
+    21300022: w_wrist90
+    21300024: w_wrist180
+    21300026: w_feet_b
+    21300028: w_feet_a
+    21300030: feet_a
+    21300032: feet_b
+    21300034: feet_c
+    21300036: r_w_leg
+    21300038: l_w_leg
+    21300040: r_m_leg
+    21300042: r_f_leg
+    21300044: shin_m
+    21300046: shin_f
+    21300048: shin_w
+    21300050: elbow_m
+    21300052: elbow_f
+    21300054: elbow_w
+    21300056: hair_1
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: tors_m
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 1803
+        width: 43
+        height: 113
+      alignment: 9
+      pivot: {x: 0.51631325, y: 0.15237184}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -7.2014694, y: 95.78198}
+        - {x: -21.20147, y: 71.78198}
+        - {x: -21.20147, y: -5.2180176}
+        - {x: -16.20147, y: -17.218018}
+        - {x: 11.798531, y: -17.218018}
+        - {x: 20.79853, y: 0.7819824}
+        - {x: 20.79853, y: 92.78198}
+        - {x: 11.798531, y: 95.78198}
+    - name: tirs_f
+      rect:
+        serializedVersion: 2
+        x: 113
+        y: 1794
+        width: 44
+        height: 122
+      alignment: 9
+      pivot: {x: 0.46990272, y: 0.15454602}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 10.32428, y: 103.145386}
+        - {x: -2.6757202, y: 103.145386}
+        - {x: -20.67572, y: 73.145386}
+        - {x: -20.67572, y: -16.854614}
+        - {x: -17.67572, y: -18.854614}
+        - {x: 12.32428, y: -18.854614}
+        - {x: 18.32428, y: -10.854614}
+        - {x: 23.32428, y: 11.145386}
+        - {x: 23.32428, y: 95.145386}
+    - name: tors_w
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1481
+        width: 39
+        height: 115
+      alignment: 9
+      pivot: {x: 0.42180476, y: 0.16586277}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -3.450386, y: 95.92578}
+        - {x: -16.450386, y: 76.92578}
+        - {x: -16.450386, y: -19.074219}
+        - {x: 13.549614, y: -19.074219}
+        - {x: 22.549614, y: 2.9257812}
+        - {x: 22.549614, y: 93.92578}
+        - {x: 17.549614, y: 95.92578}
+    - name: head
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 1864
+        width: 28
+        height: 40
+      alignment: 9
+      pivot: {x: 0.2821677, y: 0.2712738}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: legs_m
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 1841
+        width: 28
+        height: 71
+      alignment: 9
+      pivot: {x: 0.52178353, y: 0.85221237}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: leg_f
+      rect:
+        serializedVersion: 2
+        x: 175
+        y: 1848
+        width: 26
+        height: 69
+      alignment: 9
+      pivot: {x: 0.5234598, y: 0.8359039}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: r_leg_w
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 1526
+        width: 26
+        height: 66
+      alignment: 9
+      pivot: {x: 0.5000009, y: 0.85117227}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: l_leg_w
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 1526
+        width: 22
+        height: 66
+      alignment: 9
+      pivot: {x: 0.49999964, y: 0.8326897}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: wrist
+      rect:
+        serializedVersion: 2
+        x: 153
+        y: 1750
+        width: 32
+        height: 22
+      alignment: 9
+      pivot: {x: 0.2108407, y: 0.5983332}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: wrist90
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 1756
+        width: 33
+        height: 15
+      alignment: 9
+      pivot: {x: 0.22701147, y: 0.4777588}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: w_wrist
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1290
+        width: 29
+        height: 18
+      alignment: 9
+      pivot: {x: 0.23537858, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: w_wrist90
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 1293
+        width: 33
+        height: 14
+      alignment: 9
+      pivot: {x: 0.19668025, y: 0.66682655}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: w_wrist180
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 1291
+        width: 25
+        height: 16
+      alignment: 9
+      pivot: {x: 0.16634735, y: 0.5000076}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: w_feet_b
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 1354
+        width: 39
+        height: 30
+      alignment: 9
+      pivot: {x: 0.43155906, y: 0.8225342}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: w_feet_a
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 1321
+        width: 39
+        height: 23
+      alignment: 9
+      pivot: {x: 0.3117852, y: 0.7901346}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: feet_a
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 1745
+        width: 42
+        height: 27
+      alignment: 9
+      pivot: {x: 0.2855083, y: 0.73479545}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: feet_b
+      rect:
+        serializedVersion: 2
+        x: 57
+        y: 1704
+        width: 41
+        height: 32
+      alignment: 9
+      pivot: {x: 0.4755876, y: 0.85450745}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -19.499092, y: -16.344238}
+        - {x: -8.499092, y: -27.344238}
+        - {x: 21.500908, y: -27.344238}
+        - {x: 21.500908, y: -15.344238}
+        - {x: 13.500908, y: 4.6557617}
+        - {x: -17.499092, y: 4.6557617}
+        - {x: -19.499092, y: 2.6557617}
+    - name: feet_c
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 1662
+        width: 46
+        height: 30
+      alignment: 9
+      pivot: {x: 0.15909328, y: 0.7558024}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: r_w_leg
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1385
+        width: 35
+        height: 87
+      alignment: 9
+      pivot: {x: 0.449401, y: 0.8766037}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 14.270966, y: 10.735474}
+        - {x: -15.729034, y: 10.735474}
+        - {x: -15.729034, y: -74.26453}
+        - {x: -11.729034, y: -76.26453}
+        - {x: 9.270966, y: -76.26453}
+        - {x: 19.270966, y: -53.264526}
+        - {x: 19.270966, y: 0.73547363}
+        - {x: 17.270966, y: 9.735474}
+    - name: l_w_leg
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 1387
+        width: 32
+        height: 85
+      alignment: 9
+      pivot: {x: 0.4308194, y: 0.89588267}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -13.786221, y: 8.849976}
+        - {x: -13.786221, y: -76.150024}
+        - {x: 11.213779, y: -76.150024}
+        - {x: 18.21378, y: -52.150024}
+        - {x: 18.21378, y: -1.1500244}
+        - {x: 15.213779, y: 8.849976}
+    - name: r_m_leg
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 1714
+        width: 35
+        height: 82
+      alignment: 9
+      pivot: {x: 0.50000095, y: 0.8455721}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -13.500034, y: 12.663086}
+        - {x: -17.500034, y: 11.663086}
+        - {x: -17.500034, y: -27.336914}
+        - {x: -10.500034, y: -63.336914}
+        - {x: -5.5000343, y: -69.336914}
+        - {x: 17.499966, y: -69.336914}
+        - {x: 17.499966, y: 12.663086}
+    - name: r_f_leg
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 1705
+        width: 36
+        height: 85
+      alignment: 9
+      pivot: {x: 0.5737949, y: 0.83337545}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 15.343384, y: -28.836914}
+        - {x: 15.343384, y: 14.163086}
+        - {x: -20.656616, y: 14.163086}
+        - {x: -20.656616, y: -50.836914}
+        - {x: -17.656616, y: -70.836914}
+        - {x: 5.343384, y: -70.836914}
+        - {x: 8.343384, y: -66.836914}
+        - {x: 10.343384, y: -61.836914}
+        - {x: 13.343384, y: -48.836914}
+    - name: shin_m
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 1646
+        width: 25
+        height: 64
+      alignment: 9
+      pivot: {x: 0.57084334, y: 0.9081726}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: shin_f
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 1629
+        width: 23
+        height: 70
+      alignment: 9
+      pivot: {x: 0.60577124, y: 0.9100952}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: shin_w
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 1316
+        width: 24
+        height: 64
+      alignment: 9
+      pivot: {x: 0.4999992, y: 0.87251663}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: elbow_m
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 1785
+        width: 22
+        height: 54
+      alignment: 9
+      pivot: {x: 0.5, y: 0.87843156}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: elbow_f
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 1792
+        width: 21
+        height: 49
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: elbow_w
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 1477
+        width: 19
+        height: 46
+      alignment: 9
+      pivot: {x: 0.5, y: 0.8173165}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: hair_1
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 1881
+        width: 28
+        height: 27
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

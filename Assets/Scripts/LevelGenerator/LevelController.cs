@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System.Linq;
 
 public class LevelController : MonoBehaviour {
 	LevelGeneration generator;
@@ -40,7 +41,7 @@ public class LevelController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetKeyDown(KeyCode.Q)){
+		if(Input.GetKeyDown(KeyCode.W)){
 			//Profiler.BeginSample ("lol");
 			//SaveLoadManager.Load (Application.dataPath.ToString() +"/Resources/Levels/levels_2/"+ 0.ToString() +".level");
 			//GameObject mesh = Instantiate ((GameObject)Resources.Load ("LevelChunkPrefabs/-1"));
@@ -52,22 +53,31 @@ public class LevelController : MonoBehaviour {
 			/*for (int i = 0; i < 16; i++) {
 				LevelToPrefab (i);
 			}*/
-			Debug.Log (Application.streamingAssetsPath);
+			//Debug.Log (GameMath.IntersectionTwoLines (new Vector2 (0, 0), new Vector2 (-2f, -2f), new Vector2 (0, -2), new Vector2 (-2f, 0f)));
+			//Debug.Log (Application.streamingAssetsPath);
 			//LoadLevel (16);
+			//SetPortalsDirections(portals);
+			//SetPortalsDirections();
+			foreach (PortalScript portal in portals) {
+				DrawLol (portal.gameObject.transform.position, portal.direction.ToString());
+			}
+
 
 		}
 	
 	}
 
 	public void Test(){
-		SaveLoadManager.SetLevelChunkFilesInfo ();
+		//SaveLoadManager.SetLevelChunkFilesInfo ();
+
+
 		//Debug.Log(levelChunkFilesInfo.types[0].numbers);
 		//SaveLoadManager.CreateDirectoryIfNotExist(Application.dataPath + "/olol/kold/adf");
 		/*Debug.Log(Application.persistentDataPath);
 		Directory.CreateDirectory (Application.persistentDataPath + "/zuz");
 
 		Debug.Log (Directory.Exists (Application.persistentDataPath + "/zuz"));*/
-
+		//SetPortalsDirection ();
 		/*string[] directory = Directory.GetFiles (Application.persistentDataPath + "/Resources/Levels");
 		foreach(string dir in directory){
 			Debug.Log (dir);
@@ -141,6 +151,7 @@ public class LevelController : MonoBehaviour {
 		Vector3 portalCoord = portal.gameObject.transform.position;
 		portalOnNewLevel = new PortalInfo();
 		portalOnNewLevel.SetData (portal);
+		SetPortalsDirections ();
 		SaveLevel ();
 		//GenPortals ();
 		StartCoroutine(LevelMesh.CoroutineAddDataProcess.PlayerSpawnWhenAllProcessStoped (player, portalCoord));
@@ -191,7 +202,12 @@ public class LevelController : MonoBehaviour {
 		currentMesh.GetComponent<MeshCollider> ().material = (PhysicMaterial)Resources.Load ("HaveNotWallFriction");
 		currentMesh.transform.parent = levelEnvironment.transform;
 		for (int i = 0; i < meshData.levelBlocks.Count; i++) {
-			currentMesh.AddData (meshData.levelBlocks [i], coord);
+			if((currentMesh.squareVerticesEndValue + meshData.levelBlocks [i].squareVerticesSerializeble.Count) < 12000){
+				currentMesh.AddData (meshData.levelBlocks [i], coord);
+			}else{
+				currentMesh = Instantiate ((GameObject)Resources.Load ("LevelMesh")).GetComponent<LevelMesh> ();
+				currentMesh.AddData (meshData.levelBlocks [i], coord);
+			}
 		}
 	}
 
@@ -250,6 +266,146 @@ public class LevelController : MonoBehaviour {
 		chunk.chunkNumber = chunkNumber;
 		return chunk;
 	}
+				
+
+	public void SetPortalsDirections(){
+		List<Vector3> portalPositions = new List<Vector3> ();
+		foreach(PortalScript portal in portals){
+			portalPositions.Add (portal.gameObject.transform.position);
+		}
+
+		portalPositions = portalPositions.OrderBy (p => p.x).ToList();
+		//Debug.Log (portalPositions[0]);
+		Vector3 leftPortal = portalPositions[0];
+		Vector3 rightPortal = portalPositions[portalPositions.Count - 1];
+		//Debug.Log (portalPositions.ElementAt(0));
+
+		portalPositions = portalPositions.OrderBy (p => p.y).ToList();
+		Vector3 upPortal =  portalPositions[portalPositions.Count - 1];
+		Vector3 downPortal = portalPositions[0];
+
+
+		Vector2 leftUpPointA = new Vector2 (leftPortal.x, upPortal.y);
+		Vector2 rightUpPointB = new Vector2 (rightPortal.x, upPortal.y);
+		Vector2 rightDownPointC = new Vector2 (rightPortal.x, downPortal.y);
+		Vector2 leftDownPointD = new Vector2 (leftPortal.x, downPortal.y);
+
+		Vector2 squareCenter = GameMath.IntersectionTwoLines (leftDownPointD, rightUpPointB,  leftUpPointA, rightDownPointC);
+
+
+
+		List<PortalScript> leftPortals = new List<PortalScript> ();
+		List<PortalScript> rightPortals = new List<PortalScript> ();
+
+		/*************************/
+		//DrawLol(new Vector3(squareCenter.x, squareCenter.y, 0), "Ce");
+		/*************************/
+
+
+		//List<PortalScript> unsignedPortals = new List<PortalScript> ();
+
+		foreach (PortalScript portal in portals) {
+			Vector2 portalPosition2d = new Vector2 (portal.gameObject.transform.position.x, portal.gameObject.transform.position.y);
+			if (portalPosition2d.x <= squareCenter.x) {
+				leftPortals.Add (portal);
+			} else {
+				rightPortals.Add (portal);
+			}
+		}
+
+
+		if (leftPortals.Count >= 2 && rightPortals.Count >=2) {
+			leftPortals = leftPortals.OrderBy (p => p.gameObject.transform.position.y).ToList ();
+			leftPortals [0].direction = PortalScript.left;
+			leftPortals [leftPortals.Count - 1].direction = PortalScript.up;
+
+			rightPortals = rightPortals.OrderBy (p => p.gameObject.transform.position.y).ToList ();
+			rightPortals [0].direction = PortalScript.down;
+			rightPortals [rightPortals.Count - 1].direction = PortalScript.right;
+		}
+
+
+		if (leftPortals.Count < 2 && rightPortals.Count >=2) {
+			leftPortals = leftPortals.OrderBy (p => p.gameObject.transform.position.y).ToList ();
+			leftPortals [0].direction = PortalScript.left;
+			//leftPortals [leftPortals.Count - 1].direction = PortalScript.up;
+
+			rightPortals = rightPortals.OrderBy (p => p.gameObject.transform.position.y).ToList ();
+			rightPortals [0].direction = PortalScript.down;
+
+			List<PortalScript> rightCenterPortals = rightPortals.GetRange (1, rightPortals.Count - 2);
+			int rand = Random.Range (0, rightCenterPortals.Count);
+			rightCenterPortals [rand].direction = PortalScript.right;
+			rightPortals [rightPortals.Count - 1].direction = PortalScript.up;
+		}
+
+		if (leftPortals.Count >= 2 && rightPortals.Count < 2) {
+			rightPortals = rightPortals.OrderBy (p => p.gameObject.transform.position.y).ToList ();
+			rightPortals [0].direction = PortalScript.right;
+			//leftPortals [leftPortals.Count - 1].direction = PortalScript.up;
+
+
+
+			leftPortals = leftPortals.OrderBy (p => p.gameObject.transform.position.y).ToList ();
+			leftPortals [0].direction = PortalScript.down;
+
+			List<PortalScript> leftCenterPortals = leftPortals.GetRange (1, leftPortals.Count - 2);
+			int rand = Random.Range (0, leftCenterPortals.Count);
+			leftCenterPortals [rand].direction = PortalScript.left;
+			leftPortals [leftPortals.Count - 1].direction = PortalScript.up;
+		}
+
+
+		//List<PortalScript> unsignedPortals = new List<PortalScript> ();
+		foreach(PortalScript portal in portals){
+			if(portal.direction == -1){
+				//unsignedPortals.Add (portal);
+				if (portal.gameObject.transform.position.x >= squareCenter.x) {
+					if (portal.gameObject.transform.position.y >= squareCenter.y) {
+						portal.direction = PortalScript.right;
+					} else {
+						portal.direction = PortalScript.down;
+					}
+				} else {
+					if (portal.gameObject.transform.position.y >= squareCenter.y) {
+						portal.direction = PortalScript.up;
+					} else {
+						portal.direction = PortalScript.left;
+					}
+				}
+			}			
+		}
+
+
+
+		/*foreach(PortalScript portal in portals){
+			if(portal.direction == -1){
+				unsignedPortals.Add (portal);
+			}			
+		}*/
+			
+		/*if (unsignedPortals.Count != 0) {
+			//List<PortalScript> newUnsignedPortals = unsignedPortals;
+			SetPortalsDirections (unsignedPortals);
+		}*/
+	}
+
+
+	void DrawLol(Vector3 coord, string text){
+		GameObject mapZone = Instantiate ((GameObject)Resources.Load("PortalCheck"));
+		mapZone.transform.position = new Vector3 (coord.x, coord.y, coord.z);
+		GameObject textRenderer = mapZone.transform.GetChild (0).gameObject;
+		textRenderer.GetComponent<TextMesh> ().text = text.ToString ();
+	}
+
+
+
+
+
+
+
+
+
 
 
 	private	class LevelChunkWithInfo{

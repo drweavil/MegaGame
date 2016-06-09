@@ -49,6 +49,7 @@
      <Compile Include="Assets\Scripts\GUI\ButtonsController.cs" />
      <Compile Include="Assets\Scripts\GUI\Joystick.cs" />
      <Compile Include="Assets\Scripts\GUI\JoystickScript.cs" />
+     <Compile Include="Assets\Scripts\GameMath.cs" />
      <Compile Include="Assets\Scripts\HealthScript.cs" />
      <Compile Include="Assets\Scripts\LevelGenerator\LevelChunk.cs" />
      <Compile Include="Assets\Scripts\LevelGenerator\LevelChunkFilesInfo.cs" />

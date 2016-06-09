@@ -1,0 +1,125 @@
+fileFormatVersion: 2
+guid: 9f578f642b97dd4448b23bc4aba3d1d3
+timeCreated: 1463674492
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: kower_weap_0
+    21300002: kower_weap_1
+    21300004: kower_weap_2
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: kower_weap_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1719
+        width: 263
+        height: 94
+      alignment: 9
+      pivot: {x: 0.3488537, y: 0.3226591}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 60.251472, y: 56.670044}
+        - {x: 40.251472, y: 63.670044}
+        - {x: -22.748528, y: 63.670044}
+        - {x: -82.74853, y: 37.670044}
+        - {x: -84.74853, y: 35.670044}
+        - {x: -84.74853, y: -12.329956}
+        - {x: -64.74853, y: -23.329956}
+        - {x: 100.25147, y: -23.329956}
+        - {x: 166.25146, y: -3.329956}
+        - {x: 166.25146, y: 53.670044}
+        - {x: 161.25146, y: 63.670044}
+        - {x: 159.25146, y: 63.670044}
+        - {x: 143.25146, y: 59.670044}
+        - {x: 143.25146, y: 44.670044}
+    - name: kower_weap_1
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 1534
+        width: 234
+        height: 70
+      alignment: 9
+      pivot: {x: 0.24244308, y: 0.48168072}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 177.26831, y: 4.2823486}
+        - {x: 167.26831, y: 10.282349}
+        - {x: 74.26832, y: 30.282349}
+        - {x: -26.731682, y: 30.282349}
+        - {x: -34.73168, y: 24.282349}
+        - {x: -37.73168, y: 17.282349}
+        - {x: -37.73168, y: -13.717651}
+        - {x: -8.731682, y: -30.717651}
+        - {x: 71.26832, y: -30.717651}
+        - {x: 156.26831, y: -12.717651}
+        - {x: 177.26831, y: -2.7176514}
+    - name: kower_weap_2
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 1324
+        width: 257
+        height: 88
+      alignment: 9
+      pivot: {x: 0.29044035, y: 0.5145708}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 32.356827, y: 38.717773}
+        - {x: -74.64317, y: 20.717773}
+        - {x: -74.64317, y: -29.282227}
+        - {x: 25.356827, y: -37.282227}
+        - {x: 182.35683, y: -37.282227}
+        - {x: 182.35683, y: 20.717773}
+        - {x: 168.35683, y: 38.717773}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
