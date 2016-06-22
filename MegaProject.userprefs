@@ -1,22 +1,32 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\LevelGenerator\LevelController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\AnimationController.cs">
     <Files>
-      <File FileName="Assets\Scripts\LevelGenerator\LevelController.cs" Line="205" Column="42" />
-      <File FileName="Assets\Scripts\PlayerScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\LevelGenerator\SaveLoadManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\LevelGenerator\LevelGeneration.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\LevelGenerator\LevelMesh.cs" Line="26" Column="35" />
+      <File FileName="Assets\Scripts\ReskinController.cs" Line="117" Column="6" />
+      <File FileName="Assets\Scripts\LevelGenerator\LevelController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\LevelGenerator\LevelInfo\Level.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\LevelGenerator\LevelRandomPart\RandomPartBlock.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\LevelGenerator\LevelChunk.cs" Line="1" Column="1" />
+      <File FileName="Assets\EditorTools\LevelChunkCreater.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\LevelGenerator\SaveLoadManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\LevelGenerator\LevelChunkFilesInfo.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\LevelGenerator\LevelMesh.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\LevelGenerator\LevelGeneration.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\Joystick.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\ButtonScript.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\ButtonsController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\PortalScript.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\LevelGenerator\LevelInfo\PortalInfo.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\LevelGenerator\LevelInfo\Level.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\LevelGenerator\LevelChunkFilesInfo.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GameMath.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\WorldMap\MapZoneGenerator.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\LevelGenerator\LevelRandomPart\FullSet.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\LevelGenerator\LevelRandomPart\InteractiveObjectRandomPart.cs" Line="1" Column="1" />
+      <File FileName="Assets\EditorTools\ObjectInfo.cs" Line="1" Column="1" />
+      <File FileName="Assets\EditorTools\Block.cs" Line="1" Column="1" />
+      <File FileName="Assets\EditorTools\DecorBlock.cs" Line="1" Column="1" />
+      <File FileName="Assets\EditorTools\InteractiveObject.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\AnimationController.cs" Line="19" Column="19" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

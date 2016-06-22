@@ -79,26 +79,27 @@ public static class SaveLoadManager {
 		BinaryFormatter bf = new BinaryFormatter ();
 		LevelChunkFilesInfo chunkFilesInfo = new LevelChunkFilesInfo ();
 
-		string[] directoryes = Directory.GetDirectories (Application.dataPath + "/Resources/LevelChunkPrefabs/");
+		string root = Application.dataPath + "/Resources/LevelChunkPrefabs";
+		DirectoryInfo directory = new DirectoryInfo (root);
+		DirectoryInfo[] directories = directory.GetDirectories();
 
-
-		foreach (string dir in directoryes) {
-			string[] dirPath = dir.Split ('/');
-			string dirName = dirPath [dirPath.Length - 1];
-
-			LevelChunkFilesInfo.ChunkTypeFileInfo typesFileInfo = new LevelChunkFilesInfo.ChunkTypeFileInfo ();
-			typesFileInfo.typeId = int.Parse (dirName);
-
-			string path = Application.dataPath + "/Resources/LevelChunkPrefabs/" + dirName + "/";
-			DirectoryInfo directory = new DirectoryInfo (path);
-			FileInfo[] info = directory.GetFiles ("*.prefab");
-
-			foreach(FileInfo inf in info){
-				string chunkName = inf.Name.Split ('.')[0];
-				//Debug.Log (int.Parse(chunkName));
-				typesFileInfo.numbers.Add(int.Parse(chunkName));
+		foreach(DirectoryInfo textureDir in directories){
+			DirectoryInfo[] sizeDirs = new DirectoryInfo (root + "/" + textureDir.Name).GetDirectories();
+			foreach(DirectoryInfo sizeDir in sizeDirs){
+				DirectoryInfo[] typeDirs = new DirectoryInfo (root + "/" + textureDir.Name + "/" + sizeDir.Name).GetDirectories();
+				foreach(DirectoryInfo typeDir in typeDirs){
+					foreach(FileInfo number in typeDir.GetFiles()){
+						if (number.Name.Split ('.') [1] == "prefab" && number.Name.Split ('.').Length == 2) {
+							LevelChunkFilesInfo.ChunkTypeFileInfo type = new LevelChunkFilesInfo.ChunkTypeFileInfo ();
+							type.texture = textureDir.Name;
+							type.size = int.Parse (sizeDir.Name);
+							type.type = int.Parse (typeDir.Name);
+							type.number = int.Parse (number.Name.Split ('.') [0]);
+							chunkFilesInfo.types.Add (type);
+						}
+					}
+				}
 			}
-			chunkFilesInfo.types.Add(typesFileInfo);
 		}
 
 		FileStream file = File.Create(Application.dataPath + "/Resources/LevelChunkFilesInfo.txt");

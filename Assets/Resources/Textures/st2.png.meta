@@ -1,10 +1,10 @@
 fileFormatVersion: 2
 guid: 1d1acd8550fc9f44f9a55956a7ca482a
-timeCreated: 1463561335
+timeCreated: 1465942408
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: st2_0
+    21300000: chest
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -51,21 +51,23 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: st2_0
+    - name: chest
       rect:
         serializedVersion: 2
-        x: 189
-        y: 254
-        width: 66
-        height: 67
+        x: 1041
+        y: 256
+        width: 97
+        height: 87
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -33, y: 33.5}
-        - {x: -33, y: -33.5}
-        - {x: 33, y: -33.5}
-        - {x: 33, y: 33.5}
+      - - {x: -47.5, y: 43.5}
+        - {x: -48.5, y: 42.5}
+        - {x: -48.5, y: -43.5}
+        - {x: 48.5, y: -43.5}
+        - {x: 48.5, y: 41.5}
+        - {x: 47.5, y: 43.5}
     outline: []
   spritePackingTag: 
   userData: 

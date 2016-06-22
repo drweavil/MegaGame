@@ -317,7 +317,48 @@ public class LevelMesh : MonoBehaviour {
 		CoroutineAddDataProcess process = new CoroutineAddDataProcess ();
 		StartCoroutine (process.CoroutineAddData (data, coord, this));
 		StartCoroutine(process.MeshUpdateWhenThisProcessesStoped (this));
-		UpdateMesh();
+		//UpdateMesh();
+	}
+
+	public static List<SerializableVector3>  GetColliderCoords(SerializableVector3 coords){
+		float x = coords.x;
+		float y = coords.y;
+		float z = coords.z;
+		float size = 1f;
+		List<SerializableVector3> colliderVerticesSerializeble = new List<SerializableVector3>();
+		//Top
+		colliderVerticesSerializeble.Add (new SerializableVector3 (x, y, z));
+		colliderVerticesSerializeble.Add (new SerializableVector3 (x+size, y, z));
+		colliderVerticesSerializeble.Add (new SerializableVector3 (x+size, y,z-size));
+		colliderVerticesSerializeble.Add (new SerializableVector3 (x, y, z-size));
+
+
+		//Left
+		colliderVerticesSerializeble.Add (new SerializableVector3 (x, y, z));
+		colliderVerticesSerializeble.Add (new SerializableVector3 (x, y, z-size));
+		colliderVerticesSerializeble.Add (new SerializableVector3 (x, y-size,z-size));
+		colliderVerticesSerializeble.Add (new SerializableVector3 (x, y-size, z));
+
+		//Right
+		colliderVerticesSerializeble.Add (new SerializableVector3 (x+size, y, z));
+		colliderVerticesSerializeble.Add (new SerializableVector3 (x+size, y, z-size));
+		colliderVerticesSerializeble.Add (new SerializableVector3 (x+size, y-size,z-size));
+		colliderVerticesSerializeble.Add (new SerializableVector3 (x+size, y-size, z));
+
+		//Bottom
+		colliderVerticesSerializeble.Add (new SerializableVector3 (x, y-size, z));
+		colliderVerticesSerializeble.Add (new SerializableVector3 (x+size, y-size, z));
+		colliderVerticesSerializeble.Add (new SerializableVector3 (x+size, y-size,z-size));
+		colliderVerticesSerializeble.Add (new SerializableVector3 (x, y-size, z-size));
+
+
+
+		//SquareCollider
+		colliderVerticesSerializeble.Add (new SerializableVector3 (x, y, z));
+		colliderVerticesSerializeble.Add (new SerializableVector3 (x+size, y, z));
+		colliderVerticesSerializeble.Add (new SerializableVector3 (x+size, y-size,z));
+		colliderVerticesSerializeble.Add (new SerializableVector3 (x, y-size, z));
+		return colliderVerticesSerializeble;
 	}
 		
 

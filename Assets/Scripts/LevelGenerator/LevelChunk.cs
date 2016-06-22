@@ -3,7 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class LevelChunk : MonoBehaviour {
-	public  List<LevelMesh.LevelMeshDataSerializable> levelBlocks = new List<LevelMesh.LevelMeshDataSerializable>();
+	public  List<LevelMesh.LevelMeshDataSerializable> levelBlocks;
+	public  List<LevelMesh.LevelMeshDataSerializable> levelDecorBlocks;
+	public List<InteractiveObjectRandomPart> fixObjects = new List<InteractiveObjectRandomPart> ();
+	public List<FullSet> sets = new List<FullSet> ();
+
+	public List<RandomPartBlock> randomlevelBlocks = new List<RandomPartBlock>();
+	public List<InteractiveObjectRandomPart> randomObjects = new List<InteractiveObjectRandomPart> ();
+	public List<InteractiveObjectRandomPart> portals = new List<InteractiveObjectRandomPart> ();
 	public  SerializableVector3 playerSpawn;
 
 	// Use this for initialization
