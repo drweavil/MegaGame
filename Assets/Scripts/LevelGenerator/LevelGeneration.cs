@@ -9,6 +9,7 @@ public class LevelGeneration : MonoBehaviour {
 	public int height;
 	public int width;
 	private int[,] level;
+	private LevelChunkRudiment[,] levelChunkRudiment;
 	//private GridController grid;
 
 	private const int left = 0, right = 1, down = 2, up = 3;
@@ -16,35 +17,10 @@ public class LevelGeneration : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		//grid = GameObject.Find ("GridController").GetComponent<GridController>();
-		//int currentPoint;
-		//currentPoint = level [0, Random.Range (0, 10)];
-		//PartType (new Vector3 (0, 0, 0), 11);	
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		/*if (Input.GetKeyDown (KeyCode.Space)) {
-			//grid.Refresh ();
-			CreateLevelPath ();
-			//level [1, 2] = -1;
-			//RefreshArray ();
-			//SetValue (new int[] {1,10}, left);
-			//CreateLevelPath();
-			//PartType (new Vector3 (0, 0 * -1, 0), 15);
-			//Test ();
-			for (int i = 0; i < height+2; i++) {
-				for (int j = 0; j < width+2; j++) {
-					PartType (new Vector3 (j, i * -1, 0), level[i,j]);
-				}
-			}
-			//Debug.Log (IsExit());
-
-			int[] lol = new int[2];
-			lol [0] = 1;
-			lol [1] = 2;
-		}
-	*/
 	}
 
 	int PathDirectionLeftRightDown(int leftPercent, int rightPercent, int downPercent){
@@ -210,10 +186,11 @@ public class LevelGeneration : MonoBehaviour {
 		return array [rand];
 	}
 
-	public int[,] CreateLevelPath(int setHeight, int setWidth){
+	public LevelChunkRudiment[,] CreateLevelPath(int setHeight, int setWidth){
 		height = setHeight;
 		width = setWidth;
 		level = new int[height+2, width+2];
+		levelChunkRudiment = new LevelChunkRudiment[height+2, width+2];
 
 		RefreshArray ();
 		int[] startPoint = new int[2];
@@ -223,9 +200,9 @@ public class LevelGeneration : MonoBehaviour {
 		SetValue (startPoint, up);
 		ClearLevel ();
 		if (CheckPortalsCount() < 4) {
-		 	level = CreateLevelPath (setHeight, setWidth);
+			levelChunkRudiment = CreateLevelPath (setHeight, setWidth);
 		}
-		return level;
+		return ToLevelRudimentArray();
 	}
 
 	public int CheckPortalsCount(){
@@ -1565,14 +1542,21 @@ public class LevelGeneration : MonoBehaviour {
 
 	}
 		
-
-	void Test(){
-		int lol = 1;
+	LevelChunkRudiment[,] ToLevelRudimentArray(){
+		int index = 0;
 		for (int i = 0; i < height+2; i++) {
 			for (int j = 0; j < width+2; j++) {
-				level [i, j] = lol;
-				lol++;
+				//if(j == 0 || j == (width+1) || i == 0 || i == (height+1)){
+				levelChunkRudiment[i, j] = new LevelChunkRudiment();
+				levelChunkRudiment [i, j].type = level [i, j];
+				levelChunkRudiment [i, j].chunkId = index;
+				levelChunkRudiment [i, j].coord = new SerializableVector2((float)j, (float)i);
+				index = index + 1;
+				//}else{
+				//	level [i, j] = 0;
+				//}
 			}
 		}
+		return levelChunkRudiment;
 	}
 }

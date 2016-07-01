@@ -6,15 +6,20 @@ using UnityEngine.UI;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using S = System;
 
 public class LevelController : MonoBehaviour {
 	LevelGeneration generator;
-	GameObject player;
+	public static GameObject player;
+	LevelChunkRudiment[,] level;
+	public static LevelChunkRudiment[,] levelChunkRudimentsInfoForMiniPortals;
 	public int currentLevel;
 	//int nextLevel = currentLevel + 1;
 	int test = 0;
 	LevelMesh currentMesh;
 	GameObject levelMeshPrefab;
+
 	public List<PortalScript> portals = new List<PortalScript> ();
 	//info 
 	static List<LevelChunkInfo> levelChunksData = new List<LevelChunkInfo>(); 
@@ -24,7 +29,6 @@ public class LevelController : MonoBehaviour {
 	PortalInfo portalOnOldLevel;
 	PortalInfo portalOnNewLevel;
 
-	int[,] level;
 	public GameObject levelEnvironment;
 	public GameObject levelInteractiveObjects;
 	public ButtonsController buttonsController;
@@ -32,9 +36,14 @@ public class LevelController : MonoBehaviour {
 	string levelTextureName = "earth";
 	public Texture levelTexture;
 	public int levelChunkSize = 20;
-
-
 	LevelChunkFilesInfo levelChunkFilesInfo;
+
+	Thread creatingRandomPartMeshesThread;
+	List<LevelMesh.LevelMeshDataSerializable> newMeshesRandomPart;
+	Hashtable interactiveObjects = new Hashtable();
+
+	int randomizeRandomPartThreadCounts = 0;
+
 
 
 	// Use this for initialization
@@ -46,14 +55,23 @@ public class LevelController : MonoBehaviour {
 		//level = generator.CreateLevelPath (10, 10);
 
 		levelChunkFilesInfo = SaveLoadManager.LoadLevelChunkFilesInfo();
+
+		foreach (GameObject obj in Resources.LoadAll<GameObject>("InteractiveObjects")) {
+			interactiveObjects.Add (obj.name, obj);
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if(Input.GetKeyDown(KeyCode.W)){
-			LevelChunkCreater.GenPrefabs ();
-			//GameObject lol = Instantiate((GameObject)Resources.Load("LevelChunkPrefabs/earth/20/2/0"));
-			//Debug.Log(randomPartInteractiveObjects.Count);
+			//LevelChunkCreater.GenPrefabs ();
+
+			/*List<LevelChunkRudiment> lol = new List<LevelChunkRudiment> (level);
+			Debug.Log (lol.Find(l => l.chunkId == 20).coord.x);*/
+			foreach(LevelChunkRudiment lol in level){
+				Debug.Log (lol.coord.x.ToString() + "/" + lol.coord.y.ToString());
+			}
+			//SetLevelChunkRudimentsInfoForMiniPortals ();
 		}
 	
 	}
@@ -82,16 +100,28 @@ public class LevelController : MonoBehaviour {
 		}
 	}
 
-	void LoadLevel(int level){
+	void LoadLevel(int levelNumber){
 		ClearLevel ();
 		portals.Clear ();
 		levelChunksData.Clear();
+		randomPartBlocks.Clear ();
+		randomPartInteractiveObjects.Clear ();
+		Transform[] objs = GameObject.Find ("LevelInteractiveObjects").GetComponentsInChildren<Transform> ();
+		if(objs.Length != 0){
+			foreach (Transform obj in objs) {
+				if(obj.gameObject.name != "LevelInteractiveObjects"){
+					Destroy (obj.gameObject);
+				}
+			}
+		}
 
-		Level loadedLevel =  SaveLoadManager.LoadLevel (level);
+		Level loadedLevel =  SaveLoadManager.LoadLevel (levelNumber);
+		level = loadedLevel.level;
+		SetLevelChunkRudimentsInfoForMiniPortals ();
 		foreach (LevelChunkInfo chunk in loadedLevel.levelChunksInfo) {
 			CreatePart (new Vector3 (chunk.coord.x, chunk.coord.y, chunk.coord.z), 
 				chunk.chunkSize,
-				chunk.chunkType, 
+				chunk.chunkRudiment, 
 				chunk.chunkNumber, 
 				false, 
 				false
@@ -99,14 +129,11 @@ public class LevelController : MonoBehaviour {
 		}
 
 
-
-		//LoadPortals
 		foreach(PortalInfo portalInfo in loadedLevel.portalsInfo){
-			GameObject newPortal = Instantiate ((GameObject)Resources.Load ("Prefabs/portal"));
+			GameObject newPortal = Instantiate ((GameObject)interactiveObjects["portal"]);
 			PortalScript newPortalScript = newPortal.GetComponent<PortalScript> ();
 			newPortalScript.SetData (portalInfo);
 			portals.Add (newPortalScript);
-			//newPortal.gameObject.transform.position = new Vector3(portal.portalCoord.x, portal.portalCoord.y, portal.portalCoord.z)
 		}
 
 		GenRandomPart (loadedLevel.randomPartBlocks, loadedLevel.randomPartInteractiveObjects);
@@ -114,17 +141,27 @@ public class LevelController : MonoBehaviour {
 
 	public void GenLevel(){
 		portals.Clear ();
+		randomPartBlocks.Clear ();
+		randomPartInteractiveObjects.Clear ();
+		Transform[] objs = GameObject.Find ("LevelInteractiveObjects").GetComponentsInChildren<Transform> ();
+		if(objs.Length != 0){
+			foreach (Transform obj in objs) {
+				if (obj.gameObject.name != "LevelInteractiveObjects") {
+					Destroy (obj.gameObject);
+				}
+			}
+		}
+
 		level = generator.CreateLevelPath (20, 20);
+		SetLevelChunkRudimentsInfoForMiniPortals ();
 		levelChunksData.Clear ();
 
 		SetLevelTexture ();
-		//test
-		//level = new int[1,3] {{13,1,12}};
 		for (int i = 0; i < generator.height+2; i++) {
 			for (int j = 0; j < generator.width+2; j++) {
-				if (level [i, j] != -3) {
+				if (level [i, j].type != -3) {
 					CreatePart (new Vector3 (j * levelChunkSize, i * levelChunkSize * -1, 0), levelChunkSize, level [i, j]);
-					/*CreatePart (new Vector3 (0, 0, 0), level [i, j]);*/
+
 				}
 			}
 		}
@@ -133,21 +170,13 @@ public class LevelController : MonoBehaviour {
 		portalOnNewLevel = new PortalInfo();
 		portalOnNewLevel.SetData (portal);
 		SetPortalsDirections ();
-		GenRandomPart (randomPartBlocks, randomPartInteractiveObjects);
+		WaitRandomizePartProcesses();
 		SaveLevel ();
-		//GenPortals ();
+		GenRandomPart (randomPartBlocks, randomPartInteractiveObjects);
+
 		StartCoroutine(LevelMesh.CoroutineAddDataProcess.PlayerSpawnWhenAllProcessStoped (player, portalCoord));
 	}
-
-	/*void GenPortals(){
-		int teleportId = 0;
-		foreach (PortalInfo portal in portals) {
-			GameObject newPortal =  Instantiate ((GameObject)Resources.Load ("Prefabs/portal"));
-			SerializableVector3 portalCoords = portal.portalCoord;
-			newPortal.transform.position = new Vector3 (portalCoords.x, portalCoords.y, portalCoords.z);
-			newPortal.GetComponent<PortalScript> ().teleportButton = buttonsController.teleportButton;
-		}
-	}*/
+		
 
 	PortalScript GetRandomFromList(List<PortalScript> list){
 		int rand = Random.Range (0, portals.Count);
@@ -155,14 +184,95 @@ public class LevelController : MonoBehaviour {
 	}
 		
 
-	void CreatePart(Vector3 coord, int chunkSize, int chunkType, int chunkNumber = -1, bool createPortals = true, bool withRandomPart = true){
-		LevelChunkWithInfo chunkWithInfo = LoadLevelChunk(chunkSize, chunkType, chunkNumber);
+	void CreatePart(Vector3 coord, int chunkSize, LevelChunkRudiment chunkRudiment, int chunkNumber = -1, bool createPortals = true, bool withRandomPart = true){
+		LevelChunkWithInfo chunkWithInfo = LoadLevelChunk(chunkSize, chunkRudiment, chunkNumber);
 		levelChunksData.Add (chunkWithInfo.GetChunkInfo(coord));
 		LevelChunk chunk = chunkWithInfo.levelChunk;
+
+		/*************************************RandomPart***********************************************/
+		if(withRandomPart){
+			ThreadPool.QueueUserWorkItem((object param) => {
+				/*ManualResetEvent flag = new ManualResetEvent(false);
+				threadEvents.Add(flag);*/
+				randomizeRandomPartThreadCounts = randomizeRandomPartThreadCounts + 1;
+				S.Random rndc = new S.Random();
+				foreach (RandomPartBlock block in chunk.randomlevelBlocks) {
+					//S.Random rndc = new S.Random();
+					int rnd = rndc.Next (0, 101);
+					if (rnd <= block.randomValue) {
+						RandomPartBlock blockClone = new RandomPartBlock();
+						blockClone.SetData (block);
+						blockClone.coord = new SerializableVector3(block.coord.x + coord.x , block.coord.y + coord.y, block.coord.z + coord.z );
+						randomPartBlocks.Add (blockClone);
+					}
+				}
+
+				foreach (InteractiveObjectRandomPart obj in chunk.randomObjects) {
+					//S.Random rndc = new S.Random();
+					int rnd = rndc.Next (0, 101);
+					if (rnd <= obj.randomValue) {
+						InteractiveObjectRandomPart objClone = new InteractiveObjectRandomPart ();
+						objClone.SetData (obj);
+						objClone.coord = new SerializableVector3(obj.coord.x + coord.x, obj.coord.y + coord.y, obj.coord.z + coord.z);
+						objClone.chunkId = chunkRudiment.chunkId;
+						objClone.coordInChunkRudimentInfoForMiniPortalsArray = chunkRudiment.coord;
+						randomPartInteractiveObjects.Add (objClone);
+					}
+				}
+
+				foreach (FullSet newSet in chunk.sets) {
+					//S.Random rndc = new S.Random();
+					int rnd = rndc.Next (0, 101);
+					if (rnd <= newSet.randomValue) {
+						foreach (RandomPartBlock block in newSet.blocks) {
+							if (block.isRandom) {
+								int blockRnd = rndc.Next (0, 101);
+								if (blockRnd <= block.randomValue) {
+									RandomPartBlock blockClone = new RandomPartBlock ();
+									blockClone.SetData (block);
+									blockClone.coord = new SerializableVector3 (block.coord.x + coord.x  , block.coord.y + coord.y, block.coord.z + coord.z);
+									randomPartBlocks.Add (blockClone);
+								}
+							} else {
+								RandomPartBlock blockClone = new RandomPartBlock ();
+								blockClone.SetData (block);
+								blockClone.coord = new SerializableVector3 (block.coord.x + coord.x , block.coord.y + coord.y , block.coord.z + coord.z);
+								randomPartBlocks.Add (blockClone);
+							}
+						}
+							
+						foreach (InteractiveObjectRandomPart obj in newSet.interactiveObjects) {
+							if (obj.isRandom) {
+								//S.Random rndc = new S.Random();
+								int objRnd = rndc.Next (0, 101);
+								if (objRnd <= obj.randomValue) {
+									InteractiveObjectRandomPart objClone = new InteractiveObjectRandomPart ();
+									objClone.SetData (obj);
+									objClone.coord = new SerializableVector3 (obj.coord.x + coord.x , obj.coord.y + coord.y , obj.coord.z + coord.z);
+									objClone.chunkId = chunkRudiment.chunkId;
+									objClone.coordInChunkRudimentInfoForMiniPortalsArray = chunkRudiment.coord;
+									randomPartInteractiveObjects.Add (objClone);
+								}
+							} else {
+								InteractiveObjectRandomPart objClone = new InteractiveObjectRandomPart ();
+								objClone.SetData (obj);
+								objClone.coord = new SerializableVector3 (obj.coord.x + coord.x, obj.coord.y + coord.y, obj.coord.z + coord.z);
+								objClone.chunkId = chunkRudiment.chunkId;
+								objClone.coordInChunkRudimentInfoForMiniPortalsArray = chunkRudiment.coord;
+								randomPartInteractiveObjects.Add (objClone);
+							}
+						}
+					}
+				}
+				randomizeRandomPartThreadCounts = randomizeRandomPartThreadCounts - 1;
+				//flag.Set();
+			}, new object[] {chunk, coord});
+		}
+		/***************************************************************************************************/
 		if (createPortals) {
 			//chunk.playerSpawn = new SerializableVector3 (8 + coord.x, -18 + coord.y, 0);
 			foreach (InteractiveObjectRandomPart portal in chunk.portals) {
-				GameObject newPortal = Instantiate ((GameObject)Resources.Load ("InteractiveObjects/portal"));
+				GameObject newPortal = Instantiate ((GameObject)interactiveObjects["portal"]);
 
 				PortalScript newPortalScript = newPortal.GetComponent<PortalScript> ();
 				newPortalScript.portalId = portals.Count + 1;
@@ -204,69 +314,17 @@ public class LevelController : MonoBehaviour {
 
 		/*********************************FixObjects***************************************/
 		foreach(InteractiveObjectRandomPart obj in chunk.fixObjects){
-			GameObject newObj = Instantiate ((GameObject)Resources.Load("InteractiveObjects/"+obj.type));
+			GameObject newObj = Instantiate ((GameObject)interactiveObjects[obj.type]);
 			newObj.transform.position = new Vector3 (obj.coord.x + coord.x, obj.coord.y + coord.y, obj.coord.z + + coord.z);
 			newObj.transform.parent = levelInteractiveObjects.transform;
+			InteractiveObjectRandomPart objClone = new InteractiveObjectRandomPart ();
+			objClone.SetData (obj);
+			objClone.chunkId = chunkRudiment.chunkId;
+			objClone.coordInChunkRudimentInfoForMiniPortalsArray = chunkRudiment.coord;
+			CheckInteraciveObjectByMiniPortal (objClone, newObj);
 		}
 		/*************************************************************************/
-
-
-		/*************************************RandomPart***********************************************/
-
-		if(withRandomPart){
-			foreach (RandomPartBlock block in chunk.randomlevelBlocks) {
-				int rnd = Random.Range (0, 101);
-				if (rnd <= block.randomValue) {
-					RandomPartBlock lol = block;
-					lol.coord =  new SerializableVector3(block.coord.x + coord.x, block.coord.y + coord.y, block.coord.z + coord.z);
-					//block.coord = new SerializableVector3(block.coord.x + coord.x, block.coord.y + coord.y, block.coord.z + coord.z);
-					randomPartBlocks.Add (lol);
-				}
-			}
-
-			//Debug.Log (chunk.randomObjects.Count);
-			foreach (InteractiveObjectRandomPart obj in chunk.randomObjects) {
-				int rnd = Random.Range (0, 101);
-				if (rnd <= obj.randomValue) {
-					obj.coord = new SerializableVector3(obj.coord.x + coord.x, obj.coord.y + coord.y, obj.coord.z + coord.z);
-					randomPartInteractiveObjects.Add (obj);
-				}
-			}
-
-			foreach (FullSet newSet in chunk.sets) {
-				//Debug.Log (newSet.randomValue);
-				int rnd = Random.Range (0, 101);
-				if (rnd <= newSet.randomValue) {
-					foreach (RandomPartBlock block in newSet.blocks) {
-						if (block.isRandom) {
-							int blockRnd = Random.Range (0, 101);
-							if (blockRnd <= block.randomValue) {
-								block.coord = new SerializableVector3 (block.coord.x + coord.x, block.coord.y + coord.y, block.coord.z + coord.z);
-								randomPartBlocks.Add (block);
-							}
-						} else {
-							randomPartBlocks.Add (block);
-						}
-					}
-
-					//Debug.Log (newSet.interactiveObjects.Count);
-					foreach (InteractiveObjectRandomPart obj in newSet.interactiveObjects) {
-						if (obj.isRandom) {
-							int objRnd = Random.Range (0, 101);
-							if (objRnd <= obj.randomValue) {
-								obj.coord = new SerializableVector3 (obj.coord.x + coord.x, obj.coord.y + coord.y, obj.coord.z + coord.z);
-								randomPartInteractiveObjects.Add (obj);
-							}
-						} else {
-							randomPartInteractiveObjects.Add (obj);
-						}
-					}
-				}
-			}
-		}
-		/***************************************************************************************************/
 	}
-
 
 
 	public void CreateLevel(){
@@ -292,6 +350,7 @@ public class LevelController : MonoBehaviour {
 		savingLevel.levelChunksInfo = levelChunksData;
 		savingLevel.randomPartBlocks = randomPartBlocks;
 		savingLevel.randomPartInteractiveObjects = randomPartInteractiveObjects;
+		savingLevel.level = level;
 		//save Portals
 		foreach(PortalScript portal in portals){
 			PortalInfo newPortalInfo = new PortalInfo ();
@@ -301,20 +360,20 @@ public class LevelController : MonoBehaviour {
 		currentLevel = SaveLoadManager.SaveLevel (savingLevel);
 	}
 
-	LevelChunkWithInfo LoadLevelChunk(int size, int type, int number = -1){
+	LevelChunkWithInfo LoadLevelChunk(int size, LevelChunkRudiment chunkRudiment, int number = -1){
 		//string path = "jar:file://" + Application.dataPath + "!assets/Resources/LevelChunkPrefabs/" + type.ToString() + "/";
 		int chunkNumber;
 		if (number == -1) {
-			chunkNumber = levelChunkFilesInfo.GetRandomChunkNumber(levelTextureName, levelChunkSize, type);
+			chunkNumber = levelChunkFilesInfo.GetRandomChunkNumber(levelTextureName, levelChunkSize, chunkRudiment.type);
 		} else {
 			chunkNumber = number;
 		}
 
-		GameObject meshDataPrefab = (GameObject)Resources.Load ("LevelChunkPrefabs/" + levelTextureName  + "/" + size.ToString() + "/" + type.ToString() + "/" + chunkNumber.ToString());
+		GameObject meshDataPrefab = (GameObject)Resources.Load ("LevelChunkPrefabs/" + levelTextureName  + "/" + size.ToString() + "/" + chunkRudiment.type.ToString() + "/" + chunkNumber.ToString());
 		LevelChunkWithInfo chunk = new LevelChunkWithInfo();
 		chunk.levelChunk = meshDataPrefab.GetComponent<LevelChunk> ();
 		chunk.chunkSize = size;
-		chunk.chunkType = type;
+		chunk.chunkRudiment = chunkRudiment;
 		chunk.chunkNumber = chunkNumber;
 		return chunk;
 	}
@@ -433,11 +492,23 @@ public class LevelController : MonoBehaviour {
 	}
 
 	public void GenRandomPart(List<RandomPartBlock> blocks, List<InteractiveObjectRandomPart> objects){
+		creatingRandomPartMeshesThread = new Thread (() => {newMeshesRandomPart = CreateRandomPartMeshes(blocks);});
+		creatingRandomPartMeshesThread.Start ();
+		StartCoroutine (StartAddDataProcessWhenMeshesCreated());
+
+
+			
+		foreach(InteractiveObjectRandomPart obj in objects){
+			GameObject newObj = Instantiate ((GameObject)interactiveObjects[obj.type]);
+			newObj.transform.position = new Vector3 (obj.coord.x, obj.coord.y,  obj.coord.z);
+			newObj.transform.parent = levelInteractiveObjects.transform;
+			CheckInteraciveObjectByMiniPortal (obj, newObj);
+		}}
+
+	List<LevelMesh.LevelMeshDataSerializable> CreateRandomPartMeshes(List<RandomPartBlock> blocks){
 		List<LevelMesh.LevelMeshDataSerializable> newMeshes = new List<LevelMesh.LevelMeshDataSerializable> ();
 		newMeshes.Add (new LevelMesh.LevelMeshDataSerializable ());
 		//LevelMesh.LevelMeshDataSerializable newMeshData = new LevelMesh.LevelMeshDataSerializable ();
-		LevelMesh newMesh = Instantiate(levelMeshPrefab).GetComponent<LevelMesh>();
-		newMesh.GetComponent<MeshRenderer> ().material.mainTexture = levelTexture;
 		foreach(RandomPartBlock block in blocks){
 			if(newMeshes [newMeshes.Count - 1].squareVerticesSerializeble.Count >= 5000){
 				newMeshes.Add (new LevelMesh.LevelMeshDataSerializable ());
@@ -454,24 +525,94 @@ public class LevelController : MonoBehaviour {
 					newMeshes [newMeshes.Count - 1].colliderVerticesSerializeble.Add(colVertice);
 				}
 			}
-		
+		}
+		return newMeshes;
+	}
+
+	IEnumerator StartAddDataProcessWhenMeshesCreated(){
+		while (true) {
+			if(!creatingRandomPartMeshesThread.IsAlive){
+				LevelMesh newMesh = Instantiate(levelMeshPrefab).GetComponent<LevelMesh>();
+				newMesh.GetComponent<MeshRenderer> ().material.mainTexture = levelTexture;
+				foreach (LevelMesh.LevelMeshDataSerializable data in newMeshesRandomPart) {
+					if((newMesh.squareVerticesEndValue + data.squareVerticesSerializeble.Count) < 5000){
+						newMesh.AddData (data, new Vector3(0f, 0f, 0f));
+					}else{
+						newMesh = Instantiate (levelMeshPrefab).GetComponent<LevelMesh> ();
+						newMesh.GetComponent<MeshRenderer> ().material.mainTexture = levelTexture;
+						newMesh.AddData (data, new Vector3(0f, 0f, 0f));
+					}
+				}
+				yield break;
+			}
+			yield return null;
+		}
+	}
+
+	void WaitRandomizePartProcesses (){
+		while (randomizeRandomPartThreadCounts != 0) {
+		}
+	}
+
+	void CheckInteraciveObjectByMiniPortal(InteractiveObjectRandomPart obj, GameObject newObj){
+		if(obj.type == "portalU"){
+			MiniPortal miniPortalScript = newObj.GetComponent<MiniPortal> ();
+			miniPortalScript.type = MiniPortal.up;
+			miniPortalScript.chunkId = obj.chunkId;
+			miniPortalScript.coordInChunkRudimentInfoForMiniPortalsArray = obj.coordInChunkRudimentInfoForMiniPortalsArray;
 		}
 
-		foreach (LevelMesh.LevelMeshDataSerializable data in newMeshes) {
-			if((newMesh.squareVerticesEndValue + data.squareVerticesSerializeble.Count) < 5000){
-				newMesh.AddData (data, new Vector3(0, 0, 0));
-			}else{
-				newMesh = Instantiate (levelMeshPrefab).GetComponent<LevelMesh> ();
-				newMesh.GetComponent<MeshRenderer> ().material.mainTexture = levelTexture;
-				newMesh.AddData (data, new Vector3(0, 0, 0));
+		if(obj.type == "portalD"){
+			MiniPortal miniPortalScript = newObj.GetComponent<MiniPortal> ();
+			miniPortalScript.type = MiniPortal.down;
+			miniPortalScript.chunkId = obj.chunkId;
+			miniPortalScript.coordInChunkRudimentInfoForMiniPortalsArray = obj.coordInChunkRudimentInfoForMiniPortalsArray;
+		}
+
+		if(obj.type == "portalR"){
+			MiniPortal miniPortalScript = newObj.GetComponent<MiniPortal> ();
+			miniPortalScript.type = MiniPortal.right;
+			miniPortalScript.chunkId = obj.chunkId;
+			miniPortalScript.coordInChunkRudimentInfoForMiniPortalsArray = obj.coordInChunkRudimentInfoForMiniPortalsArray;
+		}
+
+		if(obj.type == "portalL"){
+			MiniPortal miniPortalScript = newObj.GetComponent<MiniPortal> ();
+			miniPortalScript.type = MiniPortal.left;
+			miniPortalScript.chunkId = obj.chunkId;
+			miniPortalScript.coordInChunkRudimentInfoForMiniPortalsArray = obj.coordInChunkRudimentInfoForMiniPortalsArray;
+		}
+	}
+
+	void SetLevelChunkRudimentsInfoForMiniPortals(){
+		int width = level.GetLength (0);
+		int height = level.Length / width;
+
+		levelChunkRudimentsInfoForMiniPortals = new LevelChunkRudiment[height + 2, width + 2];
+		for(int i = 0; i < width; i++){
+			levelChunkRudimentsInfoForMiniPortals [0, i] = new LevelChunkRudiment ();
+			levelChunkRudimentsInfoForMiniPortals [0, i].chunkId = -1;
+		}
+
+
+		for(int i =1; i< height + 1; i++){
+			levelChunkRudimentsInfoForMiniPortals [i, 0] = new LevelChunkRudiment ();
+			levelChunkRudimentsInfoForMiniPortals [i, 0].chunkId = -1;
+			for(int j =1; j< width + 1; j++){
+				levelChunkRudimentsInfoForMiniPortals [i, j] = level [i - 1, j - 1];
 			}
+			levelChunkRudimentsInfoForMiniPortals [i, width + 1] = new LevelChunkRudiment ();
+			levelChunkRudimentsInfoForMiniPortals [i, width + 1].chunkId = -1;
 		}
-			
-		foreach(InteractiveObjectRandomPart obj in objects){
-			GameObject newObj = Instantiate ((GameObject)Resources.Load("InteractiveObjects/"+obj.type));
-			newObj.transform.position = new Vector3 (obj.coord.x, obj.coord.y,  obj.coord.z);
-			newObj.transform.parent = levelInteractiveObjects.transform;
+
+
+
+		for(int i = 0; i < width; i++){
+			levelChunkRudimentsInfoForMiniPortals [height+1, i] = new LevelChunkRudiment ();
+			levelChunkRudimentsInfoForMiniPortals [height+1, i].chunkId = -1;
 		}
+
+
 	}
 
 
@@ -487,14 +628,14 @@ public class LevelController : MonoBehaviour {
 	private	class LevelChunkWithInfo{
 		public LevelChunk levelChunk;
 		public int chunkSize;
-		public int chunkType;
+		public LevelChunkRudiment chunkRudiment;
 		public int chunkNumber;
 
 		public LevelChunkInfo GetChunkInfo(Vector3 coord){
 			LevelChunkInfo chunkInfo = new LevelChunkInfo ();
 			chunkInfo.chunkSize = chunkSize;
 			chunkInfo.chunkNumber = chunkNumber;
-			chunkInfo.chunkType = chunkType;
+			chunkInfo.chunkRudiment = chunkRudiment;
 			chunkInfo.coord = new SerializableVector3 (coord.x, coord.y, coord.z);
 			return chunkInfo;
 		}

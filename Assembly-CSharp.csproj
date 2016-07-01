@@ -59,8 +59,11 @@
      <Compile Include="Assets\Scripts\GUI\JoystickScript.cs" />
      <Compile Include="Assets\Scripts\GameMath.cs" />
      <Compile Include="Assets\Scripts\HealthScript.cs" />
+     <Compile Include="Assets\Scripts\InteractiveObjects\MiniPortal.cs" />
+     <Compile Include="Assets\Scripts\InteractiveObjects\PortalScript.cs" />
      <Compile Include="Assets\Scripts\LevelGenerator\LevelChunk.cs" />
      <Compile Include="Assets\Scripts\LevelGenerator\LevelChunkFilesInfo.cs" />
+     <Compile Include="Assets\Scripts\LevelGenerator\LevelChunkRudiment.cs" />
      <Compile Include="Assets\Scripts\LevelGenerator\LevelController.cs" />
      <Compile Include="Assets\Scripts\LevelGenerator\LevelGeneration.cs" />
      <Compile Include="Assets\Scripts\LevelGenerator\LevelInfo\Level.cs" />
@@ -73,7 +76,6 @@
      <Compile Include="Assets\Scripts\LevelGenerator\SaveLoadManager.cs" />
      <Compile Include="Assets\Scripts\MovemetScript.cs" />
      <Compile Include="Assets\Scripts\PlayerScript.cs" />
-     <Compile Include="Assets\Scripts\PortalScript.cs" />
      <Compile Include="Assets\Scripts\ReskinController.cs" />
      <Compile Include="Assets\Scripts\ShotScript.cs" />
      <Compile Include="Assets\Scripts\Surrogates\SerializableVector2.cs" />

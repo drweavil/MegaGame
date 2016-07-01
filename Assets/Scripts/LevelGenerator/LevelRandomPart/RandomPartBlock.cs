@@ -11,4 +11,15 @@ public class RandomPartBlock{
 	public bool isDecor = false;
 	public bool isRandom = false;
 	public int randomValue;
+
+
+	public void SetData(RandomPartBlock block){
+		uvs = block.uvs;
+		coord = block.coord;
+		width = block.width;
+		height = block.height;
+		isDecor = block.isDecor;
+		isRandom = block.isRandom;
+		randomValue = block.randomValue;
+	}
 }

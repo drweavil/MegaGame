@@ -13,4 +13,6 @@ public class Level {
 	public List<RandomPartBlock> randomPartBlocks = new List<RandomPartBlock> ();
 	public List<InteractiveObjectRandomPart> randomPartInteractiveObjects = new List<InteractiveObjectRandomPart> ();
 	public int levelNumber;
+
+	public LevelChunkRudiment[,] level;
 }

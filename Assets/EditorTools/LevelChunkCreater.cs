@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
 using System.IO;
@@ -232,3 +233,4 @@ public class LevelChunkCreater : MonoBehaviour {
 		SaveLoadManager.SetLevelChunkFilesInfo ();
 	}
 }
+#endif
