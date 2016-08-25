@@ -37,7 +37,7 @@ public class Joystick : MonoBehaviour {
 		/*joystickTouch = Array.Find (touches, touch => touch );*/
 		/*Debug.Log(GUILayer.HitTest (new Vector3 (Input.GetTouch(0).position.x, Input.GetTouch(0).position.y, 0)));*/
 		RectTransform rt = (RectTransform)transform;
-		Rect joystickRect = new Rect(0, 0,rt.rect.height*4, rt.rect.width*4);
+		Rect joystickRect = new Rect(0, 0,rt.rect.height*10, rt.rect.width*10);
 		joystickRect.center = transform.position;
 
 		//if (joystickTouch == null) {

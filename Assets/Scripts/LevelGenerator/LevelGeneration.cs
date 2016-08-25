@@ -23,7 +23,7 @@ public class LevelGeneration : MonoBehaviour {
 	void Update () {
 	}
 
-	int PathDirectionLeftRightDown(int leftPercent, int rightPercent, int downPercent){
+	public static int PathDirectionLeftRightDown(int leftPercent, int rightPercent, int downPercent){
 		int firstLine = leftPercent;
 		int secondLine = leftPercent + rightPercent;
 		int lastLine = leftPercent + rightPercent + downPercent;
@@ -43,7 +43,27 @@ public class LevelGeneration : MonoBehaviour {
 		return pathDirection;
 	}
 
-	int PathDirectionLeftUpDown(int leftPercent, int upPercent, int downPercent){
+	public static int PathDirectionLeftUpRight(int leftPercent, int upPercent, int rightPercent){
+		int firstLine = leftPercent;
+		int secondLine = leftPercent + upPercent;
+		int lastLine = leftPercent + upPercent + rightPercent;
+		int pathDirection = -1;
+		int random = Random.Range(0, lastLine);
+		if (random < firstLine) {
+			pathDirection = left; 
+		} 
+
+		if (random < secondLine && random >= firstLine) {
+			pathDirection = up; 
+		}
+
+		if (random <= lastLine && random >= secondLine) {
+			pathDirection = right; 
+		}
+		return pathDirection;
+	}
+
+	public static int PathDirectionLeftUpDown(int leftPercent, int upPercent, int downPercent){
 		int firstLine = leftPercent;
 		int secondLine = leftPercent + upPercent;
 		int lastLine = leftPercent + upPercent + downPercent;
@@ -63,7 +83,7 @@ public class LevelGeneration : MonoBehaviour {
 		return pathDirection;
 	}
 
-	int PathDirectionRightUpDown(int rightPercent, int upPercent, int downPercent){
+	public static int PathDirectionRightUpDown(int rightPercent, int upPercent, int downPercent){
 		int firstLine = rightPercent;
 		int secondLine = rightPercent + upPercent;
 		int lastLine = rightPercent + upPercent + downPercent;
@@ -83,7 +103,7 @@ public class LevelGeneration : MonoBehaviour {
 		return pathDirection;
 	}
 
-	int PathDirectionRightDown(int rightPercent, int downPercent){
+	public static int PathDirectionRightDown(int rightPercent, int downPercent){
 		int firstLine = rightPercent;
 		int lastLine = rightPercent + downPercent;
 		int pathDirection = -1;
@@ -99,7 +119,39 @@ public class LevelGeneration : MonoBehaviour {
 		return pathDirection;
 	}
 
-	int PathDirectionLeftDown(int leftPercent, int downPercent){
+	public static int PathDirectionUpRight(int upPercent, int rightPercent){
+		int firstLine = upPercent;
+		int lastLine = upPercent + rightPercent;
+		int pathDirection = -1;
+		int random = Random.Range(0, lastLine);
+
+		if (random < firstLine) {
+			pathDirection = up; 
+		}
+
+		if (random <= lastLine && random >= firstLine) {
+			pathDirection = right; 
+		}
+		return pathDirection;
+	}
+
+	public static int PathDirectionUpLeft(int upPercent, int leftPercent){
+		int firstLine = upPercent;
+		int lastLine = upPercent + leftPercent;
+		int pathDirection = -1;
+		int random = Random.Range(0, lastLine);
+
+		if (random < firstLine) {
+			pathDirection = up; 
+		}
+
+		if (random <= lastLine && random >= firstLine) {
+			pathDirection = left; 
+		}
+		return pathDirection;
+	}
+
+	public static int PathDirectionLeftDown(int leftPercent, int downPercent){
 		int firstLine = leftPercent;
 		int lastLine = leftPercent + downPercent;
 		int pathDirection = -1;
@@ -115,7 +167,7 @@ public class LevelGeneration : MonoBehaviour {
 		return pathDirection;
 	}
 
-	int PathDirectionLeftUp(int leftPercent, int upPercent){
+	public static int PathDirectionLeftUp(int leftPercent, int upPercent){
 		int firstLine = leftPercent;
 		int lastLine = leftPercent + upPercent;
 		int pathDirection = -1;
@@ -131,7 +183,7 @@ public class LevelGeneration : MonoBehaviour {
 		return pathDirection;
 	}
 
-	int PathDirectionRightUp(int rightPercent, int upPercent){
+	public static int PathDirectionRightUp(int rightPercent, int upPercent){
 		int firstLine = rightPercent;
 		int lastLine = rightPercent + upPercent;
 		int pathDirection = -1;
@@ -149,7 +201,7 @@ public class LevelGeneration : MonoBehaviour {
 
 		
 
-	int[] GetNextPoint(int [] currentPoint, int direction){
+	public static int[] GetNextPoint(int [] currentPoint, int direction){
 		int[] nextPoint = new int[] {currentPoint[0], currentPoint[1]};
 		switch(direction){
 		case left: //left

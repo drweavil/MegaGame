@@ -27,16 +27,28 @@ public class MapZoneGenerator : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.E)) {
 			RefreshArray ();
 
-			for(int i = 0; i < 50; i++){
+			for(int i = 0; i < 100; i++){
 				points.Add(GetRandomPoint ());
 			}
 
+			List<int[]> invalidPoints = points.FindAll (p => map [p [0], p [1]].zoneChunkId == -1);
+			foreach(int[] point in invalidPoints){
+				int invalidPointIndex = points.FindIndex (p => p[0] == point[0] && p[1] == point[1]);
+				points.RemoveAt (invalidPointIndex);
+			}
+			Debug.Log ("p/" + points.Count);
 			GenerateZonesByPoints (points);
+			MapZoneComplexityGenerator mapZoneGenerator = new MapZoneComplexityGenerator ();
+			map = mapZoneGenerator.SetComplexity (map);
 
 			SetColors ();
 			for (int i = 0; i < height+2; i++) {
 				for (int j = 0; j < width+2; j++) {
-					Draw (new Vector3(j, -i, 0), map[i,j].zoneChunkId);
+					if (map [i, j].zoneChunkType == -1) {
+						Draw (new Vector3 (j, -i, 0), map [i, j].zoneChunkId, map [i, j].complexity.ToString () + "/l");
+					} else {
+						Draw (new Vector3 (j, -i, 0), map [i, j].zoneChunkId, map [i, j].complexity.ToString ());
+					}
 				}
 			}
 		}
@@ -46,13 +58,12 @@ public class MapZoneGenerator : MonoBehaviour {
 	void SetColors(){
 		foreach (int[] point in points) {
 			colors.Add (map [point [0], point [1]].zoneChunkId, new Color (Random.value, Random.value, Random.value, 1.0f));
-			//colors.Add (map [point [0], point [1]] - 10, new Color (Random.value, Random.value, Random.value, 1.0f));
 		}
 		colors.Add (-1, new Color (Random.value, Random.value, Random.value, 1.0f));
 		colors.Add (0, new Color (Random.value, Random.value, Random.value, 1.0f));
 	}
 
-    void Draw(Vector3 coord, int type){
+	void Draw(Vector3 coord, int type, string complexity = "-1"){
 		GameObject mapZone = Instantiate ((GameObject)Resources.Load("TestZone"));
 		mapZone.transform.position = new Vector3 (mapZone.transform.position.x + coord.x,
 			mapZone.transform.position.y + coord.y,
@@ -61,7 +72,11 @@ public class MapZoneGenerator : MonoBehaviour {
 			mapZone.GetComponent<SpriteRenderer> ().material.color = (Color)colors [type];
 		}
 		GameObject textRenderer = mapZone.transform.GetChild (0).gameObject;
-		textRenderer.GetComponent<TextMesh> ().text = type.ToString ();
+		if (complexity != "-1") {
+			textRenderer.GetComponent<TextMesh> ().text =  complexity;
+		} else {
+			textRenderer.GetComponent<TextMesh> ().text = "no";
+		}
 	}
 	//****************************************************************
 
@@ -80,12 +95,16 @@ public class MapZoneGenerator : MonoBehaviour {
 	}
 
 	int[] GetRandomPoint(){
-		int x = Random.Range (1, width+1);
-		int y = Random.Range (1, height+1);
+		int x = Random.Range (1, width);
+		int y = Random.Range (1, height);
 		int[] coord = new int[] {0, 0};
-		if (map [y, x].zoneChunkId == 0) {
+		if (map [y, x].zoneChunkId == 0 && map [y, x].zoneChunkId != -1) {
 			pointCount++;
+			if (pointCount == -1) {
+				Debug.Log ("lol");
+			}
 			map [y, x].zoneChunkId = pointCount;
+			map [y, x].isKeyPoint = true;
 			coord = new int[] { y, x };
 		} else {
 			GetRandomPoint ();
@@ -106,15 +125,13 @@ public class MapZoneGenerator : MonoBehaviour {
 			zones.Add (zone);
 		}
 
-		//int zonesCount = zones.Count;
-		//int lol = 2000;
-		while ( zones.Count != 0/*lol != 0*/) {
+
+		while ( zones.Count != 0) {
 			List<int> indexes = new List<int>();
 			foreach (Zone zone in zones) {
 				if (zone.ZoneCanGrow()) {
 					zone.Grow ();
 				}
-				//Debug.Log (zone.ZoneCanGrow());
 			}
 				zones.RemoveAll(z => !z.ZoneCanGrow());
 		}
@@ -180,6 +197,7 @@ public class MapZoneGenerator : MonoBehaviour {
 
 		bool isCanGrow(List<int[]> points){
 			List<bool> checkedPoints = new List<bool> ();
+
 			foreach (int[] point in points) {
 				if (map [point [0], point [1]].zoneChunkId == 0) {
 					checkedPoints.Add (true);
@@ -234,11 +252,23 @@ public class MapZoneGenerator : MonoBehaviour {
 			checkedPoints.Add (centerPoint);
 
 			for (int i = 1; i < growDown+1; i++) {
-				checkedPoints.Add (new int[] { centerPoint [0] + i, centerPoint [1] });
+				int[] point = new int[] { centerPoint [0] + i, centerPoint [1] };
+				if ((point [0] >= 0) &&
+				   (point [0] <= (height + 1)) &&
+				   (point [1] >= 0) &&
+				   (point [1] <= width + 1)) {
+					checkedPoints.Add (point);
+				}
 			}
 
 			for (int i = 1; i < growUp+1; i++) {
-				checkedPoints.Add(new int[] {centerPoint[0] - i, centerPoint[1]});
+				int[] point = new int[] { centerPoint [0] - i, centerPoint [1] };
+				if ((point [0] >= 0) &&
+					(point [0] <= (height + 1)) &&
+					(point [1] >= 0) &&
+					(point [1] <= width + 1)) {
+					checkedPoints.Add (point);
+				}
 			}
 
 			if (isCanGrow (checkedPoints)) {
@@ -248,7 +278,6 @@ public class MapZoneGenerator : MonoBehaviour {
 					}	
 				}
 				growLeft++;
-				//canGrowLeft = false;
 			} else {
 				canGrowLeft = false;
 			}
@@ -262,12 +291,32 @@ public class MapZoneGenerator : MonoBehaviour {
 			int[] centerPoint = new int[2] {pointCoord[0], pointCoord[1] + growRight + 1};
 			checkedPoints.Add (centerPoint);
 
+			if ((centerPoint [0] < 0) ||
+				(centerPoint [0] > (height + 1)) ||
+				(centerPoint [1] < 0) ||
+				(centerPoint [1] > width + 1)) {
+				Debug.Log (centerPoint[0].ToString() + "R" + centerPoint[1].ToString()+ "Z" + zoneNumber.ToString());
+			}
+
+
 			for (int i = 1; i < growDown+1; i++) {
-				checkedPoints.Add (new int[] { centerPoint [0] + i, centerPoint [1] });
+				int[] point = new int[] { centerPoint [0] + i, centerPoint [1] };
+				if ((point [0] >= 0) &&
+					(point [0] <= (height + 1)) &&
+					(point [1] >= 0) &&
+					(point [1] <= width + 1)) {
+					checkedPoints.Add (point);
+				}
 			}
 
 			for (int i = 1; i < growUp+1; i++) {
-				checkedPoints.Add(new int[] {centerPoint[0] - i, centerPoint[1]});
+				int[] point = new int[] { centerPoint [0] - i, centerPoint [1] };
+				if ((point [0] >= 0) &&
+					(point [0] <= (height + 1)) &&
+					(point [1] >= 0) &&
+					(point [1] <= width + 1)) {
+					checkedPoints.Add (point);
+				}
 			}
 			if (isCanGrow (checkedPoints)) {
 				foreach(int[] point in checkedPoints){
@@ -286,13 +335,31 @@ public class MapZoneGenerator : MonoBehaviour {
 			List<int[]> checkedPoints = new List<int[]> ();
 			int[] centerPoint = new int[2] {pointCoord[0] - growUp - 1, pointCoord[1]};
 			checkedPoints.Add (centerPoint);
+			if ((centerPoint [0] < 0) ||
+				(centerPoint [0] > (height + 1)) ||
+				(centerPoint [1] < 0) ||
+				(centerPoint [1] > width + 1)) {
+				Debug.Log (centerPoint[0].ToString() + "U" + centerPoint[1].ToString()+ "Z" + zoneNumber.ToString());
+			}
 
 			for (int i = 1; i < growRight+1; i++) {
-				checkedPoints.Add (new int[] { centerPoint [0], centerPoint [1] + i });
+				int[] point = new int[] { centerPoint [0], centerPoint [1] + i};
+				if ((point [0] >= 0) &&
+					(point [0] <= (height + 1)) &&
+					(point [1] >= 0) &&
+					(point [1] <= width + 1)) {
+					checkedPoints.Add (point);
+				}
 			}
 
 			for (int i = 1; i < growLeft+1; i++) {
-				checkedPoints.Add(new int[] {centerPoint[0], centerPoint[1] - i});
+				int[] point = new int[] { centerPoint [0], centerPoint [1] - i};
+				if ((point [0] >= 0) &&
+					(point [0] <= (height + 1)) &&
+					(point [1] >= 0) &&
+					(point [1] <= width + 1)) {
+					checkedPoints.Add (point);
+				}
 			}
 
 			if (isCanGrow (checkedPoints)) {
@@ -312,13 +379,31 @@ public class MapZoneGenerator : MonoBehaviour {
 			List<int[]> checkedPoints = new List<int[]> ();
 			int[] centerPoint = new int[2] {pointCoord[0] + growDown + 1, pointCoord[1]};
 			checkedPoints.Add (centerPoint);
+			if ((centerPoint [0] < 0) ||
+				(centerPoint [0] > (height + 1)) ||
+				(centerPoint [1] < 0) ||
+				(centerPoint [1] > width + 1)) {
+				Debug.Log (centerPoint[0].ToString() + "D" + centerPoint[1].ToString()+ "Z" + zoneNumber.ToString());
+			}
 
 			for (int i = 1; i < growRight+1; i++) {
-				checkedPoints.Add (new int[] { centerPoint [0], centerPoint [1] + i });
+				int[] point = new int[] { centerPoint [0], centerPoint [1] + i};
+				if ((point [0] >= 0) &&
+					(point [0] <= (height + 1)) &&
+					(point [1] >= 0) &&
+					(point [1] <= width + 1)) {
+					checkedPoints.Add (point);
+				}
 			}
 
 			for (int i = 1; i < growLeft+1; i++) {
-				checkedPoints.Add(new int[] {centerPoint[0], centerPoint[1] - i});
+				int[] point = new int[] { centerPoint [0], centerPoint [1] - i};
+				if ((point [0] >= 0) &&
+					(point [0] <= (height + 1)) &&
+					(point [1] >= 0) &&
+					(point [1] <= width + 1)) {
+					checkedPoints.Add (point);
+				}
 			}
 
 			if (isCanGrow (checkedPoints)) {

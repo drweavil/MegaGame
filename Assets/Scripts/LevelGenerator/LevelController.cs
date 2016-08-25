@@ -116,12 +116,15 @@ public class LevelController : MonoBehaviour {
 		}
 
 		Level loadedLevel =  SaveLoadManager.LoadLevel (levelNumber);
-		level = loadedLevel.level;
+		//level = loadedLevel.level;
+		SetLevelChunkRudiments(loadedLevel.levelArrayWidth, loadedLevel.levelArrayHeight);
 		SetLevelChunkRudimentsInfoForMiniPortals ();
 		foreach (LevelChunkInfo chunk in loadedLevel.levelChunksInfo) {
+			//Debug.Log ((chunk.coord.y/(float)chunk.chunkSize).ToString() + "/" + (chunk.coord.x/(float)chunk.chunkSize).ToString());
+			levelChunkRudimentsInfoForMiniPortals[(int)(Mathf.Abs(chunk.coord.y)/(float)chunk.chunkSize) +1, (int)(Mathf.Abs(chunk.coord.x)/(float)chunk.chunkSize) + 1].type = chunk.chunkType;
 			CreatePart (new Vector3 (chunk.coord.x, chunk.coord.y, chunk.coord.z), 
 				chunk.chunkSize,
-				chunk.chunkRudiment, 
+				levelChunkRudimentsInfoForMiniPortals[(int)(Mathf.Abs(chunk.coord.y)/(float)chunk.chunkSize) +1, (int)(Mathf.Abs(chunk.coord.x)/(float)chunk.chunkSize) +1], 
 				chunk.chunkNumber, 
 				false, 
 				false
@@ -285,7 +288,7 @@ public class LevelController : MonoBehaviour {
 			}
 		}
 		LevelMesh currentDecorMesh = Instantiate (levelMeshPrefab).GetComponent<LevelMesh>();
-		currentDecorMesh.GetComponent<MeshRenderer> ().material.mainTexture = levelTexture;
+		currentDecorMesh.GetComponent<MeshRenderer> ().sharedMaterial.mainTexture = levelTexture;
 		currentDecorMesh.transform.parent = levelEnvironment.transform;
 		for (int i = 0; i < chunk.levelDecorBlocks.Count; i++) {
 			if((currentDecorMesh.squareVerticesEndValue + chunk.levelDecorBlocks [i].squareVerticesSerializeble.Count) < 12000){
@@ -299,7 +302,7 @@ public class LevelController : MonoBehaviour {
 		currentMesh = Instantiate (levelMeshPrefab).GetComponent<LevelMesh>();
 		currentMesh.gameObject.layer = LayerMask.NameToLayer ("Ground");
 		currentMesh.GetComponent<MeshCollider> ().material = (PhysicMaterial)Resources.Load ("HaveNotWallFriction");
-		currentMesh.GetComponent<MeshRenderer> ().material.mainTexture = levelTexture;
+		currentMesh.GetComponent<MeshRenderer> ().sharedMaterial.mainTexture = levelTexture;
 		currentMesh.transform.parent = levelEnvironment.transform;
 		for (int i = 0; i < chunk.levelBlocks.Count; i++) {
 			if((currentMesh.squareVerticesEndValue + chunk.levelBlocks [i].squareVerticesSerializeble.Count) < 12000){
@@ -350,7 +353,9 @@ public class LevelController : MonoBehaviour {
 		savingLevel.levelChunksInfo = levelChunksData;
 		savingLevel.randomPartBlocks = randomPartBlocks;
 		savingLevel.randomPartInteractiveObjects = randomPartInteractiveObjects;
-		savingLevel.level = level;
+		savingLevel.levelArrayWidth = level.GetLength (0);
+		savingLevel.levelArrayHeight = level.Length / savingLevel.levelArrayWidth;
+		//savingLevel.level = level;
 		//save Portals
 		foreach(PortalScript portal in portals){
 			PortalInfo newPortalInfo = new PortalInfo ();
@@ -373,7 +378,8 @@ public class LevelController : MonoBehaviour {
 		LevelChunkWithInfo chunk = new LevelChunkWithInfo();
 		chunk.levelChunk = meshDataPrefab.GetComponent<LevelChunk> ();
 		chunk.chunkSize = size;
-		chunk.chunkRudiment = chunkRudiment;
+		//chunk.chunkRudiment = chunkRudiment;
+		chunk.chunkType = chunkRudiment.type;
 		chunk.chunkNumber = chunkNumber;
 		return chunk;
 	}
@@ -533,13 +539,13 @@ public class LevelController : MonoBehaviour {
 		while (true) {
 			if(!creatingRandomPartMeshesThread.IsAlive){
 				LevelMesh newMesh = Instantiate(levelMeshPrefab).GetComponent<LevelMesh>();
-				newMesh.GetComponent<MeshRenderer> ().material.mainTexture = levelTexture;
+				newMesh.GetComponent<MeshRenderer> ().sharedMaterial.mainTexture = levelTexture;
 				foreach (LevelMesh.LevelMeshDataSerializable data in newMeshesRandomPart) {
 					if((newMesh.squareVerticesEndValue + data.squareVerticesSerializeble.Count) < 5000){
 						newMesh.AddData (data, new Vector3(0f, 0f, 0f));
 					}else{
 						newMesh = Instantiate (levelMeshPrefab).GetComponent<LevelMesh> ();
-						newMesh.GetComponent<MeshRenderer> ().material.mainTexture = levelTexture;
+						newMesh.GetComponent<MeshRenderer> ().sharedMaterial.mainTexture = levelTexture;
 						newMesh.AddData (data, new Vector3(0f, 0f, 0f));
 					}
 				}
@@ -581,6 +587,19 @@ public class LevelController : MonoBehaviour {
 			miniPortalScript.type = MiniPortal.left;
 			miniPortalScript.chunkId = obj.chunkId;
 			miniPortalScript.coordInChunkRudimentInfoForMiniPortalsArray = obj.coordInChunkRudimentInfoForMiniPortalsArray;
+		}
+	}
+
+	void SetLevelChunkRudiments(int width, int height){
+		level = new LevelChunkRudiment[height, width];
+		int chunkId = 0;
+		for(int i = 0; i < height; i++){
+			for(int j = 0; j < width; j++){
+				level [i, j] = new LevelChunkRudiment ();
+				level [i, j].coord = new SerializableVector2 ((float)j, (float)i);
+				level [i, j].chunkId = chunkId;
+				chunkId = chunkId + 1;
+			}	
 		}
 	}
 
@@ -628,14 +647,15 @@ public class LevelController : MonoBehaviour {
 	private	class LevelChunkWithInfo{
 		public LevelChunk levelChunk;
 		public int chunkSize;
-		public LevelChunkRudiment chunkRudiment;
+		//public LevelChunkRudiment chunkRudiment;
+		public int chunkType;
 		public int chunkNumber;
 
 		public LevelChunkInfo GetChunkInfo(Vector3 coord){
 			LevelChunkInfo chunkInfo = new LevelChunkInfo ();
 			chunkInfo.chunkSize = chunkSize;
 			chunkInfo.chunkNumber = chunkNumber;
-			chunkInfo.chunkRudiment = chunkRudiment;
+			chunkInfo.chunkType = chunkType;
 			chunkInfo.coord = new SerializableVector3 (coord.x, coord.y, coord.z);
 			return chunkInfo;
 		}
