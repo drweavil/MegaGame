@@ -1,8 +1,11 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlayerEnemyScripts\Skills.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlayerEnemyScripts\Effects\Effect.cs">
     <Files>
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\Skills.cs" Line="127" Column="26" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Effects\Effect.cs" Line="18" Column="30" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Effects\EffectOptions.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\ObjectsPool.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Skills.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\PlayerEnemyScripts\Equipment\EquipmentGenerator.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\PlayerEnemyScripts\PlayerController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\PlayerEnemyScripts\Stats.cs" Line="1" Column="1" />
@@ -16,6 +19,7 @@
       <File FileName="Assets\Scripts\GUI\JoystickScript.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\Joystick.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Timer.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\CharacterAPI.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

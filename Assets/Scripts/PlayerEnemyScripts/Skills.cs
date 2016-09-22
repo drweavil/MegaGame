@@ -7,6 +7,7 @@ public class Skills : MonoBehaviour {
 	public Animator anim;
 	public Stats stats;
 	public Rigidbody rigidbody;
+	public Transform nullEffectPosition;
 	private string currentAction = "";
 
 	private string[] names = new string[]{ "Run", "jumpStart", "jumpEnd", "jumpIdle" };
@@ -56,8 +57,19 @@ public class Skills : MonoBehaviour {
 			if (hit.collider != null) {
 				int damage = SkillDamage (0.666f, stats.physicalDamage);
 				//Debug.Log (damage);
-				hit.collider.gameObject.GetComponent<Stats>().MakeDamage(damage, Stats.physicalDamageType,  true);
+				CharacterAPI characterAPI = hit.collider.gameObject.GetComponent<CharacterAPI>();
+				characterAPI.stats.MakeDamage(damage, Stats.physicalDamageType,  true);
 				stats.AddMeleeEnergyPoints (9, true);
+
+				GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/blood");
+				Effect effect = effectObject.GetComponent<Effect> ();
+				effect.path = "Prefabs/Particles/blood";
+				EffectOptions effectOptions = new EffectOptions ();
+				effect.transform.parent = characterAPI.skills.nullEffectPosition.transform;
+				effectOptions.transformPosition = effect.transform.position;
+				effectOptions.minRandomDuration = 0.5f;
+				effectOptions.maxRandomDuration = 1f;
+				effect.StartEffect (effectOptions);
 			}
 		} else {
 			if (IsAction ()) {
@@ -76,7 +88,7 @@ public class Skills : MonoBehaviour {
 			if (hit.collider != null) {
 				int damage = SkillDamage (1.333f, stats.physicalDamage);
 				//Debug.Log (damage);
-				hit.collider.gameObject.GetComponent<Stats>().MakeDamage(damage, Stats.physicalDamageType,  true);
+				hit.collider.gameObject.GetComponent<CharacterAPI>().stats.MakeDamage(damage, Stats.physicalDamageType,  true);
 				stats.AddMeleeEnergyPoints (15, true);
 			}
 		} else {
@@ -96,7 +108,7 @@ public class Skills : MonoBehaviour {
 			if (hit.collider != null) {
 				int damage = SkillDamage (2f, stats.physicalDamage);
 				//Debug.Log (damage);
-				hit.collider.gameObject.GetComponent<Stats>().MakeDamage(damage, Stats.physicalDamageType,  true);
+				hit.collider.gameObject.GetComponent<CharacterAPI>().stats.MakeDamage(damage, Stats.physicalDamageType,  true);
 				stats.AddMeleeEnergyPoints (20, true);
 			}
 		} else {
@@ -116,8 +128,8 @@ public class Skills : MonoBehaviour {
 			Physics.Raycast (transform.position, new Vector3(transform.localScale.x, 0, 0), out hit, 0.8f, 1 << 9/*Enemy*/);
 			if (hit.collider != null) {
 				int damage = SkillDamage (2f, stats.physicalDamage);
-				//Debug.Log (damage);
-				hit.collider.gameObject.GetComponent<Stats>().MakeDamage(damage, Stats.physicalDamageType,  true);
+				Debug.Log (damage);
+				hit.collider.gameObject.GetComponent<CharacterAPI>().stats.MakeDamage(damage, Stats.physicalDamageType,  true);
 				stats.AddMeleeEnergyPoints (20, true);
 			}
 		} else {
