@@ -52,6 +52,8 @@ public class Stats : MonoBehaviour {
 
 	public bool isDeath = false;
 
+	public bool withoutControl = false;
+
 
 
 	/**********timers*******************/

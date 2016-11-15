@@ -8,4 +8,6 @@ public class EffectOptions : MonoBehaviour {
 	public float duration;
 	public bool loop = false;
 	public Vector3 transformPosition;
+	public bool isLocalPosition = true;
+	public bool revertRotationY = false;
 }

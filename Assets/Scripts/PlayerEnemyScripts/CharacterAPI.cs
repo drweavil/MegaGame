@@ -6,4 +6,7 @@ public class CharacterAPI : MonoBehaviour {
 	public Skills skills;
 	public Stats stats;
 	public Transform transform;
+	public SphereCollider sphereCollider;
+	public BoxCollider boxCollider;
+	public Rigidbody rigidbody;
 }

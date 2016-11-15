@@ -48,7 +48,7 @@ public class PlayerScript : MonoBehaviour {
 	}
 		
 	void Update () {
-		if (!stats.isDeath) {
+		if (!stats.withoutControl) {
 			if (isGrounded) {
 				inJump = true;
 			}
@@ -107,25 +107,26 @@ public class PlayerScript : MonoBehaviour {
 			}
 
 			//Debug.Log (GetComponent<Rigidbody> ().velocity.y);
-
-			cameraPositionVector.x = player.transform.position.x;
-			cameraPositionVector.y = player.transform.position.y;
-			cameraPosition.position = cameraPositionVector;
-			Vector3 backgroundPositinon = new Vector3 (player.transform.position.x - 2.5f, player.transform.position.y, 5);
-			background.transform.position = backgroundPositinon;
-		} else {
-			anim.Play ("Death");
-		}
+		} //else {
+		cameraPositionVector.x = player.transform.position.x;
+		cameraPositionVector.y = player.transform.position.y;
+		cameraPosition.position = cameraPositionVector;
+		Vector3 backgroundPositinon = new Vector3 (player.transform.position.x - 2.5f, player.transform.position.y, 5);
+		background.transform.position = backgroundPositinon;
+		//	anim.Play ("Death");
+		//}
 	}
 
 	void FixedUpdate(){
-
+		
 		isGrounded = Physics.CheckSphere (groundCheck.position, groundRadius, whatIsGround);
 
 		anim.SetBool ("OnGround", isGrounded);
 		anim.SetFloat ("vSpeed", GetComponent<Rigidbody> ().velocity.y);
-	
-		gameObject.GetComponent<Rigidbody> ().velocity = new Vector2(movement.x, GetComponent<Rigidbody> ().velocity.y);	
+
+		if (!stats.withoutControl) {
+			gameObject.GetComponent<Rigidbody> ().velocity = new Vector2 (movement.x, GetComponent<Rigidbody> ().velocity.y);
+		}	
 	}
 
 	private RaycastHit FindNearestGroundHits(RaycastHit[] hits){
@@ -143,5 +144,6 @@ public class PlayerScript : MonoBehaviour {
 		Vector3 newScale = gameObject.transform.localScale;
 		newScale.x *=  -1;
 		transform.localScale = newScale;
+		transform.rotation = Quaternion.Euler (new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z) * -1);
 	}
 }
