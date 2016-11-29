@@ -2,26 +2,29 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlayerEnemyScripts\Spells\Skills.cs">
     <Files>
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\Skills.cs" Line="369" Column="57" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\MovementController.cs" Line="100" Column="36" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\PlayerScript.cs" Line="93" Column="17" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\Skills.cs" Line="481" Column="48" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\ThunderClapHitbox.cs" Line="32" Column="39" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Stats.cs" Line="497" Column="64" />
       <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\StreamHitbox.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\SpellHitbox.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\PlayerEnemyScripts\Effects\EffectOptions.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\PlayerEnemyScripts\Effects\Effect.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\ObjectsPool.cs" Line="36" Column="1" />
       <File FileName="Assets\Scripts\PlayerEnemyScripts\Equipment\EquipmentGenerator.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\PlayerEnemyScripts\PlayerController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\Stats.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\PlayerEnemyScripts\PlayerHealthBar.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\LevelGenerator\LevelController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\LevelGenerator\LevelController.cs" Line="69" Column="6" />
       <File FileName="Assets\Scripts\GUI\HealthBar.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\PlayerScript.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\PlayerEnemyScripts\ReskinController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\PlayerEnemyScripts\AnimationController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\ButtonScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\JoystickScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\Joystick.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GUI\JoystickScript.cs" Line="18" Column="2" />
+      <File FileName="Assets\Scripts\GUI\Joystick.cs" Line="76" Column="106" />
       <File FileName="Assets\Scripts\Timer.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\PlayerEnemyScripts\CharacterAPI.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\ObjectsPool.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GUI\SlideAimButton.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -63,16 +63,10 @@ public class LevelController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetKeyDown(KeyCode.W)){
-			//LevelChunkCreater.GenPrefabs ();
-
-			/*List<LevelChunkRudiment> lol = new List<LevelChunkRudiment> (level);
-			Debug.Log (lol.Find(l => l.chunkId == 20).coord.x);*/
+		/*if(Input.GetKeyDown(KeyCode.W)){
 			foreach(LevelChunkRudiment lol in level){
 				Debug.Log (lol.coord.x.ToString() + "/" + lol.coord.y.ToString());
-			}
-			//SetLevelChunkRudimentsInfoForMiniPortals ();
-		}
+		}*/
 	
 	}
 

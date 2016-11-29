@@ -26,13 +26,23 @@ public class Skills : MonoBehaviour {
 
 	void Update(){
 		if (Input.GetKeyDown (KeyCode.Z)) {
-			Debug.Log(TestSkillDamagePercent (350));
+			Debug.Log(TestSkillDamagePercent (125));
 		}
 	}
 
-	public int SkillDamage(float percent, float plusDamage){
+	public int SkillDamage(float percent, int damageType){
 		int damage = 0;
-		damage = (int)(System.Math.Round (2.5f * stats.weaponDamage * percent) + plusDamage);
+		int wd = stats.weaponDamage;
+		float ap = 0.3f; /*average enemy armor*/
+		float dp = 0;
+		if (damageType == Stats.elementalDamageType) {
+			dp = stats.elementalDamage / 100f;
+		} else {
+			dp = stats.physicalDamage / 100f;
+		}
+		//damage = (int)(System.Math.Round (2.5f * stats.weaponDamage * percent) + damageType);
+
+		damage = (int)((wd * percent) + wd + (wd * dp) + (wd * ap * percent) + (wd * ap) + (wd * dp * ap));
 		if (damage == 0) {
 			damage = 1;
 		}
@@ -49,6 +59,7 @@ public class Skills : MonoBehaviour {
 		return finalDamage;
 	}
 	void AnimationAction(){
+		//Debug.Log ("lul");
 		MethodInfo methodInfo = this.GetType ().GetMethod (currentAction);
 		methodInfo.Invoke (this, new object[]{true});
 	}
@@ -59,8 +70,8 @@ public class Skills : MonoBehaviour {
 			RaycastHit hit;
 			Physics.Raycast (transform.position, new Vector3(transform.localScale.x, 0, 0), out hit, 0.8f, 1 << 9/*Enemy*/);
 			if (hit.collider != null) {
-				int damage = SkillDamage (0.666f, stats.physicalDamage);
-				//Debug.Log (damage);
+				int damage = SkillDamage (-0.2179487f, Stats.physicalDamageType);
+				Debug.Log (damage);
 				CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI>();
 				targetCharacterAPI.stats.MakeDamage(damage, Stats.physicalDamageType,  true);
 				stats.AddMeleeEnergyPoints (9, true);
@@ -91,7 +102,7 @@ public class Skills : MonoBehaviour {
 			RaycastHit hit;
 			Physics.Raycast (transform.position, new Vector3(transform.localScale.x, 0, 0), out hit, 0.8f, 1 << 9/*Enemy*/);
 			if (hit.collider != null) {
-				int damage = SkillDamage (1.333f, stats.physicalDamage);
+				int damage = SkillDamage (1.064103f, Stats.physicalDamageType);
 				//Debug.Log (damage);
 				CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI>();
 				targetCharacterAPI.stats.MakeDamage(damage, Stats.physicalDamageType,  true);
@@ -123,7 +134,7 @@ public class Skills : MonoBehaviour {
 			RaycastHit hit;
 			Physics.Raycast (transform.position, new Vector3(transform.localScale.x, 0, 0), out hit, 0.8f, 1 << 9/*Enemy*/);
 			if (hit.collider != null) {
-				int damage = SkillDamage (2f, stats.physicalDamage);
+				int damage = SkillDamage (2.346154f, Stats.physicalDamageType);
 				//Debug.Log (damage);
 				CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI>();
 				targetCharacterAPI.stats.MakeDamage(damage, Stats.physicalDamageType,  true);
@@ -186,8 +197,8 @@ public class Skills : MonoBehaviour {
 			spellHitbox.ignoreColliders.Add (gameObject.GetComponent<BoxCollider> ());
 
 			StartCoroutine(waitFewFramesAndMakeDamage (hitBox, 
-				spellHitbox, 
-				SkillDamage (3.333f, stats.physicalDamage),
+				spellHitbox,
+				4.910256f,
 				Stats.physicalDamageType,
 				"Prefabs/SkillPrefabs/MeleeConeHitbox")
 			);
@@ -230,7 +241,7 @@ public class Skills : MonoBehaviour {
 
 			StartCoroutine(waitFewFramesAndMakeDamage (hitBox, 
 				spellHitbox, 
-				SkillDamage (1.666f, stats.physicalDamage), 
+				1.705128f,
 				Stats.physicalDamageType,
 				"Prefabs/SkillPrefabs/CirclePunchHitbox")
 			);
@@ -247,7 +258,7 @@ public class Skills : MonoBehaviour {
 
 			StartCoroutine(waitFewFramesAndMakeDamage (hitBox2, 
 				spellHitbox2, 
-				SkillDamage (1.666f, stats.physicalDamage), 
+				1.705128f,
 				Stats.physicalDamageType,
 				"Prefabs/SkillPrefabs/CirclePunchHitbox")
 			);
@@ -318,8 +329,8 @@ public class Skills : MonoBehaviour {
 			spellHitbox.ignoreColliders.Add (gameObject.GetComponent<BoxCollider> ());
 
 			StartCoroutine(waitFewFramesAndMakeDamage (hitBox, 
-				spellHitbox, 
-				SkillDamage (2.333f, stats.physicalDamage),
+				spellHitbox,
+				2.98718f,
 				Stats.physicalDamageType,
 				"Prefabs/SkillPrefabs/MeleeWaveHitbox")
 			);
@@ -352,7 +363,7 @@ public class Skills : MonoBehaviour {
 		streamHitbox.ignoreColliders.Add (characterAPI.boxCollider);
 
 		streamHitbox.characterAPI = characterAPI;
-		streamHitbox.damagePercent = 1.66f;
+		streamHitbox.damagePercent = 2.346154f;
 		streamHitbox.damageType = Stats.physicalDamageType;
 		streamHitbox.readyToTrigger = true;
 
@@ -363,7 +374,7 @@ public class Skills : MonoBehaviour {
 	public void ThunderClap(bool isSecondPart = false){
 		currentAction = "ThunderClap";
 		if (isSecondPart) {
-			Debug.Log ("azaz");
+			//Debug.Log ("azaz");
 			GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Melee/ThunderClapAir");
 			Effect effect = effectObject.GetComponent<Effect> ();
 			effect.path = "Prefabs/Particles/Melee/ThunderClapAir";
@@ -385,8 +396,139 @@ public class Skills : MonoBehaviour {
 			effect.StartEffect (effectOptions);
 
 
+
+			GameObject hitBox = ObjectsPool.PullObject ("Prefabs/SkillPrefabs/ThunderClapHitBoxCenter");
+			ThunderClapHitbox thunderClapHitbox = hitBox.GetComponent<ThunderClapHitbox> ();
+			thunderClapHitbox.characterAPI = characterAPI;
+			thunderClapHitbox.spellHitbox.ignoreColliders.Add (characterAPI.sphereCollider);
+			thunderClapHitbox.spellHitbox.ignoreColliders.Add (characterAPI.boxCollider);
+			hitBox.transform.parent = nullSkillPosition.transform;
+			//SpellHitbox spellHitbox = hitBox.GetComponent<SpellHitbox> ();
+			hitBox.transform.localPosition = thunderClapHitbox.spellHitbox.nullSpellPosition;
+			hitBox.transform.localScale = thunderClapHitbox.spellHitbox.nullSpellScale;
+
+
+			StartCoroutine (thunderClapHitbox.MakeDamageAndThrow ());
+
 		} else {
-			anim.Play ("thunderClap");
+			StartCoroutine (ToGround ());
+			StartCoroutine (WaitGroundedAndStartThunderClap ());
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+	/************************************************* Fire *********************************************/
+	private Vector3 aimCoord;
+	public void Grenade(Vector3 grenadeCoord){
+		aimCoord = grenadeCoord;
+		GrenadeLaunch ();
+		//Debug.Log ("lol");
+	}
+
+	public void GrenadeLaunch(bool isSecondPart = false){
+		currentAction = "GrenadeLaunch";
+		//Debug.Log (isSecondPart);
+		if (isSecondPart) {
+			//Debug.Log ("asdf");
+			RaycastHit hitWithGround;
+			Vector3 finalAimCoord; 
+			if (Physics.Raycast (aimCoord, new Vector3 (0, -1, 0), out hitWithGround, 10f, 1 << 8/*Ground*/)) {
+				//Debug.Log (hitWithGround.distance);
+				finalAimCoord = new Vector3 (aimCoord.x, aimCoord.y - hitWithGround.distance + 0.3739569f, aimCoord.z);
+			} else {
+				finalAimCoord = aimCoord;
+			}
+			GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Fire/Grenade");
+			Effect effect = effectObject.GetComponent<Effect> ();
+			effect.path = "Prefabs/Particles/Fire/Grenade";
+			EffectOptions effectOptions = new EffectOptions ();
+			//effect.transform.parent = nullEffectPosition.transform;
+
+			effectOptions.transformPosition = finalAimCoord + effect.nullPositionCoords;
+			effectOptions.isRandomDuration = false;
+			effectOptions.duration = 1f;
+			effect.StartEffect (effectOptions);
+
+
+			GameObject hitBox = ObjectsPool.PullObject ("Prefabs/SkillPrefabs/GrenadeHitbox");
+			//hitBox.transform.parent = nullSkillPosition.transform;
+			SpellHitbox spellHitbox = hitBox.GetComponent<SpellHitbox> ();
+			hitBox.transform.localPosition = finalAimCoord + spellHitbox.nullSpellPosition;
+			hitBox.transform.localScale = spellHitbox.nullSpellScale;
+			spellHitbox.ignoreColliders.Add (gameObject.GetComponent<SphereCollider> ());
+			spellHitbox.ignoreColliders.Add (gameObject.GetComponent<BoxCollider> ());
+
+			StartCoroutine(waitFewFramesAndMakeDamage (hitBox, 
+				spellHitbox, 
+				1.064103f,
+				Stats.hybridDamageType,
+				"Prefabs/SkillPrefabs/GrenadeHitbox")
+			);
+			StartCoroutine (waitSkillEndAndClearColliders ());
+		} else {
+			//Debug.Log ("lol");
+			anim.Play ("grenade");
+			StartCoroutine (WaitAnimationAction("grenade", 2));
+		}
+	}
+
+
+	public void RocketJump(bool isSecondPart = false){
+		currentAction = "RocketJump";
+		if (isSecondPart) {
+			//characterAPI.stats.withoutControl = true;
+			int directionIndex = -1;
+			if (characterAPI.transform.localScale.x < 0) {
+				directionIndex = 1;
+			}
+
+
+
+			GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Fire/RocketJumpBang");
+			Effect effect = effectObject.GetComponent<Effect> ();
+			effect.path = "Prefabs/Particles/Fire/RocketJumpBang";
+			EffectOptions effectOptions = new EffectOptions ();
+			//effect.transform.parent = nullEffectPosition.transform;
+
+			effectOptions.transformPosition = nullEffectPosition.transform.position + effect.nullPositionCoords;
+			effectOptions.isRandomDuration = false;
+			effectOptions.duration = 0.6f;
+			effect.StartEffect (effectOptions);
+
+
+			GameObject hitBox = ObjectsPool.PullObject ("Prefabs/SkillPrefabs/RocketJumpHitBox");
+			//hitBox.transform.parent = nullSkillPosition.transform;
+			SpellHitbox spellHitbox = hitBox.GetComponent<SpellHitbox> ();
+			hitBox.transform.position = nullEffectPosition.transform.position + spellHitbox.nullSpellPosition;
+			hitBox.transform.localScale = spellHitbox.nullSpellScale;
+			spellHitbox.ignoreColliders.Add (gameObject.GetComponent<SphereCollider> ());
+			spellHitbox.ignoreColliders.Add (gameObject.GetComponent<BoxCollider> ());
+
+			StartCoroutine(waitFewFramesAndMakeDamage (hitBox, 
+				spellHitbox, 
+				0.1025641f,
+				Stats.hybridDamageType,
+				"Prefabs/SkillPrefabs/RocketJumpHitBox")
+			);
+			StartCoroutine (waitSkillEndAndClearColliders ());
+			//characterAPI.rigidbody.AddForce (350 * directionIndex, 350, 0);
+			characterAPI.movementController.AddForceWithStartAnimation(new Vector3(350 * directionIndex, 350, 0), "rocketJump", 2);
+			//stats.inJump = true;
+		} else {
+			anim.Play ("rocketJump");
+			StartCoroutine (WaitAnimationAction("rocketJump", 2));
+			StartCoroutine (StunWhileAnimation ("rocketJump", 2));
+			characterAPI.rigidbody.velocity = new Vector3 (0, 0, 0);
 		}
 	}
 
@@ -403,9 +545,13 @@ public class Skills : MonoBehaviour {
 
 
 
-	float TestSkillDamagePercent(int finalDamage){
+	float TestSkillDamagePercent(int fd/*finalDamage*/){
 		/*withComplexity 600*/
-		return finalDamage / (2.5f * 60);
+		int wd = 60;/*weapon damage*/
+		float ap = 0.3f; /*armorPercent*/
+		float dp = 0.5f; /*damagePercent*/
+		return (fd - wd - (wd * dp) - (wd * ap) - (wd * dp * ap)) / (wd + (wd * ap));
+		//return finalDamage / (2.5f * 60);
 	}
 
 
@@ -417,7 +563,7 @@ public class Skills : MonoBehaviour {
 		yield break;
 	}
 
-	IEnumerator waitFewFramesAndMakeDamage(GameObject hitBox, SpellHitbox spellHitbox, int damage, int damageType, string path){
+	IEnumerator waitFewFramesAndMakeDamage(GameObject hitBox, SpellHitbox spellHitbox, float damagePercent, int damageType, string path, bool withStun = false, float stunTime = 0){
 		skillProcessCount = skillProcessCount + 1;
 		int zero = 0;
 		while (zero < 4) {
@@ -431,7 +577,16 @@ public class Skills : MonoBehaviour {
 
 				foreach (GameObject obj in spellHitbox.GetObjectsWithoutIgnoredColliders()) {
 					CharacterAPI enemyCharacterAPI = obj.GetComponent<CharacterAPI> ();
-					enemyCharacterAPI.stats.MakeDamage (damage, damageType, true);
+					if (damageType == Stats.hybridDamageType) {
+						enemyCharacterAPI.stats.MakeDamage (SkillDamage (damagePercent, Stats.physicalDamageType), Stats.physicalDamageType, true);
+						enemyCharacterAPI.stats.MakeDamage (SkillDamage (damagePercent, Stats.elementalDamageType), Stats.elementalDamageType, true);
+					} else {
+						enemyCharacterAPI.stats.MakeDamage (SkillDamage (damagePercent, damageType), damageType, true);
+					}
+
+					if (withStun) {
+						enemyCharacterAPI.stats.FullStun (stunTime);
+					}
 					ignoreColliders.Add (enemyCharacterAPI.sphereCollider);
 					spellHitbox.ignoreColliders.Add (enemyCharacterAPI.sphereCollider);
 					ignoreColliders.Add (enemyCharacterAPI.boxCollider);
@@ -486,6 +641,54 @@ public class Skills : MonoBehaviour {
 		streamHitbox.Clear ();
 		ObjectsPool.PushObject ("Prefabs/SkillPrefabs/streamHitbox", hitbox);
 		//Debug.Log ("zaz");
+		yield break;
+	}
+
+
+	IEnumerator StunWhileAnimation(string animationName, int layer = 1){
+		stats.withoutControl = true;
+		for(int i = 0; i < 1; i++){
+			yield return null;
+			stats.withoutControl = true;
+		}
+		while (anim.GetCurrentAnimatorStateInfo (layer).shortNameHash == Animator.StringToHash (animationName)) {
+			stats.withoutControl = true;
+			//Debug.Log ("lol");
+			yield return null;
+		}
+		stats.withoutControl = false;
+		yield break;
+
+	}
+
+	IEnumerator ToGround(){
+		Vector3 newVelocity = new Vector3 (0, -10, 0);
+		while (!characterAPI.movementController.isGrounded) {
+			characterAPI.rigidbody.velocity = newVelocity;
+			yield return null;
+		}
+		yield break;
+	}
+
+	IEnumerator WaitGroundedAndStartThunderClap(){
+		while (!characterAPI.movementController.isGrounded) {
+			yield return null;
+		}
+		anim.Play ("thunderClap");
+		StartCoroutine (StunWhileAnimation("thunderClap"));
+	}
+
+	IEnumerator WaitAnimationAction(string animationName, int layer){
+		anim.SetBool("AnimationAction", true);
+		for(int i = 0; i < 1; i++){
+			yield return null;
+		}
+
+		while(anim.GetCurrentAnimatorStateInfo (layer).IsName(animationName)){
+			yield return null;
+		}
+
+		anim.SetBool("AnimationAction", false);
 		yield break;
 	}
 }

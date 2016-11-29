@@ -9,4 +9,5 @@ public class CharacterAPI : MonoBehaviour {
 	public SphereCollider sphereCollider;
 	public BoxCollider boxCollider;
 	public Rigidbody rigidbody;
+	public MovementController movementController;
 }

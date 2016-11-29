@@ -3,7 +3,8 @@ using System.Collections;
 using System;
 
 public class Stats : MonoBehaviour {
-	public const int physicalDamageType = 0, elementalDamageType = 2; 
+	public const int physicalDamageType = 0, hybridDamageType = 1, elementalDamageType = 2; 
+	public const int meleeSpec = 0, fireSpec=1, elementalSpec = 2;
 	public int specId;
 
 	public int health;
@@ -51,8 +52,12 @@ public class Stats : MonoBehaviour {
 	public int maximumMagicEnergy = 100;
 
 	public bool isDeath = false;
-
+	public bool isGrounded = true;
 	public bool withoutControl = false;
+	public bool inSilence = false;
+	public bool inJump = false;
+	float minimumSpeed;
+	public float currentSpeed = 1f;
 
 
 
@@ -67,6 +72,10 @@ public class Stats : MonoBehaviour {
 
 	Timer canRestoreHealthTimer = new Timer();
 	Timer restoreHealthTimer = new Timer ();
+
+	Timer stunTimer = new Timer();
+	Timer silenceTimer = new Timer();
+	Timer slowMovementTimer = new Timer();
 	/********************************/
 
 
@@ -87,6 +96,7 @@ public class Stats : MonoBehaviour {
 
 	public bool isPlayerStats = false;
 	public PlayerHealthBar playerHealthBar;
+	public CharacterAPI characterAPI;
 	//private Object playerScript;
 
 
@@ -419,6 +429,10 @@ public class Stats : MonoBehaviour {
 		}
 	}
 
+	public void SetSpec(int newSpecId){
+		specId = newSpecId;
+		characterAPI.skills.anim.SetInteger ("SpecID", newSpecId); 
+	}
 
 	public void SetStatsByComplexity (int complexity){
 		ChangeHealthPoints ((int)Math.Round((float)complexity * healthPercent));
@@ -430,5 +444,68 @@ public class Stats : MonoBehaviour {
 		RestoreMaximumHealth ();
 
 		weaponDamage = EquipmentGenerator.GetWeaponDamageByComplexity (complexity);
+		SetSpec (Stats.meleeSpec);
 	}
+
+
+	public IEnumerator ControlStun(float stunTime, bool withAnimation = false){
+		if (withAnimation) {
+			//if(characterAPI.movementController.inJump == false){
+				characterAPI.skills.anim.SetBool("InStun", true);
+			//}
+		}
+		withoutControl = true;
+		//Timer stunTimer = new Timer ();
+		stunTimer.SetTimer (stunTime);
+		while (!stunTimer.TimeIsOver ()) {
+			withoutControl = true;
+			//if (withAnimation) {
+			//	if(characterAPI.movementController.inJump == false){
+			//		characterAPI.skills.anim.SetBool("InStun", true);
+			//	}
+			//}
+			//Debug.Log ("stun");
+			yield return null;
+		}
+		withoutControl = false;
+		if (withAnimation) {
+			//characterAPI.skills.anim.Play ("Idle");
+			characterAPI.skills.anim.SetBool("InStun", false);
+		}
+		yield break;
+	}
+
+	public IEnumerator Silence(float silenceTime){
+		inSilence = true;
+		//Timer silenceTimer = new Timer ();
+		silenceTimer.SetTimer (silenceTime);
+		while (!silenceTimer.TimeIsOver ()) {
+			inSilence = true;
+			yield return null;
+		}
+		inSilence = false;
+		yield break;
+	}
+
+	public void FullStun(float stunTime){
+		StartCoroutine (ControlStun (stunTime, true));
+		StartCoroutine (Silence (stunTime));
+	}
+
+	public void SetCurrentSpeed(float speed){
+		currentSpeed = speed;
+		characterAPI.skills.anim.SetFloat("RunAnimationSpeed", speed);
+	}
+
+	public IEnumerator GetMovementSlowly(float time, float toSpeed){
+		slowMovementTimer.SetTimer (time);
+		minimumSpeed = toSpeed;
+		while (!slowMovementTimer.TimeIsOver ()) {
+			SetCurrentSpeed (minimumSpeed);
+			yield return null;
+		}
+		SetCurrentSpeed(1f);
+		yield break;
+	}
+
 }

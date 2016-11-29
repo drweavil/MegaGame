@@ -57,6 +57,7 @@
      <Compile Include="Assets\Scripts\GUI\HealthBar.cs" />
      <Compile Include="Assets\Scripts\GUI\Joystick.cs" />
      <Compile Include="Assets\Scripts\GUI\JoystickScript.cs" />
+     <Compile Include="Assets\Scripts\GUI\SlideAimButton.cs" />
      <Compile Include="Assets\Scripts\GameMath.cs" />
      <Compile Include="Assets\Scripts\InteractiveObjects\MiniPortal.cs" />
      <Compile Include="Assets\Scripts\InteractiveObjects\PortalScript.cs" />
@@ -78,7 +79,9 @@
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\CharacterAPI.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\Effects\Effect.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\Effects\EffectOptions.cs" />
+     <Compile Include="Assets\Scripts\PlayerEnemyScripts\Effects\NullPosition.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\Equipment\EquipmentGenerator.cs" />
+     <Compile Include="Assets\Scripts\PlayerEnemyScripts\MovementController.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\PlayerController.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\PlayerHealthBar.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\PlayerScript.cs" />
@@ -86,6 +89,7 @@
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\Spells\Skills.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\Spells\SpellHitbox.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\Spells\StreamHitbox.cs" />
+     <Compile Include="Assets\Scripts\PlayerEnemyScripts\Spells\ThunderClapHitbox.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\Stats.cs" />
      <Compile Include="Assets\Scripts\Surrogates\SerializableVector2.cs" />
      <Compile Include="Assets\Scripts\Surrogates\SerializableVector3.cs" />

@@ -7,11 +7,12 @@ public class Joystick : MonoBehaviour {
 	private Vector3 mouseVector;
 	private Touch[] touches;
 	private System.Nullable<Touch> joystickTouch = null;
-	private float maxJoystickDistance = 30.0f;
+	private float maxJoystickdistance = 30.0f;
+	public GameObject joystickCenter;
 
 	// Use this for initialization
 	void Start () {
-		gameObject.transform.position = GameObject.Find ("JoystickCenter").transform.position;
+		gameObject.transform.position = joystickCenter.transform.position;
 	
 	}
 	
@@ -24,13 +25,13 @@ public class Joystick : MonoBehaviour {
 	}
 
 	void FixedUpdate(){
-		var player = GameObject.Find ("Player");
+		/*var player = GameObject.Find ("Player");
 		var movement = new Vector2 (
 			GetDirection().x,
 			GetDirection().y
-		);
+		);*/
 		/*player.direction */
-		player.GetComponent<PlayerScript>().direction =  movement;
+		/*player.GetComponent<PlayerScript>().direction =  movement;*/
 	}
 
 	public void Drag(){
@@ -39,9 +40,9 @@ public class Joystick : MonoBehaviour {
 		RectTransform rt = (RectTransform)transform;
 		Rect joystickRect = new Rect(0, 0,rt.rect.height*10, rt.rect.width*10);
 		joystickRect.center = transform.position;
-
+		//Debug.Log ("asdfg");
 		//if (joystickTouch == null) {
-			joystickTouch = Array.Find (touches, touch => joystickRect.Contains(touch.position));
+		joystickTouch = Array.Find (touches, touch => joystickRect.Contains(touch.position));
 		//if(joystickTouch != null){
 		//	joystickRect.center = joystickTouch.Value.position;
 		//}
@@ -50,16 +51,16 @@ public class Joystick : MonoBehaviour {
 
 
 
-		if (GetDistanceBetweenTouchAndCenter () > maxJoystickDistance) {
-			mouseVector =   joystickTouch.Value.position - new Vector2(GameObject.Find ("JoystickCenter").transform.position.x, GameObject.Find ("JoystickCenter").transform.position.y);
-			gameObject.transform.position = (mouseVector / mouseVector.magnitude) * maxJoystickDistance + GameObject.Find ("JoystickCenter").transform.position;
+		if (GetdistanceBetweenTouchAndCenter () > maxJoystickdistance) {
+			mouseVector =   joystickTouch.Value.position - new Vector2(joystickCenter.transform.position.x, joystickCenter.transform.position.y);
+			gameObject.transform.position = (mouseVector / mouseVector.magnitude) * maxJoystickdistance + joystickCenter.transform.position;
 		} else {
 			gameObject.transform.position = joystickTouch.Value.position;
 		}
 	}
 
 	public void Drop(){
-		gameObject.transform.position = GameObject.Find ("JoystickCenter").transform.position;
+		gameObject.transform.position = joystickCenter.transform.position;
 		joystickTouch = null;
 	}
 
@@ -67,16 +68,16 @@ public class Joystick : MonoBehaviour {
 		Debug.Log ("azaza");
 	}*/
 
-	float GetDistanceBetweenJoystickAndCenter(){
-		return (gameObject.transform.position - GameObject.Find ("JoystickCenter").transform.position).magnitude; 	
+	float GetdistanceBetweenJoystickAndCenter(){
+		return (gameObject.transform.position - joystickCenter.transform.position).magnitude; 	
 	}
 
-	float GetDistanceBetweenTouchAndCenter(){
-		return (joystickTouch.Value.position -  new Vector2(GameObject.Find ("JoystickCenter").transform.position.x, GameObject.Find ("JoystickCenter").transform.position.y)).magnitude; 	
+	float GetdistanceBetweenTouchAndCenter(){
+		return (joystickTouch.Value.position -  new Vector2(joystickCenter.transform.position.x, joystickCenter.transform.position.y)).magnitude; 	
 	}
 
 	public Vector2 GetDirection(){
-		var direction = gameObject.transform.position - GameObject.Find ("JoystickCenter").transform.position;
+		var direction = gameObject.transform.position - joystickCenter.transform.position;
 		direction.Normalize ();
 		return direction;
 	}
