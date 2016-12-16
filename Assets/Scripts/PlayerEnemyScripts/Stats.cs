@@ -8,6 +8,9 @@ public class Stats : MonoBehaviour {
 	public int specId;
 
 	public int health;
+	public int elementalShield;
+	public int physicalShield;
+	public int hybridShield;
 
 	public int maximumHealth;
 	public int stamina = 0;
@@ -76,6 +79,8 @@ public class Stats : MonoBehaviour {
 	Timer stunTimer = new Timer();
 	Timer silenceTimer = new Timer();
 	Timer slowMovementTimer = new Timer();
+
+	public Timer shieldTimer = new Timer();
 	/********************************/
 
 
@@ -104,6 +109,7 @@ public class Stats : MonoBehaviour {
 		//playerScript
 		/*SetMaximumHealth ();
 		RestoreMaximumHealth ();*/
+		shieldTimer = new Timer ();
 		SetStatsByComplexity (600);
 		SetMaximumFireResource ();
 	}
@@ -173,10 +179,22 @@ public class Stats : MonoBehaviour {
 	public void MakeDamage(int damage, int damageType = -1, bool withResTimer = false){
 		if (damageType == physicalDamageType) {
 			damage = damage - (int)Math.Round((((float)damage*armor)/100f));
+			if (physicalShield > 0) {
+				damage = RemoveShieldPoints (damage, Stats.physicalDamageType);
+			}
 		}
 		if (damageType == elementalDamageType) {
 			damage = damage - (int)Math.Round((((float)damage*elementalArmor)/100f));
+			if (elementalShield > 0) {
+				damage = RemoveShieldPoints (damage, Stats.elementalDamageType);
+			}
 		}
+
+		if (hybridShield > 0) {
+			int residualDamage = RemoveShieldPoints (damage, Stats.hybridDamageType);
+			damage = (int)((damage / 2f) + residualDamage);
+		}
+
 		if (damage < 0) {
 			damage = 0;
 		}
@@ -195,6 +213,82 @@ public class Stats : MonoBehaviour {
 		if (withResTimer) {
 			canRestoreHealthTimer.SetTimer (healthCanRestoreTime);
 		}
+	}
+
+	public void AddShieldPoints(int shieldPoints, int shieldType){
+		if (Stats.physicalDamageType == shieldType) {
+			physicalShield += shieldPoints;
+			elementalShield = 0;
+			hybridShield = 0;
+
+			if(isPlayerStats){
+				playerHealthBar.SetShield (physicalShield);
+			}
+		}
+
+		if (Stats.elementalDamageType == shieldType) {
+			physicalShield = 0;
+			elementalShield += shieldPoints;
+			hybridShield = 0;
+
+			if(isPlayerStats){
+				playerHealthBar.SetShield (elementalShield);
+			}
+		}
+
+		if (Stats.hybridDamageType == shieldType) {
+			physicalShield = 0;
+			elementalShield = 0;
+			hybridShield += shieldPoints;
+
+			if(isPlayerStats){
+				playerHealthBar.SetShield (hybridShield);
+			}
+		}
+	}
+
+
+	public int RemoveShieldPoints(int shieldPoints, int shieldType){
+		int residualPoints = 0;
+		if (Stats.physicalDamageType == shieldType) {
+			physicalShield -= shieldPoints;
+			if (physicalShield < 0) {
+				shieldTimer.SetTimer (0);
+				residualPoints = physicalShield * -1;
+				physicalShield += physicalShield * -1;
+			}
+
+			if(isPlayerStats){
+				playerHealthBar.SetShield (physicalShield);
+			}
+		}
+
+		if (Stats.elementalDamageType == shieldType) {
+			elementalShield -= shieldPoints;
+			if (elementalShield < 0) {
+				shieldTimer.SetTimer (0);
+				residualPoints = elementalShield * -1;
+				elementalShield += elementalShield * -1;
+			}
+
+			if(isPlayerStats){
+				playerHealthBar.SetShield (elementalShield);
+			}
+		}
+
+		if (Stats.hybridDamageType == shieldType) {
+			hybridShield -= shieldPoints;
+			if (hybridShield < 0) {
+				shieldTimer.SetTimer (0);
+				residualPoints = hybridShield * -1;
+				hybridShield += hybridShield * -1;
+			}
+
+			if(isPlayerStats){
+				playerHealthBar.SetShield (hybridShield);
+			}
+		}
+		return residualPoints;
 	}
 
 	public void RestoreHealth(int restore){

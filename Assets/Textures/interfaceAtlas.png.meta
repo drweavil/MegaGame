@@ -47,6 +47,7 @@ TextureImporter:
     21300080: battleResources
     21300082: healthBarMask
     21300084: resourseBarMask
+    21300086: shieldBar
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -89,11 +90,14 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 100
   alphaIsTransparency: 1
+  spriteTessellationDetail: -1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
+    serializedVersion: 2
     sprites:
-    - name: 2hurma1
+    - serializedVersion: 2
+      name: 2hurma1
       rect:
         serializedVersion: 2
         x: 950
@@ -104,7 +108,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: 2hurma2
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: 2hurma2
       rect:
         serializedVersion: 2
         x: 969
@@ -114,15 +120,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -18, y: 20}
-        - {x: -21, y: 19}
-        - {x: -21, y: -19}
-        - {x: -17, y: -20}
-        - {x: 20, y: -20}
-        - {x: 21, y: -18}
-        - {x: 21, y: 20}
-    - name: 2hurma3
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: 2hurma3
       rect:
         serializedVersion: 2
         x: 969
@@ -133,7 +134,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: abilityramk
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: abilityramk
       rect:
         serializedVersion: 2
         x: 1
@@ -143,12 +146,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -217, y: 71}
-        - {x: -217, y: -71}
-        - {x: 217, y: -71}
-        - {x: 217, y: 71}
-    - name: battleCnopk
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: battleCnopk
       rect:
         serializedVersion: 2
         x: 669
@@ -158,23 +159,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -32.5, y: 32}
-        - {x: -32.5, y: -30}
-        - {x: -30.5, y: -32}
-        - {x: 32.5, y: -32}
-        - {x: 32.5, y: 32}
-      - - {x: -21.5, y: -16}
-        - {x: -24.5, y: -19}
-        - {x: -23.5, y: -22}
-        - {x: -22.5, y: 22}
-      - - {x: -23.5, y: 2}
-        - {x: -21.5, y: 0}
-        - {x: -18.5, y: 1}
-        - {x: -18.5, y: 4}
-        - {x: -20.5, y: 6}
-        - {x: -23.5, y: 5}
-    - name: battleResources
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: battleResources
       rect:
         serializedVersion: 2
         x: 1
@@ -184,57 +172,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.5084746}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 260, y: 16}
-        - {x: 215, y: 45}
-        - {x: 5, y: 57}
-        - {x: -253, y: 57}
-        - {x: -260, y: 40}
-        - {x: -260, y: -34}
-        - {x: -240, y: -57}
-        - {x: -101, y: -57}
-        - {x: 116, y: -36}
-        - {x: 257, y: -8}
-        - {x: 260, y: -5}
-      - - {x: 146, y: -13}
-        - {x: 149, y: -12}
-        - {x: 149, y: -9}
-        - {x: 146, y: -8}
-        - {x: 144, y: -10}
-      - - {x: -233, y: -2}
-        - {x: -233, y: -7}
-        - {x: -228, y: -11}
-        - {x: -223, y: -11}
-        - {x: -221, y: -10}
-        - {x: -221, y: -8}
-        - {x: -226, y: -2}
-      - - {x: -171, y: -2}
-        - {x: -173, y: -4}
-        - {x: -174, y: -9}
-        - {x: -172, y: -11}
-        - {x: -170, y: -11}
-        - {x: -167, y: -8}
-        - {x: -167, y: -4}
-        - {x: -169, y: -2}
-      - - {x: -193, y: 11}
-        - {x: -190, y: 12}
-        - {x: -190, y: 15}
-        - {x: -193, y: 16}
-        - {x: -195, y: 14}
-      - - {x: -209, y: 24}
-        - {x: -211, y: 22}
-        - {x: -211, y: 20}
-        - {x: -209, y: 18}
-        - {x: -205, y: 18}
-        - {x: -203, y: 20}
-        - {x: -203, y: 22}
-        - {x: -205, y: 24}
-      - - {x: -179, y: 19}
-        - {x: -176, y: 20}
-        - {x: -176, y: 23}
-        - {x: -179, y: 24}
-        - {x: -181, y: 22}
-    - name: bgk
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: bgk
       rect:
         serializedVersion: 2
         x: 905
@@ -245,7 +186,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: bur
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: bur
       rect:
         serializedVersion: 2
         x: 751
@@ -255,12 +198,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -98.5, y: 30.5}
-        - {x: -98.5, y: -30.5}
-        - {x: 98.5, y: -30.5}
-        - {x: 98.5, y: 30.5}
-    - name: cangeweapon
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: cangeweapon
       rect:
         serializedVersion: 2
         x: 1
@@ -270,12 +211,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -41.5, y: 108.5}
-        - {x: -41.5, y: -108.5}
-        - {x: 41.5, y: -108.5}
-        - {x: 41.5, y: 108.5}
-    - name: expbar
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: expbar
       rect:
         serializedVersion: 2
         x: 1
@@ -285,25 +224,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.49493244, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 277, y: 41}
-        - {x: 210, y: 41}
-        - {x: 186, y: 35}
-        - {x: -210, y: 34}
-        - {x: -254, y: 41}
-        - {x: -293, y: 41}
-        - {x: -293, y: 33}
-        - {x: -289, y: 9}
-        - {x: -258, y: -40}
-        - {x: -203, y: -41}
-        - {x: -139, y: -41}
-        - {x: -96, y: -36}
-        - {x: 61, y: -41}
-        - {x: 279, y: -41}
-        - {x: 282, y: -40}
-        - {x: 291, y: -39}
-        - {x: 291, y: 13}
-    - name: expline
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: expline
       rect:
         serializedVersion: 2
         x: 1
@@ -313,23 +237,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.44186047, y: 0.8}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -48, y: -37}
-        - {x: -49, y: -36}
-        - {x: -149, y: -36}
-        - {x: -150, y: -38}
-        - {x: -149, y: -40}
-        - {x: -48, y: -40}
-      - - {x: 251, y: 6}
-        - {x: 246, y: 9}
-        - {x: -97, y: 9}
-        - {x: -206, y: 8}
-        - {x: -209, y: 5}
-        - {x: -209, y: -35}
-        - {x: 248, y: -35}
-        - {x: 259, y: -22}
-        - {x: 259, y: -5}
-    - name: healthBarMask
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: healthBarMask
       rect:
         serializedVersion: 2
         x: 1
@@ -340,7 +251,9 @@ TextureImporter:
       pivot: {x: 0.501355, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: hp bar
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: hp bar
       rect:
         serializedVersion: 2
         x: 604
@@ -350,13 +263,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -197, y: 21.5}
-        - {x: -197, y: -17.5}
-        - {x: -188, y: -21.5}
-        - {x: 197, y: -21.5}
-        - {x: 197, y: 21.5}
-    - name: hurma1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: hurma1
       rect:
         serializedVersion: 2
         x: 437
@@ -366,18 +276,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.537037, y: 0.453125}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 21, y: 70}
-        - {x: 12, y: 65}
-        - {x: -57, y: -13}
-        - {x: -57, y: -44}
-        - {x: -39, y: -57}
-        - {x: 12, y: -57}
-        - {x: 20, y: -54}
-        - {x: 50, y: 27}
-        - {x: 50, y: 67}
-        - {x: 31, y: 70}
-    - name: hurma2
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: hurma2
       rect:
         serializedVersion: 2
         x: 86
@@ -387,17 +289,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.67058825, y: 0.47857141}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -24, y: 73}
-        - {x: -38, y: 73}
-        - {x: -55, y: 64}
-        - {x: -55, y: -4}
-        - {x: -7, y: -67}
-        - {x: 17, y: -67}
-        - {x: 21, y: -58}
-        - {x: 21, y: -38}
-        - {x: 11, y: 6}
-    - name: hurma3
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: hurma3
       rect:
         serializedVersion: 2
         x: 905
@@ -407,14 +302,10 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.53731346, y: 0.5084746}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -31, y: 54}
-        - {x: -31, y: -55}
-        - {x: 9, y: -55}
-        - {x: 29, y: -38}
-        - {x: 29, y: 36}
-        - {x: 11, y: 54}
-    - name: joiped
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: joiped
       rect:
         serializedVersion: 2
         x: 742
@@ -424,18 +315,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -60, y: 68.5}
-        - {x: -68, y: 35.5}
-        - {x: -68, y: -40.5}
-        - {x: -65, y: -45.5}
-        - {x: -35, y: -68.5}
-        - {x: 32, y: -68.5}
-        - {x: 61, y: -61.5}
-        - {x: 68, y: -38.5}
-        - {x: 68, y: 45.5}
-        - {x: 48, y: 68.5}
-    - name: mainramk
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: mainramk
       rect:
         serializedVersion: 2
         x: 1
@@ -445,12 +328,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -212, y: 83.5}
-        - {x: -212, y: -83.5}
-        - {x: 212, y: -83.5}
-        - {x: 212, y: 83.5}
-    - name: overheat
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: overheat
       rect:
         serializedVersion: 2
         x: 86
@@ -461,7 +342,9 @@ TextureImporter:
       pivot: {x: 0.5018182, y: 0.47619048}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: persinfo
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: persinfo
       rect:
         serializedVersion: 2
         x: 1
@@ -471,12 +354,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -374, y: 83.5}
-        - {x: -374, y: -83.5}
-        - {x: 374, y: -83.5}
-        - {x: 374, y: 83.5}
-    - name: plank
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: plank
       rect:
         serializedVersion: 2
         x: 86
@@ -487,7 +368,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: ragebar
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: ragebar
       rect:
         serializedVersion: 2
         x: 604
@@ -498,7 +381,9 @@ TextureImporter:
       pivot: {x: 0.5018248, y: 0.425}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: ramk
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: ramk
       rect:
         serializedVersion: 2
         x: 547
@@ -508,16 +393,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -40.5, y: 40.5}
-        - {x: -40.5, y: -40.5}
-        - {x: 40.5, y: -40.5}
-        - {x: 40.5, y: 40.5}
-      - - {x: -24.5, y: -4.5}
-        - {x: -25.5, y: 25.5}
-        - {x: 26.5, y: 25.5}
-        - {x: 25.5, y: -23.5}
-    - name: ramk2
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: ramk2
       rect:
         serializedVersion: 2
         x: 476
@@ -527,16 +406,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -63, y: 63}
-        - {x: -63, y: -63}
-        - {x: 63, y: -63}
-        - {x: 63, y: 63}
-      - - {x: -48, y: -47}
-        - {x: -48, y: 49}
-        - {x: 47, y: 27}
-        - {x: 48, y: -47}
-    - name: ramk3
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: ramk3
       rect:
         serializedVersion: 2
         x: 595
@@ -546,25 +419,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -72.5, y: 72.5}
-        - {x: -72.5, y: -72.5}
-        - {x: 72.5, y: -72.5}
-        - {x: 72.5, y: 72.5}
-      - - {x: -56.5, y: 55.5}
-        - {x: 57.5, y: 55.5}
-        - {x: 57.5, y: -12.5}
-        - {x: 56.5, y: -13.5}
-        - {x: 56.5, y: -31.5}
-        - {x: 20.5, y: -31.5}
-        - {x: 16.5, y: -33.5}
-        - {x: 16.5, y: -38.5}
-        - {x: 17.5, y: -42.5}
-        - {x: 18.5, y: -53.5}
-        - {x: 17.5, y: -53.5}
-        - {x: 14.5, y: -55.5}
-        - {x: -56.5, y: -55.5}
-    - name: resoursBar
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: resoursBar
       rect:
         serializedVersion: 2
         x: 751
@@ -574,12 +432,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -108, y: 25}
-        - {x: -108, y: -25}
-        - {x: 108, y: -25}
-        - {x: 108, y: 25}
-    - name: resourseBarMask
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: resourseBarMask
       rect:
         serializedVersion: 2
         x: 751
@@ -590,7 +446,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Rplank
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Rplank
       rect:
         serializedVersion: 2
         x: 86
@@ -601,7 +459,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: rTugl
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: rTugl
       rect:
         serializedVersion: 2
         x: 880
@@ -611,14 +471,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -68, y: 35}
-        - {x: -68, y: 15}
-        - {x: -23, y: -35}
-        - {x: 14, y: -35}
-        - {x: 68, y: 16}
-        - {x: 68, y: 35}
-    - name: rTugltalant
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: rTugltalant
       rect:
         serializedVersion: 2
         x: 531
@@ -628,14 +484,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -68, y: 35}
-        - {x: -68, y: 16}
-        - {x: -9, y: -35}
-        - {x: 13, y: -35}
-        - {x: 68, y: 16}
-        - {x: 68, y: 35}
-    - name: Rugl
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Rugl
       rect:
         serializedVersion: 2
         x: 372
@@ -645,13 +497,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -36.5, y: 34.5}
-        - {x: -36.5, y: -34.5}
-        - {x: -17.5, y: -34.5}
-        - {x: 36.5, y: 15.5}
-        - {x: 36.5, y: 34.5}
-    - name: scrollbarcentr
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: scrollbarcentr
       rect:
         serializedVersion: 2
         x: 1002
@@ -662,7 +511,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: scrollhigt
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: scrollhigt
       rect:
         serializedVersion: 2
         x: 978
@@ -673,7 +524,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: scrollpimp
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: scrollpimp
       rect:
         serializedVersion: 2
         x: 974
@@ -684,18 +537,35 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: talantplank
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: shieldBar
       rect:
         serializedVersion: 2
-        x: 522
-        y: 55
+        x: 630
+        y: 448
+        width: 392
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: talantplank
+      rect:
+        serializedVersion: 2
+        x: 630
+        y: 429
         width: 292
         height: 17
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: tpenergy
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: tpenergy
       rect:
         serializedVersion: 2
         x: 751
@@ -706,7 +576,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Tugl
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Tugl
       rect:
         serializedVersion: 2
         x: 880
@@ -716,14 +588,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -68, y: 35}
-        - {x: -68, y: 15}
-        - {x: -23, y: -35}
-        - {x: 14, y: -35}
-        - {x: 68, y: 16}
-        - {x: 68, y: 35}
-    - name: ugl
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: ugl
       rect:
         serializedVersion: 2
         x: 447
@@ -733,13 +601,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -36.5, y: 34.5}
-        - {x: -36.5, y: -34.5}
-        - {x: -17.5, y: -34.5}
-        - {x: 36.5, y: 15.5}
-        - {x: 36.5, y: 34.5}
-    - name: uglmeny
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: uglmeny
       rect:
         serializedVersion: 2
         x: 1
@@ -749,55 +614,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -132, y: 22.5}
-        - {x: -145, y: 4.5}
-        - {x: -145, y: -22.5}
-        - {x: 145, y: -22.5}
-        - {x: 145, y: 22.5}
-      - - {x: 35, y: 0.5}
-        - {x: 33, y: 0.5}
-        - {x: 30, y: -2.5}
-        - {x: 30, y: -5.5}
-        - {x: 31, y: -7.5}
-        - {x: 37, y: -7.5}
-        - {x: 39, y: -5.5}
-        - {x: 39, y: -1.5}
-      - - {x: -70, y: 1.5}
-        - {x: -73, y: -2.5}
-        - {x: -73, y: -4.5}
-        - {x: -72, y: -6.5}
-        - {x: -68, y: -6.5}
-        - {x: -66, y: -5.5}
-        - {x: -66, y: 0.5}
-        - {x: -68, y: 1.5}
-      - - {x: -61, y: 0.5}
-        - {x: -63, y: -4.5}
-        - {x: -61, y: -6.5}
-        - {x: -57, y: -6.5}
-        - {x: -55, y: -4.5}
-        - {x: -55, y: -3.5}
-        - {x: -59, y: 0.5}
-      - - {x: -85, y: -2.5}
-        - {x: -83, y: -4.5}
-        - {x: -80, y: -3.5}
-        - {x: -80, y: 1.5}
-        - {x: -82, y: 3.5}
-        - {x: -85, y: 2.5}
-      - - {x: -5, y: -2.5}
-        - {x: -3, y: -3.5}
-        - {x: 0, y: -2.5}
-        - {x: 0, y: 1.5}
-        - {x: -1, y: 4.5}
-        - {x: -4, y: 4.5}
-        - {x: -5, y: 2.5}
-      - - {x: 73, y: -1.5}
-        - {x: 75, y: -3.5}
-        - {x: 78, y: -2.5}
-        - {x: 78, y: 2.5}
-        - {x: 76, y: 4.5}
-        - {x: 73, y: 3.5}
-    - name: uglobar
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: uglobar
       rect:
         serializedVersion: 2
         x: 751
@@ -807,14 +627,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -13, y: 75.5}
-        - {x: -76, y: 75.5}
-        - {x: -76, y: -75.5}
-        - {x: 76, y: -75.5}
-        - {x: 76, y: -12.5}
-        - {x: -13, y: -12.5}
-    - name: ugol
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: ugol
       rect:
         serializedVersion: 2
         x: 531
@@ -824,12 +640,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -31, y: 30.5}
-        - {x: -31, y: -30.5}
-        - {x: 31, y: -30.5}
-        - {x: 31, y: 30.5}
-    - name: underjoiped
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: underjoiped
       rect:
         serializedVersion: 2
         x: 427
@@ -839,36 +653,8 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 122, y: -98.5}
-        - {x: 145, y: -60.5}
-        - {x: 151, y: -39.5}
-        - {x: 152, y: -32.5}
-        - {x: 152, y: 38.5}
-        - {x: 143, y: 66.5}
-        - {x: 123, y: 97.5}
-        - {x: 103, y: 118.5}
-        - {x: 74, y: 140.5}
-        - {x: 42, y: 151.5}
-        - {x: -44, y: 151.5}
-        - {x: -62, y: 146.5}
-        - {x: -101, y: 123.5}
-        - {x: -134, y: 86.5}
-        - {x: -148, y: 55.5}
-        - {x: -152, y: 41.5}
-        - {x: -152, y: -39.5}
-        - {x: -151, y: -45.5}
-        - {x: -139, y: -74.5}
-        - {x: -126, y: -94.5}
-        - {x: -101, y: -119.5}
-        - {x: -78, y: -136.5}
-        - {x: -59, y: -145.5}
-        - {x: -43, y: -150.5}
-        - {x: -37, y: -151.5}
-        - {x: 36, y: -151.5}
-        - {x: 60, y: -144.5}
-        - {x: 81, y: -133.5}
-        - {x: 105, y: -115.5}
+      outline: []
+      tessellationDetail: -1
     outline: []
   spritePackingTag: 
   userData: 

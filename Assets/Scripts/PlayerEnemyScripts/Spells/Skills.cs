@@ -9,6 +9,7 @@ public class Skills : MonoBehaviour {
 	public Rigidbody rigidbody;
 	public Transform nullEffectPosition;
 	public Transform nullSkillPosition;
+	public Transform armsPosition;
 	private string currentAction = "";
 	private List<Collider> ignoreColliders = new List<Collider>();
 	private int skillProcessCount = 0;
@@ -16,6 +17,10 @@ public class Skills : MonoBehaviour {
 
 	private string[] names = new string[]{ "Run", "jumpStart", "jumpEnd", "jumpIdle" };
 	private List<int> actionAnimationHashes = new List<int>();
+
+	private Vector3 shotDirectionVector;
+
+	private Effect shieldEffect;
 
 
 	void Awake(){
@@ -26,11 +31,11 @@ public class Skills : MonoBehaviour {
 
 	void Update(){
 		if (Input.GetKeyDown (KeyCode.Z)) {
-			Debug.Log(TestSkillDamagePercent (125));
+			Debug.Log(TestSkillDamagePercent (300));
 		}
 	}
 
-	public int SkillDamage(float percent, int damageType){
+	public int SkillDamage(float percent, int damageType, float efficiency = 100f){
 		int damage = 0;
 		int wd = stats.weaponDamage;
 		float ap = 0.3f; /*average enemy armor*/
@@ -43,6 +48,7 @@ public class Skills : MonoBehaviour {
 		//damage = (int)(System.Math.Round (2.5f * stats.weaponDamage * percent) + damageType);
 
 		damage = (int)((wd * percent) + wd + (wd * dp) + (wd * ap * percent) + (wd * ap) + (wd * dp * ap));
+		damage = (int)(damage * (efficiency/100));
 		if (damage == 0) {
 			damage = 1;
 		}
@@ -58,6 +64,16 @@ public class Skills : MonoBehaviour {
 		}
 		return finalDamage;
 	}
+
+	bool IsCritical(){
+		bool isCriticalValue = false;
+		float random = Random.Range (0f, 100.01f);
+		if (random <= stats.critical) {
+			isCriticalValue = true;
+		}
+		return isCriticalValue;
+	}
+
 	void AnimationAction(){
 		//Debug.Log ("lul");
 		MethodInfo methodInfo = this.GetType ().GetMethod (currentAction);
@@ -71,7 +87,7 @@ public class Skills : MonoBehaviour {
 			Physics.Raycast (transform.position, new Vector3(transform.localScale.x, 0, 0), out hit, 0.8f, 1 << 9/*Enemy*/);
 			if (hit.collider != null) {
 				int damage = SkillDamage (-0.2179487f, Stats.physicalDamageType);
-				Debug.Log (damage);
+				//Debug.Log (damage);
 				CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI>();
 				targetCharacterAPI.stats.MakeDamage(damage, Stats.physicalDamageType,  true);
 				stats.AddMeleeEnergyPoints (9, true);
@@ -196,12 +212,14 @@ public class Skills : MonoBehaviour {
 			spellHitbox.ignoreColliders.Add (gameObject.GetComponent<SphereCollider> ());
 			spellHitbox.ignoreColliders.Add (gameObject.GetComponent<BoxCollider> ());
 
-			StartCoroutine(waitFewFramesAndMakeDamage (hitBox, 
-				spellHitbox,
-				4.910256f,
-				Stats.physicalDamageType,
-				"Prefabs/SkillPrefabs/MeleeConeHitbox")
-			);
+
+			HitboxDamagerOptions damagerOptions = new HitboxDamagerOptions();
+			damagerOptions.hitBox = hitBox;
+			damagerOptions.spellHitbox = spellHitbox;
+			damagerOptions.damagePercent = 4.910256f;
+			damagerOptions.damageType = Stats.physicalDamageType;
+			damagerOptions.path = "Prefabs/SkillPrefabs/MeleeConeHitbox";
+			StartCoroutine(waitFewFramesAndMakeDamage (damagerOptions));
 			StartCoroutine (waitSkillEndAndClearColliders ());
 
 
@@ -239,12 +257,13 @@ public class Skills : MonoBehaviour {
 			spellHitbox.ignoreColliders.Add (gameObject.GetComponent<SphereCollider> ());
 			spellHitbox.ignoreColliders.Add (gameObject.GetComponent<BoxCollider> ());
 
-			StartCoroutine(waitFewFramesAndMakeDamage (hitBox, 
-				spellHitbox, 
-				1.705128f,
-				Stats.physicalDamageType,
-				"Prefabs/SkillPrefabs/CirclePunchHitbox")
-			);
+			HitboxDamagerOptions damagerOptions = new HitboxDamagerOptions();
+			damagerOptions.hitBox = hitBox;
+			damagerOptions.spellHitbox = spellHitbox;
+			damagerOptions.damagePercent = 1.705128f;
+			damagerOptions.damageType = Stats.physicalDamageType;
+			damagerOptions.path = "Prefabs/SkillPrefabs/CirclePunchHitbox";
+			StartCoroutine(waitFewFramesAndMakeDamage (damagerOptions));
 			break;
 		case 2:
 			GameObject hitBox2 = ObjectsPool.PullObject ("Prefabs/SkillPrefabs/CirclePunchHitbox");
@@ -256,12 +275,14 @@ public class Skills : MonoBehaviour {
 			spellHitbox2.ignoreColliders.Add (gameObject.GetComponent<SphereCollider> ());
 			spellHitbox2.ignoreColliders.Add (gameObject.GetComponent<BoxCollider> ());
 
-			StartCoroutine(waitFewFramesAndMakeDamage (hitBox2, 
-				spellHitbox2, 
-				1.705128f,
-				Stats.physicalDamageType,
-				"Prefabs/SkillPrefabs/CirclePunchHitbox")
-			);
+
+			HitboxDamagerOptions damagerOptions2 = new HitboxDamagerOptions();
+			damagerOptions2.hitBox = hitBox2;
+			damagerOptions2.spellHitbox = spellHitbox2;
+			damagerOptions2.damagePercent = 1.705128f;
+			damagerOptions2.damageType = Stats.physicalDamageType;
+			damagerOptions2.path = "Prefabs/SkillPrefabs/CirclePunchHitbox";
+			StartCoroutine(waitFewFramesAndMakeDamage (damagerOptions2));
 			break;
 
 		case 3: 
@@ -328,12 +349,15 @@ public class Skills : MonoBehaviour {
 			spellHitbox.ignoreColliders.Add (gameObject.GetComponent<SphereCollider> ());
 			spellHitbox.ignoreColliders.Add (gameObject.GetComponent<BoxCollider> ());
 
-			StartCoroutine(waitFewFramesAndMakeDamage (hitBox, 
-				spellHitbox,
-				2.98718f,
-				Stats.physicalDamageType,
-				"Prefabs/SkillPrefabs/MeleeWaveHitbox")
-			);
+
+			HitboxDamagerOptions damagerOptions = new HitboxDamagerOptions();
+			damagerOptions.hitBox = hitBox;
+			damagerOptions.spellHitbox = spellHitbox;
+			damagerOptions.damagePercent = 2.98718f;
+			damagerOptions.damageType = Stats.physicalDamageType;
+			damagerOptions.path = "Prefabs/SkillPrefabs/MeleeWaveHitbox";
+
+			StartCoroutine(waitFewFramesAndMakeDamage (damagerOptions));
 			StartCoroutine (waitSkillEndAndClearColliders ());
 
 
@@ -374,20 +398,11 @@ public class Skills : MonoBehaviour {
 	public void ThunderClap(bool isSecondPart = false){
 		currentAction = "ThunderClap";
 		if (isSecondPart) {
-			//Debug.Log ("azaz");
 			GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Melee/ThunderClapAir");
 			Effect effect = effectObject.GetComponent<Effect> ();
 			effect.path = "Prefabs/Particles/Melee/ThunderClapAir";
 			EffectOptions effectOptions = new EffectOptions ();
-			//effect.transform.parent = nullEffectPosition.transform;
 			Vector3 effectPosition = nullEffectPosition.transform.position + effect.nullPositionCoords;
-			//if(characterAPI.transform.localScale.x < 0){
-				//Debug.Log ("lols");
-				//effectPosition = nullEffectPosition.transform.position +
-				//	new Vector3 (effect.nullPositionCoords.x * -1, effect.nullPositionCoords.y, effect.nullPositionCoords.z);
-				//effectOptions.revertRotationY = true;	
-
-			//}
 
 			effectOptions.isLocalPosition = false;
 			effectOptions.transformPosition = effectPosition;
@@ -403,7 +418,6 @@ public class Skills : MonoBehaviour {
 			thunderClapHitbox.spellHitbox.ignoreColliders.Add (characterAPI.sphereCollider);
 			thunderClapHitbox.spellHitbox.ignoreColliders.Add (characterAPI.boxCollider);
 			hitBox.transform.parent = nullSkillPosition.transform;
-			//SpellHitbox spellHitbox = hitBox.GetComponent<SpellHitbox> ();
 			hitBox.transform.localPosition = thunderClapHitbox.spellHitbox.nullSpellPosition;
 			hitBox.transform.localScale = thunderClapHitbox.spellHitbox.nullSpellScale;
 
@@ -417,7 +431,110 @@ public class Skills : MonoBehaviour {
 	}
 
 
+	public void BlackHole(bool isSecondPart){
+		currentAction = "BlackHole";
+		if (isSecondPart) {
+			GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Melee/BlackHole");
+			Effect effect = effectObject.GetComponent<Effect> ();
+			effect.path = "Prefabs/Particles/Melee/BlackHole";
+			EffectOptions effectOptions = new EffectOptions ();
+			//effect.transform.parent = nullEffectPosition.transform;
+			Vector3 effectPosition = nullEffectPosition.transform.position + effect.nullPositionCoords;
+			if(characterAPI.transform.localScale.x < 0){
+				effectPosition = nullEffectPosition.transform.position +
+					new Vector3 (effect.nullPositionCoords.x * -1, effect.nullPositionCoords.y, effect.nullPositionCoords.z);
+				effectOptions.revertRotationY = true;	
 
+			}
+
+			effectOptions.isLocalPosition = false;
+			effectOptions.transformPosition = effectPosition;
+			effectOptions.isRandomDuration = false;
+			effectOptions.duration = 2f;
+			effect.StartEffect (effectOptions);
+
+			GameObject hitBox = ObjectsPool.PullObject ("Prefabs/SkillPrefabs/blackHoleHitbox");
+			SpellHitbox spellHitbox = hitBox.GetComponent<SpellHitbox> ();
+			hitBox.transform.position = nullSkillPosition.transform.position + spellHitbox.nullSpellPosition;
+			hitBox.transform.localScale = spellHitbox.nullSpellScale;
+			if(characterAPI.transform.localScale.x < 0){
+				spellHitbox.FlipWorld();	
+			}
+			spellHitbox.ignoreColliders.Add (gameObject.GetComponent<SphereCollider> ());
+			spellHitbox.ignoreColliders.Add (gameObject.GetComponent<BoxCollider> ());
+			spellHitbox.path = "Prefabs/SkillPrefabs/blackHoleHitbox";
+
+
+			SpellHitbox.ObjectsAction spellHitboxAction = (CharacterAPI targetAPI) => {
+				targetAPI.stats.MakeDamage(SkillDamage(-0.3717949f, Stats.physicalDamageType), Stats.physicalDamageType, true);
+				StartCoroutine(targetAPI.movementController.MovementToObjectWithTimer(2f, spellHitbox.centerTransform, new Vector2(5, 5f)));
+			};
+
+			StartCoroutine(spellHitbox.MakeObjectsAction(spellHitboxAction));
+
+		} else {
+			if (IsAction ()) {
+				anim.Play ("actionBlackHole", 1);
+			} else {
+				anim.Play ("blackHole", 1);
+			}
+			StartCoroutine (WaitAnimationAction ("blackHole", 1));
+			//StartCoroutine(StunWhileAnimation("blackHole", 1));
+		}
+	}
+
+
+
+	public void SiphonLife(bool isSecondPart = false){
+		currentAction = "SiphonLife";
+		if (isSecondPart) {
+			GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Melee/siphonLife");
+			Effect effect = effectObject.GetComponent<Effect> ();
+			effect.path = "Prefabs/Particles/Melee/siphonLife";
+			EffectOptions effectOptions = new EffectOptions ();
+			effect.transform.parent = nullEffectPosition.transform;
+			effectOptions.transformPosition = effect.nullPositionCoords;
+			effectOptions.isRandomDuration = false;
+			effectOptions.duration = 1f;
+			effect.StartEffect (effectOptions);
+
+			GameObject hitBox = ObjectsPool.PullObject ("Prefabs/SkillPrefabs/siphonLifeHitbox");
+			SpellHitbox spellHitbox = hitBox.GetComponent<SpellHitbox> ();
+			hitBox.transform.position = nullSkillPosition.transform.position + spellHitbox.nullSpellPosition;
+			hitBox.transform.localScale = spellHitbox.nullSpellScale;
+			if(characterAPI.transform.localScale.x < 0){
+				spellHitbox.FlipWorld();	
+			}
+			spellHitbox.ignoreColliders.Add (gameObject.GetComponent<SphereCollider> ());
+			spellHitbox.ignoreColliders.Add (gameObject.GetComponent<BoxCollider> ());
+			spellHitbox.path = "Prefabs/SkillPrefabs/siphonLifeHitbox";
+
+
+			SpellHitbox.ObjectsAction spellHitboxAction = (CharacterAPI targetAPI) => {
+				int damage = SkillDamage(-0.8589743f, Stats.physicalDamageType);
+				targetAPI.stats.MakeDamage(damage, Stats.physicalDamageType, true);
+				stats.RestoreHealth(SkillDamage(2.346154f, Stats.physicalDamageType));
+
+				if(IsCritical()){
+					stats.RestoreHealth(damage);
+				}
+				//StartCoroutine(targetAPI.movementController.MovementToObjectWithTimer(2f, spellHitbox.centerTransform, new Vector2(5, 5f)));
+			};
+
+			StartCoroutine(spellHitbox.MakeObjectsAction(spellHitboxAction));
+		} else {
+			//Debug.Log ("lol");
+			if (IsAction ()) {
+				Debug.Log ("lol");
+				anim.Play ("actionSiphonLife", 1);
+				StartCoroutine (WaitAnimationAction ("actionSiphonLife", 1));
+			} else {
+				anim.Play ("siphonLife", 1);
+				StartCoroutine (WaitAnimationAction ("siphonLife", 1));
+			}
+
+		}
+	}
 
 
 
@@ -428,6 +545,65 @@ public class Skills : MonoBehaviour {
 
 
 	/************************************************* Fire *********************************************/
+	public void FastShot(bool isSecondPart = false){
+		currentAction = "FastShot";
+		if (isSecondPart) {
+			RaycastHit hit;
+			float scaleDirectionX = 1;
+			if (transform.localScale.x < 0) {
+				scaleDirectionX = -1;
+			}
+			Physics.Raycast (
+				transform.position, 
+				new Vector3(scaleDirectionX, shotDirectionVector.y, shotDirectionVector.z),
+				out hit, 
+				8f, 
+				(1 << LayerMask.NameToLayer("Enemy")) | (1 << LayerMask.NameToLayer("Ground")) /*Enemy*/
+			);
+			//Physics.Raycast (new Vec);
+			if (hit.collider != null) {
+				if (hit.collider.gameObject.layer != LayerMask.NameToLayer ("Ground")) {
+					int damage = SkillDamage (-0.2179487f, Stats.hybridDamageType);
+					//Debug.Log (damage);
+					CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI> ();
+					targetCharacterAPI.stats.MakeDamage (damage, Stats.hybridDamageType, true);
+					stats.AddMeleeEnergyPoints (9, true);
+
+					GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Fire/ExplosiveBullet");
+					Effect effect = effectObject.GetComponent<Effect> ();
+					effect.path = "Prefabs/Particles/Fire/ExplosiveBullet";
+					EffectOptions effectOptions = new EffectOptions ();
+					effect.transform.parent = targetCharacterAPI.skills.nullEffectPosition.transform;
+					effectOptions.isRandomDuration = false;
+					effectOptions.duration = 0.5f;
+					float randomYposition = Random.Range (effect.nullPositionCoords.y - 0.100f, effect.nullPositionCoords.y + 0.100f);
+					effectOptions.transformPosition = new Vector3 (effect.nullPositionCoords.x, randomYposition, effect.nullPositionCoords.z);
+					effect.StartEffect (effectOptions);
+				}
+			}
+		} else {
+			if (characterAPI.movementController.movement.y < 0.8f && characterAPI.movementController.movement.y > -0.8f) {
+				anim.Play ("fastShot90", 2);
+				shotDirectionVector = new Vector3 (1f, 0, 0);
+				StartCoroutine (WaitAnimationAction ("fastShot90", 2));
+			} else {
+				if (characterAPI.movementController.movement.y > 0.8f) {
+					anim.Play ("fastShot135", 2);
+					shotDirectionVector = new Vector3 (1f, 1f, 0);
+					StartCoroutine (WaitAnimationAction ("fastShot135", 2));
+				} else {
+					if (characterAPI.movementController.movement.y < -0.8f) {
+						anim.Play ("fastShot45", 2);
+						shotDirectionVector = new Vector3 (1f, -1f, 0);
+						StartCoroutine (WaitAnimationAction ("fastShot45", 2));
+					}
+				}
+			}
+
+		}
+	}
+
+
 	private Vector3 aimCoord;
 	public void Grenade(Vector3 grenadeCoord){
 		aimCoord = grenadeCoord;
@@ -468,12 +644,15 @@ public class Skills : MonoBehaviour {
 			spellHitbox.ignoreColliders.Add (gameObject.GetComponent<SphereCollider> ());
 			spellHitbox.ignoreColliders.Add (gameObject.GetComponent<BoxCollider> ());
 
-			StartCoroutine(waitFewFramesAndMakeDamage (hitBox, 
-				spellHitbox, 
-				1.064103f,
-				Stats.hybridDamageType,
-				"Prefabs/SkillPrefabs/GrenadeHitbox")
-			);
+
+			HitboxDamagerOptions damagerOptions = new HitboxDamagerOptions();
+			damagerOptions.hitBox = hitBox;
+			damagerOptions.spellHitbox = spellHitbox;
+			damagerOptions.damagePercent = 1.064103f;
+			damagerOptions.damageType = Stats.hybridDamageType;
+			damagerOptions.path = "Prefabs/SkillPrefabs/GrenadeHitbox";
+
+			StartCoroutine(waitFewFramesAndMakeDamage (damagerOptions));
 			StartCoroutine (waitSkillEndAndClearColliders ());
 		} else {
 			//Debug.Log ("lol");
@@ -514,14 +693,16 @@ public class Skills : MonoBehaviour {
 			spellHitbox.ignoreColliders.Add (gameObject.GetComponent<SphereCollider> ());
 			spellHitbox.ignoreColliders.Add (gameObject.GetComponent<BoxCollider> ());
 
-			StartCoroutine(waitFewFramesAndMakeDamage (hitBox, 
-				spellHitbox, 
-				0.1025641f,
-				Stats.hybridDamageType,
-				"Prefabs/SkillPrefabs/RocketJumpHitBox")
-			);
+
+			HitboxDamagerOptions damagerOptions = new HitboxDamagerOptions();
+			damagerOptions.hitBox = hitBox;
+			damagerOptions.spellHitbox = spellHitbox;
+			damagerOptions.damagePercent = 0.1025641f;
+			damagerOptions.damageType = Stats.hybridDamageType;
+			damagerOptions.path = "Prefabs/SkillPrefabs/GrenadeHitbox";
+
+			StartCoroutine(waitFewFramesAndMakeDamage (damagerOptions));
 			StartCoroutine (waitSkillEndAndClearColliders ());
-			//characterAPI.rigidbody.AddForce (350 * directionIndex, 350, 0);
 			characterAPI.movementController.AddForceWithStartAnimation(new Vector3(350 * directionIndex, 350, 0), "rocketJump", 2);
 			//stats.inJump = true;
 		} else {
@@ -529,6 +710,314 @@ public class Skills : MonoBehaviour {
 			StartCoroutine (WaitAnimationAction("rocketJump", 2));
 			StartCoroutine (StunWhileAnimation ("rocketJump", 2));
 			characterAPI.rigidbody.velocity = new Vector3 (0, 0, 0);
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/************************************************Elemental****************************************************/
+	public void FastCast(bool isSecondPart = false){
+		currentAction = "FastCast";
+		if (isSecondPart) {
+			RaycastHit hit;
+			float scaleDirectionX = 1;
+			if (transform.localScale.x < 0) {
+				scaleDirectionX = -1;
+			}
+
+
+
+			GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Elemental/fireball");
+			Effect effect = effectObject.GetComponent<Effect> ();
+			SpellBall spellBall = effectObject.GetComponent<SpellBall> ();
+			spellBall.characterAPI = characterAPI;
+			spellBall.damagePercent = -0.2179487f;
+			spellBall.damageType = Stats.elementalDamageType;
+			spellBall.direction = new Vector3 (scaleDirectionX, shotDirectionVector.y, shotDirectionVector.z);
+			spellBall.speed = 0.15f;
+			spellBall.time = 2f;
+			spellBall.currentTime = 0;
+			spellBall.ready = true;
+			spellBall.path = "Prefabs/Particles/Elemental/fireball";
+			spellBall.energyPoints = 9;
+			spellBall.ignoreColliders.Add (characterAPI.boxCollider);
+			spellBall.ignoreColliders.Add (characterAPI.sphereCollider);
+			spellBall.efficiency = 100f + (float)(characterAPI.stats.magicEnergy);
+			effect.path = "Prefabs/Particles/Elemental/fireball";
+			EffectOptions effectOptions = new EffectOptions ();
+			//effect.transform.parent = targetCharacterAPI.skills.nullEffectPosition.transform;
+			//effectOptions.isRandomDuration = false;
+			//effectOptions.duration = 0.5f;
+			effectOptions.loop = true;
+			//float randomYposition = Random.Range (effect.nullPositionCoords.y - 0.100f, effect.nullPositionCoords.y + 0.100f);
+			effectOptions.transformPosition = armsPosition.position;
+			effect.StartEffect (effectOptions);
+		} else {
+			if (characterAPI.movementController.movement.y < 0.8f && characterAPI.movementController.movement.y > -0.8f) {
+				anim.Play ("fastCast90", 3);
+				shotDirectionVector = new Vector3 (1f, 0, 0);
+				StartCoroutine (WaitAnimationAction ("fastCast90", 3));
+			} else {
+				if (characterAPI.movementController.movement.y > 0.8f) {
+					anim.Play ("fastCast135", 3);
+					//Debug.Log ("asdf");
+					shotDirectionVector = new Vector3 (1f, 1f, 0);
+					StartCoroutine (WaitAnimationAction ("fastCast135", 3));
+				} else {
+					if (characterAPI.movementController.movement.y < -0.8f) {
+						anim.Play ("fastCast45", 3);
+						shotDirectionVector = new Vector3 (1f, -1f, 0);
+						StartCoroutine (WaitAnimationAction ("fastCast45", 3));
+					}
+				}
+			}
+
+		}
+	}
+
+
+
+
+	public void ChainLavaBurst(bool isSecondPart = false){
+		currentAction = "ChainLavaBurst";
+		if (isSecondPart) {
+			RaycastHit hit;
+			float scaleDirectionX = 1;
+			if (transform.localScale.x < 0) {
+				scaleDirectionX = -1;
+			}
+			Physics.Raycast (
+				transform.position, 
+				new Vector3(scaleDirectionX, shotDirectionVector.y, shotDirectionVector.z),
+				out hit, 
+				8f, 
+				(1 << LayerMask.NameToLayer("Enemy")) | (1 << LayerMask.NameToLayer("Ground")) /*Enemy*/
+			);
+			//Physics.Raycast (new Vec);
+			if (hit.collider != null) {
+				if (hit.collider.gameObject.layer != LayerMask.NameToLayer ("Ground")) {
+					int damage = SkillDamage (-0.2179487f, Stats.hybridDamageType);
+					//Debug.Log (damage);
+					CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI> ();
+					//targetCharacterAPI.stats.MakeDamage (damage, Stats.hybridDamageType, true);
+					//stats.AddMeleeEnergyPoints (9, true);
+					List<Collider> spellUserIgnoreColliders = new List<Collider>();
+					spellUserIgnoreColliders.Add (characterAPI.boxCollider);
+					spellUserIgnoreColliders.Add (characterAPI.sphereCollider);
+					LavaBurstPart (targetCharacterAPI, spellUserIgnoreColliders, 100f);
+
+
+				}
+			}
+		} else {
+			if (characterAPI.movementController.movement.y < 0.8f && characterAPI.movementController.movement.y > -0.8f) {
+				anim.Play ("chainLavaBurst90", 3);
+				shotDirectionVector = new Vector3 (1f, 0, 0);
+				StartCoroutine (WaitAnimationAction ("chainLavaBurst90", 3));
+				StartCoroutine (StunWhileAnimation ("chainLavaBurst90", 3));
+			} else {
+				if (characterAPI.movementController.movement.y > 0.8f) {
+					anim.Play ("chainLavaBurst135", 3);
+					//Debug.Log ("asdf");
+					shotDirectionVector = new Vector3 (1f, 1f, 0);
+					StartCoroutine (WaitAnimationAction ("chainLavaBurst135", 3));
+					StartCoroutine (StunWhileAnimation ("chainLavaBurst135", 3));
+				} else {
+					if (characterAPI.movementController.movement.y < -0.8f) {
+						anim.Play ("chainLavaBurst45", 3);
+						shotDirectionVector = new Vector3 (1f, -1f, 0);
+						StartCoroutine (WaitAnimationAction ("chainLavaBurst45", 3));
+						StartCoroutine (StunWhileAnimation ("chainLavaBurst45", 3));
+					}
+				}
+			}
+		}
+	}
+
+	void LavaBurstPart(CharacterAPI targetAPI, List<Collider> spellUserIgnoreColliders, float percentAndDamage){
+		GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Elemental/lavaBurst");
+		Effect effect = effectObject.GetComponent<Effect> ();
+		effect.path = "Prefabs/Particles/Elemental/lavaBurst";
+		EffectOptions effectOptions = new EffectOptions ();
+		effect.transform.parent = targetAPI.skills.nullEffectPosition.transform;
+		effectOptions.isRandomDuration = false;
+		effectOptions.duration = 1.5f;
+		//float randomYposition = Random.Range (effect.nullPositionCoords.y - 0.100f, effect.nullPositionCoords.y + 0.100f);
+		effectOptions.transformPosition = effect.nullPositionCoords;
+		effect.StartEffect (effectOptions);
+
+		GameObject hitBox = ObjectsPool.PullObject ("Prefabs/SkillPrefabs/lavaBurstHitbox");
+		//hitBox.transform.parent = nullSkillPosition.transform;
+		SpellHitbox spellHitbox = hitBox.GetComponent<SpellHitbox> ();
+		//hitBox.transform.parent = targetAPI.skills.nullEffectPosition.transform;
+		hitBox.transform.position =  targetAPI.transform.position + spellHitbox.nullSpellPosition;
+		hitBox.transform.localScale = spellHitbox.nullSpellScale;
+		spellHitbox.ignoreColliders = spellUserIgnoreColliders;
+
+
+		HitboxDamagerOptions damagerOptions = new HitboxDamagerOptions();
+		damagerOptions.hitBox = hitBox;
+		damagerOptions.spellHitbox = spellHitbox;
+		damagerOptions.damagePercent = 0.1025641f;
+		damagerOptions.damageType = Stats.elementalDamageType;
+		damagerOptions.path = "Prefabs/SkillPrefabs/lavaBurstHitbox";
+		damagerOptions.efficienty = percentAndDamage;
+
+		StartCoroutine(waitFewFramesAndMakeDamage (damagerOptions));
+		StartCoroutine (waitSkillEndAndClearColliders ());
+
+		float randomPercentAndDamage = Random.Range (0, percentAndDamage);
+		StartCoroutine (WaitFewSecondsAndTryLavaBurst(1f, targetAPI, randomPercentAndDamage, spellUserIgnoreColliders));
+	}
+
+	IEnumerator WaitFewSecondsAndTryLavaBurst(float waitTime, CharacterAPI targetAPI, float percentAndDamage, List<Collider> spellUserIgnoreColliders){
+		float randomPercentAndDamage = Random.Range (0, 100.01f);
+		if (randomPercentAndDamage <= percentAndDamage) {
+			Timer timer = new Timer ();
+			timer.SetTimer (waitTime);
+			while (!timer.TimeIsOver ()) {
+				yield return null;
+			}
+			RaycastHit[] rightHits = Physics.RaycastAll (transform.position, 
+				                        new Vector3 (1, 0, 0), 
+				                        3f, 
+				                        (1 << LayerMask.NameToLayer ("Enemy")) | (1 << LayerMask.NameToLayer ("Ground"))
+			                        );
+
+			RaycastHit[] leftHits = Physics.RaycastAll (transform.position, 
+				                       new Vector3 (1, 0, 0), 
+				                       3f, 
+				                       (1 << LayerMask.NameToLayer ("Enemy")) | (1 << LayerMask.NameToLayer ("Ground"))
+			                       );
+			List<RaycastHit> hits = new List<RaycastHit> ();
+			foreach (RaycastHit hit in rightHits) {
+				if (hit.collider.gameObject != targetAPI.gameObject) {
+					hits.Add (hit);
+				}
+			}
+			foreach (RaycastHit hit in leftHits) {
+				if (hit.collider.gameObject != targetAPI.gameObject) {
+					hits.Add (hit);
+				}
+			}
+
+			if (hits.Count != 0) {
+				int hitIndex = Random.Range (1, hits.Count + 1);
+				RaycastHit hit = hits [hitIndex - 1];
+				CharacterAPI newTargetAPI = hit.collider.gameObject.GetComponent<CharacterAPI> ();
+
+				LavaBurstPart (newTargetAPI, spellUserIgnoreColliders, randomPercentAndDamage);
+
+			}
+		}
+		yield break;
+	}
+
+
+
+	public void PhysicalShield(bool isSecondPart = false){
+		currentAction = "PhysicalShield";
+		if (isSecondPart) {
+			stats.AddShieldPoints (SkillDamage(2.346154f, Stats.physicalDamageType), Stats.physicalDamageType);
+			if (stats.shieldTimer.TimeIsOver()) {
+				GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Elemental/physicalShield");
+				Effect effect = effectObject.GetComponent<Effect> ();
+				effect.path = "Prefabs/Particles/Elemental/physicalShield";
+				EffectOptions effectOptions = new EffectOptions ();
+				effect.transform.parent = nullEffectPosition.transform;
+				effectOptions.transformPosition = effect.nullPositionCoords;
+				effectOptions.isRandomDuration = false;
+				//effectOptions.duration = 1f;
+				effectOptions.loop = true;
+				effect.StartEffect (effectOptions);
+				stats.shieldTimer.SetTimer (10f);
+				Timer.TimerAction timerAction = () => {
+					stats.RemoveShieldPoints (stats.physicalShield, Stats.physicalDamageType);
+					ObjectsPool.PushObject ("Prefabs/Particles/Elemental/physicalShield", effectObject);
+				};
+
+				StartCoroutine(stats.shieldTimer.ActionAfterTimer(timerAction));
+			}else{
+				stats.shieldTimer.SetTimer(10f);
+			}
+		} else {
+			anim.Play ("castShield", 3);
+			StartCoroutine (WaitAnimationAction("castShield", 3));
+		}
+	}
+
+	public void ElementalShield(bool isSecondPart = false){
+		currentAction = "ElementalShield";
+		if (isSecondPart) {
+			stats.AddShieldPoints (SkillDamage(2.346154f, Stats.elementalDamageType), Stats.elementalDamageType);
+			if (stats.shieldTimer.TimeIsOver()) {
+				GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Elemental/elementalShield");
+				Effect effect = effectObject.GetComponent<Effect> ();
+				effect.path = "Prefabs/Particles/Elemental/elementalShield";
+				EffectOptions effectOptions = new EffectOptions ();
+				effect.transform.parent = nullEffectPosition.transform;
+				effectOptions.transformPosition = effect.nullPositionCoords;
+				effectOptions.isRandomDuration = false;
+				//effectOptions.duration = 1f;
+				effectOptions.loop = true;
+				effect.StartEffect (effectOptions);
+				stats.shieldTimer.SetTimer (4f);
+				Timer.TimerAction timerAction = () => {
+					stats.RemoveShieldPoints (stats.elementalShield, Stats.elementalDamageType);
+					ObjectsPool.PushObject ("Prefabs/Particles/Elemental/elementalShield", effectObject);
+				};
+
+				StartCoroutine(stats.shieldTimer.ActionAfterTimer(timerAction));
+			}else{
+				stats.shieldTimer.SetTimer(4f);
+			}
+		} else {
+			anim.Play ("castShield", 3);
+			StartCoroutine (WaitAnimationAction("castShield", 3));
+		}
+	}
+
+
+	public void HybridShield(bool isSecondPart = false){
+		currentAction = "HybridShield";
+		if (isSecondPart) {
+			stats.AddShieldPoints ((int)(SkillDamage(2.346154f, Stats.elementalDamageType)/2), Stats.hybridDamageType);
+			stats.AddShieldPoints ((int)(SkillDamage(2.346154f, Stats.physicalDamageType)/2), Stats.hybridDamageType);
+			if (stats.shieldTimer.TimeIsOver()) {
+				GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Elemental/hybridShield");
+				Effect effect = effectObject.GetComponent<Effect> ();
+				effect.path = "Prefabs/Particles/Elemental/hybridShield";
+				EffectOptions effectOptions = new EffectOptions ();
+				effect.transform.parent = nullEffectPosition.transform;
+				effectOptions.transformPosition = effect.nullPositionCoords;
+				effectOptions.isRandomDuration = false;
+				//effectOptions.duration = 1f;
+				effectOptions.loop = true;
+				effect.StartEffect (effectOptions);
+				stats.shieldTimer.SetTimer (4f);
+				Timer.TimerAction timerAction = () => {
+					stats.RemoveShieldPoints (stats.hybridShield, Stats.hybridDamageType);
+					ObjectsPool.PushObject ("Prefabs/Particles/Elemental/hybridShield", effectObject);
+				};
+
+				StartCoroutine(stats.shieldTimer.ActionAfterTimer(timerAction));
+			}else{
+				stats.shieldTimer.SetTimer(4f);
+			}
+		} else {
+			anim.Play ("castShield", 3);
+			StartCoroutine (WaitAnimationAction("castShield", 3));
 		}
 	}
 
@@ -563,41 +1052,42 @@ public class Skills : MonoBehaviour {
 		yield break;
 	}
 
-	IEnumerator waitFewFramesAndMakeDamage(GameObject hitBox, SpellHitbox spellHitbox, float damagePercent, int damageType, string path, bool withStun = false, float stunTime = 0){
+	IEnumerator waitFewFramesAndMakeDamage(HitboxDamagerOptions damagerOptions){
 		skillProcessCount = skillProcessCount + 1;
 		int zero = 0;
 		while (zero < 4) {
-			if (spellHitbox.objects.Count == 0) {
+			if (damagerOptions.spellHitbox.objects.Count == 0) {
 				zero += 1;
 				yield return null;
 			} else {
 				foreach (Collider col in ignoreColliders) {
-					spellHitbox.ignoreColliders.Add (col);
+					damagerOptions.spellHitbox.ignoreColliders.Add (col);
 				}
 
-				foreach (GameObject obj in spellHitbox.GetObjectsWithoutIgnoredColliders()) {
+				foreach (GameObject obj in damagerOptions.spellHitbox.GetObjectsWithoutIgnoredColliders()) {
+					//Debug.Log ("Lol");
 					CharacterAPI enemyCharacterAPI = obj.GetComponent<CharacterAPI> ();
-					if (damageType == Stats.hybridDamageType) {
-						enemyCharacterAPI.stats.MakeDamage (SkillDamage (damagePercent, Stats.physicalDamageType), Stats.physicalDamageType, true);
-						enemyCharacterAPI.stats.MakeDamage (SkillDamage (damagePercent, Stats.elementalDamageType), Stats.elementalDamageType, true);
+					if (damagerOptions.damageType == Stats.hybridDamageType) {
+						enemyCharacterAPI.stats.MakeDamage (SkillDamage (damagerOptions.damagePercent, Stats.physicalDamageType, damagerOptions.efficienty), Stats.physicalDamageType, true);
+						enemyCharacterAPI.stats.MakeDamage (SkillDamage (damagerOptions.damagePercent, Stats.elementalDamageType, damagerOptions.efficienty), Stats.elementalDamageType, true);
 					} else {
-						enemyCharacterAPI.stats.MakeDamage (SkillDamage (damagePercent, damageType), damageType, true);
+						enemyCharacterAPI.stats.MakeDamage (SkillDamage (damagerOptions.damagePercent, damagerOptions.damageType, damagerOptions.efficienty), damagerOptions.damageType, true);
 					}
 
-					if (withStun) {
-						enemyCharacterAPI.stats.FullStun (stunTime);
+					if (damagerOptions.withStun) {
+						enemyCharacterAPI.stats.FullStun (damagerOptions.stunTime);
 					}
 					ignoreColliders.Add (enemyCharacterAPI.sphereCollider);
-					spellHitbox.ignoreColliders.Add (enemyCharacterAPI.sphereCollider);
+					damagerOptions.spellHitbox.ignoreColliders.Add (enemyCharacterAPI.sphereCollider);
 					ignoreColliders.Add (enemyCharacterAPI.boxCollider);
-					spellHitbox.ignoreColliders.Add (enemyCharacterAPI.boxCollider);
+					damagerOptions.spellHitbox.ignoreColliders.Add (enemyCharacterAPI.boxCollider);
 				}
 
-				spellHitbox.Clear ();
+				damagerOptions.spellHitbox.Clear ();
 				zero = 4;
 			}
 		}
-		ObjectsPool.PushObject (path, hitBox);
+		ObjectsPool.PushObject (damagerOptions.path, damagerOptions.hitBox);
 		skillProcessCount = skillProcessCount - 1;
 		yield break;
 	}

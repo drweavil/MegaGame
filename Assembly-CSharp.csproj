@@ -86,7 +86,9 @@
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\PlayerHealthBar.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\PlayerScript.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\ReskinController.cs" />
+     <Compile Include="Assets\Scripts\PlayerEnemyScripts\Spells\HitboxDamagerOptions.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\Spells\Skills.cs" />
+     <Compile Include="Assets\Scripts\PlayerEnemyScripts\Spells\SpellBall.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\Spells\SpellHitbox.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\Spells\StreamHitbox.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\Spells\ThunderClapHitbox.cs" />

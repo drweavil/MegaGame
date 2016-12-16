@@ -6,6 +6,7 @@ public class ThunderClapHitbox : MonoBehaviour {
 	public SpellHitbox spellHitbox;
 	public float damagePercent;
 	public CharacterAPI characterAPI;
+	public float efficiency = 100f;
 	string path = "Prefabs/SkillPrefabs/ThunderClapHitBoxCenter";
 
 
@@ -32,7 +33,7 @@ public class ThunderClapHitbox : MonoBehaviour {
 						enemyTarget.stats.FullStun (3f);
 					} 
 					//Debug.Log (characterAPI.skills.SkillDamage (2.98718f, Stats.physicalDamageType));
-					enemyTarget.stats.MakeDamage (characterAPI.skills.SkillDamage (2.98718f, Stats.physicalDamageType), Stats.physicalDamageType, true);
+					enemyTarget.stats.MakeDamage (characterAPI.skills.SkillDamage (2.98718f, Stats.physicalDamageType, efficiency), Stats.physicalDamageType, true);
 				}
 			}
 			//yield return null;

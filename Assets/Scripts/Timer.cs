@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Timer : MonoBehaviour {
 	private float endTime = 0;
+	public delegate void TimerAction ();
 
 	public void SetTimer(float seconds){
 		endTime = Time.time + seconds;
@@ -14,5 +15,21 @@ public class Timer : MonoBehaviour {
 			itIs = true;
 		}
 		return itIs;
+	}
+
+	public float ResidualTime(){
+		float value = 0;
+		if (endTime > Time.time) {
+			value = endTime - Time.time;
+		}
+		return value;
+	}
+
+	public IEnumerator ActionAfterTimer(TimerAction action){
+		while (!TimeIsOver ()) {
+			yield return null;
+		}
+		action();
+		yield break;
 	}
 }

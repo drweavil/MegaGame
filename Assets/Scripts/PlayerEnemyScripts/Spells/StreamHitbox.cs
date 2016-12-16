@@ -10,6 +10,7 @@ public class StreamHitbox : MonoBehaviour {
 	public Vector3 nullSpellScale;
 	public float damagePercent;
 	public int damageType;
+	public float efficiency = 100f;
 	//public float crit;
 	public CharacterAPI characterAPI;
 	public bool readyToTrigger = false;
@@ -22,7 +23,7 @@ public class StreamHitbox : MonoBehaviour {
 			   col.gameObject.tag == "Character") {
 				objects.Add (col.gameObject);
 				CharacterAPI enemyTarget = col.gameObject.GetComponent<CharacterAPI> ();
-				enemyTarget.stats.MakeDamage (characterAPI.skills.SkillDamage (damagePercent, damageType), Stats.physicalDamageType, true);
+				enemyTarget.stats.MakeDamage (characterAPI.skills.SkillDamage (damagePercent, damageType, efficiency), Stats.physicalDamageType, true);
 				Debug.Log ("lol");
 			}
 		}

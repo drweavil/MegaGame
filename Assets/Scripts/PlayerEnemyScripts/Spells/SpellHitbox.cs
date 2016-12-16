@@ -13,6 +13,11 @@ public class SpellHitbox : MonoBehaviour {
 	public Collider collider;
 	public Vector3 nullColliderSize;
 	public Vector3 nullColliderCenter;
+	public string path;
+	public Transform centerTransform;
+
+	public delegate void ObjectsAction (CharacterAPI targetAPI);
+
 
 	void OnTriggerEnter(Collider col){
 		if (objects.FindIndex (o => o == col.gameObject) == -1 && 
@@ -73,5 +78,29 @@ public class SpellHitbox : MonoBehaviour {
 		objects.Clear ();
 		objectColliders.Clear ();
 		ignoreColliders.Clear ();
+	}
+
+
+
+	public IEnumerator MakeObjectsAction(ObjectsAction action){
+		int frameIndex = 0;
+		while (frameIndex < 4) {
+			if (this.objects.Count == 0) {
+				frameIndex += 1;
+				yield return null;
+			} else {
+				frameIndex = 4;
+				List<GameObject> objects = GetObjectsWithoutIgnoredColliders ();
+				//Debug.Log (objects.Count);
+				foreach (GameObject obj in objects) {
+					CharacterAPI enemyTarget = obj.GetComponent<CharacterAPI> ();
+					action (enemyTarget);
+				}
+			}
+		}
+
+		Clear ();
+		ObjectsPool.PushObject (path, this.gameObject);
+		yield break;
 	}
 }

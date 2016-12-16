@@ -42,7 +42,7 @@ public class Effect : MonoBehaviour {
 			}
 		}
 
-		if (Input.GetKeyDown (KeyCode.I)) {
+		/*if (Input.GetKeyDown (KeyCode.I)) {
 			ParticleSystem.ShapeModule shape = particleSystem.shape;
 			shape.radius = 10;
 		}
@@ -50,7 +50,7 @@ public class Effect : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.O)) {
 			//lol.SetActive (true);
 			particleSystem.Play ();
-		}
+		}*/
 	}
 
 	void Awake(){
@@ -101,6 +101,11 @@ public class Effect : MonoBehaviour {
 		if (nullPositionCoords == null) {
 			nullPositionCoords = coords;
 		}
+	}
+
+	public void ExtendDuration(float seconds){
+		durationTimer.SetTimer (durationTimer.ResidualTime () + seconds);
+		effectTimer.SetTimer (effectTimer.ResidualTime () + seconds);
 	}
 
 	public void SetMeleeWaveRadius(float radius){

@@ -51,14 +51,17 @@ public class PlayerScript : MonoBehaviour {
 	}
 		
 	void Update () {
-		Debug.Log (direction);
-		/*if (Input.GetKeyDown (KeyCode.I)) {
-			StartCoroutine(stats.GetMovementSlowly (3f, 0.4f));
-		}*/
+		//Debug.Log (direction);
+		if (Input.GetKeyDown (KeyCode.I)) {
+			stats.MakeDamage (100, Stats.physicalDamageType, true);
+		}
+
 		if (!stats.withoutControl) {
 			if (direction.x == 0.0 && direction.y == 0.0) {
 				float inputX = Input.GetAxisRaw ("Horizontal");
 				float inputY = Input.GetAxisRaw ("Vertical");
+
+				anim.SetFloat ("DirectionY", inputY);
 
 				movementController.SetMovement (new Vector2 (
 					MovementController.speed.x * inputX * stats.currentSpeed, 
