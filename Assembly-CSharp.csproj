@@ -75,6 +75,11 @@
      <Compile Include="Assets\Scripts\LevelGenerator\LevelRandomPart\RandomPartBlock.cs" />
      <Compile Include="Assets\Scripts\LevelGenerator\SaveLoadManager.cs" />
      <Compile Include="Assets\Scripts\ObjectsPool.cs" />
+     <Compile Include="Assets\Scripts\PlayerEnemyScripts\AI\AIAction.cs" />
+     <Compile Include="Assets\Scripts\PlayerEnemyScripts\AI\AIActionParam.cs" />
+     <Compile Include="Assets\Scripts\PlayerEnemyScripts\AI\AIActions.cs" />
+     <Compile Include="Assets\Scripts\PlayerEnemyScripts\AI\AIController.cs" />
+     <Compile Include="Assets\Scripts\PlayerEnemyScripts\AI\AIControllerParams.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\AnimationController.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\CharacterAPI.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\Effects\Effect.cs" />

@@ -78,7 +78,8 @@ public class PlayerHealthBar : MonoBehaviour {
 
 
 
-	public void SetHealth(int currentHealth){
+	public void SetHealth(float currentHealthFloat){
+		int currentHealth = (int)(System.Math.Round(currentHealthFloat, 0));
 		float oneHealthWidthPoint = stats.maximumHealth / maximumHealthWidth;
 		healthBarRect.sizeDelta = new Vector2(currentHealth / oneHealthWidthPoint, healthBarRect.rect.height);
 		newHealthRectPosition.position = healthRectPosition;
@@ -94,7 +95,7 @@ public class PlayerHealthBar : MonoBehaviour {
 		resourceBarRect.localPosition = newResourceRectPosition.center;
 	}
 
-	public void SetShield(int currentShield){
+	public void SetShield(float currentShield){
 		if (currentShield > 0) {
 			shieldBar.SetActive (true);
 		} else {

@@ -29,6 +29,10 @@ public class MovementController : MonoBehaviour {
 	public bool isGrounded = true;
 	//bool onlyMovementStun = false;
 	bool dontUseVelocityY = false;
+	public GameObject leftSlot;
+	public CharacterAPI leftCharacterSlot;
+	public GameObject rightSlot;
+	public CharacterAPI rightCharacterSlot;
 
 
 
@@ -172,6 +176,13 @@ public class MovementController : MonoBehaviour {
 		}
 		startJumpAnimationInAction = false;
 		yield break;
+	}
+
+	public Vector2 GetCurrentSpeed(Vector2 direction){
+		return new Vector2 (
+			MovementController.speed.x * direction.x * stats.currentSpeed, 
+			MovementController.speed.y * direction.y * stats.currentSpeed
+		);
 	}
 
 	/*IEnumerator StartIdleAndJumpEndAnimation(){

@@ -10,4 +10,5 @@ public class CharacterAPI : MonoBehaviour {
 	public BoxCollider boxCollider;
 	public Rigidbody rigidbody;
 	public MovementController movementController;
+	public AIController aiController;
 }

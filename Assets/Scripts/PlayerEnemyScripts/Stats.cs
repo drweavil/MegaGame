@@ -7,14 +7,14 @@ public class Stats : MonoBehaviour {
 	public const int meleeSpec = 0, fireSpec=1, elementalSpec = 2;
 	public int specId;
 
-	public int health;
-	public int elementalShield;
-	public int physicalShield;
-	public int hybridShield;
+	public float health;
+	public float elementalShield;
+	public float physicalShield;
+	public float hybridShield;
 
-	public int maximumHealth;
+	public float maximumHealth;
 	public int stamina = 0;
-	const int staminaCoeff = 10;
+	const float staminaCoeff = 10;
 	private static float healthPercent = 0.2f;
 
 	public float physicalDamage;
@@ -50,7 +50,7 @@ public class Stats : MonoBehaviour {
 	public int meleeEnergy;
 	public int maximumMeleeEnergy = 100;
 	public int fireEnergy;
-	public int maximumFireEnergy = 100;
+	public int maximumFireEnergy = 0;
 	public int magicEnergy;
 	public int maximumMagicEnergy = 100;
 
@@ -59,6 +59,8 @@ public class Stats : MonoBehaviour {
 	public bool withoutControl = false;
 	public bool inSilence = false;
 	public bool inJump = false;
+	bool itIsBurn = false;
+	//float burnPercent = 0;
 	float minimumSpeed;
 	public float currentSpeed = 1f;
 
@@ -85,7 +87,7 @@ public class Stats : MonoBehaviour {
 
 
 	private float healthRestoreTime = 2f;
-	private int healthRestorePoints = 10;
+	private float healthRestorePoints = 10f;
 	private float healthCanRestoreTime = 5f;
 	private float meleeRemoveTime = 1f;
 	private int meleeRemovePoint = 2;
@@ -111,7 +113,7 @@ public class Stats : MonoBehaviour {
 		RestoreMaximumHealth ();*/
 		shieldTimer = new Timer ();
 		SetStatsByComplexity (600);
-		SetMaximumFireResource ();
+		//SetMaximumFireResource ();
 	}
 
 
@@ -136,7 +138,7 @@ public class Stats : MonoBehaviour {
 		if (isPlayerStats || specId == PlayerController.fire) {
 			if (canRestoreFireResourceTimer.TimeIsOver ()) {
 				if (fireResourceTimer.TimeIsOver ()) {
-					AddFireEnergyPoints (fireRestorePoint);
+					RemoveFireEnergyPoints (fireRestorePoint);
 					fireResourceTimer.SetTimer (fireRestoreTime);
 				}
 			}
@@ -155,10 +157,7 @@ public class Stats : MonoBehaviour {
 
 	public void SetMaximumHealth(){
 		maximumHealth = GetMaximumHealth();
-		healthRestorePoints = (int)Math.Round((float)GetMaximumHealth () * 0.02f);
-		if (healthRestorePoints == 0) {
-			healthRestorePoints = 1;
-		}
+		healthRestorePoints = GetMaximumHealth () * 0.02f;
 	}
 
 	public void RestoreMaximumHealth(){
@@ -166,7 +165,7 @@ public class Stats : MonoBehaviour {
 		isDeath = false;
 	}
 
-	public int GetMaximumHealth(){
+	public float GetMaximumHealth(){
 		return stamina * staminaCoeff;
 	}
 
@@ -176,23 +175,23 @@ public class Stats : MonoBehaviour {
 
 
 
-	public void MakeDamage(int damage, int damageType = -1, bool withResTimer = false){
+	public void MakeDamage(float damage, int damageType = -1, bool withResTimer = false){
 		if (damageType == physicalDamageType) {
-			damage = damage - (int)Math.Round((((float)damage*armor)/100f));
+			damage = damage - ((damage*armor)/100f);
 			if (physicalShield > 0) {
 				damage = RemoveShieldPoints (damage, Stats.physicalDamageType);
 			}
 		}
 		if (damageType == elementalDamageType) {
-			damage = damage - (int)Math.Round((((float)damage*elementalArmor)/100f));
+			damage = damage - ((damage*elementalArmor)/100f);
 			if (elementalShield > 0) {
 				damage = RemoveShieldPoints (damage, Stats.elementalDamageType);
 			}
 		}
 
 		if (hybridShield > 0) {
-			int residualDamage = RemoveShieldPoints (damage, Stats.hybridDamageType);
-			damage = (int)((damage / 2f) + residualDamage);
+			float residualDamage = RemoveShieldPoints (damage, Stats.hybridDamageType);
+			damage = (damage / 2f) + residualDamage;
 		}
 
 		if (damage < 0) {
@@ -215,7 +214,7 @@ public class Stats : MonoBehaviour {
 		}
 	}
 
-	public void AddShieldPoints(int shieldPoints, int shieldType){
+	public void AddShieldPoints(float shieldPoints, int shieldType){
 		if (Stats.physicalDamageType == shieldType) {
 			physicalShield += shieldPoints;
 			elementalShield = 0;
@@ -248,14 +247,14 @@ public class Stats : MonoBehaviour {
 	}
 
 
-	public int RemoveShieldPoints(int shieldPoints, int shieldType){
-		int residualPoints = 0;
+	public float RemoveShieldPoints(float shieldPoints, int shieldType){
+		float residualPoints = 0;
 		if (Stats.physicalDamageType == shieldType) {
 			physicalShield -= shieldPoints;
 			if (physicalShield < 0) {
 				shieldTimer.SetTimer (0);
-				residualPoints = physicalShield * -1;
-				physicalShield += physicalShield * -1;
+				residualPoints = physicalShield * -1f;
+				physicalShield += physicalShield * -1f;
 			}
 
 			if(isPlayerStats){
@@ -267,8 +266,8 @@ public class Stats : MonoBehaviour {
 			elementalShield -= shieldPoints;
 			if (elementalShield < 0) {
 				shieldTimer.SetTimer (0);
-				residualPoints = elementalShield * -1;
-				elementalShield += elementalShield * -1;
+				residualPoints = elementalShield * -1f;
+				elementalShield += elementalShield * -1f;
 			}
 
 			if(isPlayerStats){
@@ -280,8 +279,8 @@ public class Stats : MonoBehaviour {
 			hybridShield -= shieldPoints;
 			if (hybridShield < 0) {
 				shieldTimer.SetTimer (0);
-				residualPoints = hybridShield * -1;
-				hybridShield += hybridShield * -1;
+				residualPoints = hybridShield * -1f;
+				hybridShield += hybridShield * -1f;
 			}
 
 			if(isPlayerStats){
@@ -291,7 +290,7 @@ public class Stats : MonoBehaviour {
 		return residualPoints;
 	}
 
-	public void RestoreHealth(int restore){
+	public void RestoreHealth(float restore){
 		health += restore;
 		if (health > GetMaximumHealth ()) {
 			health -= health - GetMaximumHealth ();
@@ -333,8 +332,12 @@ public class Stats : MonoBehaviour {
 
 	public void AddFireEnergyPoints(int points, bool withResTimer = false){
 		fireEnergy += points;
-		if (fireEnergy > maximumFireEnergy) {
-			fireEnergy -= fireEnergy - maximumFireEnergy;
+		if (fireEnergy > 100) {
+			if (!itIsBurn) {
+				itIsBurn = true;
+				StartCoroutine (Burn());
+			}
+			//fireEnergy -= fireEnergy - maximumFireEnergy;
 		}
 		if (isPlayerStats) {
 			SetRecourceToBar ();
@@ -375,6 +378,9 @@ public class Stats : MonoBehaviour {
 	public void RemoveFireEnergyPoints(int points, bool withResTimer = false){
 		if (fireEnergy != 0) {
 			fireEnergy -= points;
+			if (fireEnergy <= 100) {
+				itIsBurn = false;
+			}
 			if (fireEnergy < 0) {
 				fireEnergy += fireEnergy * -1;
 			}
@@ -400,6 +406,11 @@ public class Stats : MonoBehaviour {
 		if (withResTimer) {
 			canRemoveMagicResourceTimer.SetTimer (magicCanRemoveTime);	
 		}
+	}
+
+
+	float GetBurnPercent(){
+		return (float)(fireEnergy - 100) * 0.0005f;
 	}
 
 
@@ -599,6 +610,83 @@ public class Stats : MonoBehaviour {
 			yield return null;
 		}
 		SetCurrentSpeed(1f);
+		yield break;
+	}
+
+	public IEnumerator DealDot(float damage, int damageType, float dotTime, int ticksNumber){
+		float eachTick = damage / ticksNumber;
+		if (eachTick == 0) {
+			eachTick = 1f;
+		}
+
+		//Debug.Log (damage.ToString() + ":" + eachTick.ToString());
+
+		float tickTime = dotTime / ticksNumber;
+
+		Timer tickTimer = new Timer ();
+		tickTimer.SetTimer (tickTime);
+		while (ticksNumber != 0) {
+			if (tickTimer.TimeIsOver ()) {
+				//Debug.Log ("tick");
+				MakeDamage (eachTick, damageType, true);
+				ticksNumber -= 1;
+				if (ticksNumber == 0) {
+					yield break;
+				} else {
+					tickTimer.SetTimer (tickTime);
+					yield return null;
+				}
+			} else {
+				yield return null;
+			}
+		}
+	}
+
+
+	public void IceStun(float time){
+		GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Elemental/iceBlock");
+		Effect effect = effectObject.GetComponent<Effect> ();
+		effect.path = "Prefabs/Particles/Elemental/iceBlock";
+		EffectOptions effectOptions = new EffectOptions ();
+		effect.transform.parent = characterAPI.skills.nullEffectPosition.transform;
+		effectOptions.transformPosition = effect.nullPositionCoords;
+		effectOptions.isRandomDuration = false;
+		effectOptions.duration = time;
+		effectOptions.objectDuration = time;
+		effect.StartEffect (effectOptions);
+
+		StartCoroutine (ControlStun (time));
+		StartCoroutine (Silence(time));
+
+		Timer timer = new Timer ();
+		timer.SetTimer (time);
+		characterAPI.skills.anim.speed = 0f;
+		Timer.TimerAction action = () => {
+			characterAPI.skills.anim.speed = 1f;
+			Debug.Log("asdf");
+		};
+		StartCoroutine(timer.ActionAfterTimer (action));
+	}
+
+
+	IEnumerator Burn(){
+		Timer burnTimer = new Timer();
+		burnTimer.SetTimer (1f);
+		while (itIsBurn) {
+			if (burnTimer.TimeIsOver()) {
+				health -= GetMaximumHealth () * GetBurnPercent ();
+				if(isPlayerStats){
+					playerHealthBar.SetHealth (health);
+				}
+				canRestoreHealthTimer.SetTimer (healthCanRestoreTime);
+				burnTimer.SetTimer (1f);
+				if (health <= 0) {
+					isDeath = true;
+					yield break;
+				}
+			}
+			yield return null;
+		}
 		yield break;
 	}
 

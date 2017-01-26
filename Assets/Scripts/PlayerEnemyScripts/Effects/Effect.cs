@@ -80,7 +80,11 @@ public class Effect : MonoBehaviour {
 		if (!options.loop) {
 			hasTimer = true;
 			durationTimer.SetTimer (duration);
-			effectTimer.SetTimer (duration + (particleSystem.startLifetime));
+			if (options.objectDuration != 0) {
+				effectTimer.SetTimer (options.objectDuration);
+			} else {
+				effectTimer.SetTimer (duration + (particleSystem.startLifetime));
+			}
 		}
 		particleSystem.Play ();
 		//Debug.Log (particleSystem.isPlaying);

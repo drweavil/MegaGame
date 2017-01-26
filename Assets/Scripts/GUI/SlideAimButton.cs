@@ -32,7 +32,7 @@ public class SlideAimButton : MonoBehaviour {
 		}
 
 		int currentState = 0;
-		CharacterAPI playerAPI = playerController.player.GetComponent<CharacterAPI> ();
+		CharacterAPI playerAPI = PlayerController.player.GetComponent<CharacterAPI> ();
 		GameObject aim = ObjectsPool.PullObject ("Prefabs/UI/grenadeAim");
 		NullPosition nullPosition = aim.GetComponent<NullPosition> ();
 		Vector3 nullPositionVector = nullPosition.nullPosition;

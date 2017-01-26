@@ -6,6 +6,7 @@ public class EffectOptions : MonoBehaviour {
 	public float maxRandomDuration;
 	public bool isRandomDuration = true;
 	public float duration;
+	public float objectDuration = 0;
 	public bool loop = false;
 	public Vector3 transformPosition;
 	public bool isLocalPosition = true;

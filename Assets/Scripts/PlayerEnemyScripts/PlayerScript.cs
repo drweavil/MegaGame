@@ -53,7 +53,10 @@ public class PlayerScript : MonoBehaviour {
 	void Update () {
 		//Debug.Log (direction);
 		if (Input.GetKeyDown (KeyCode.I)) {
-			stats.MakeDamage (100, Stats.physicalDamageType, true);
+			//stats.MakeDamage (100, Stats.physicalDamageType, true);
+			//stats.IceStun(3f);
+			//Debug.Log(11%10);
+
 		}
 
 		if (!stats.withoutControl) {
