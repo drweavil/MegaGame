@@ -4,10 +4,9 @@ using System.Collections.Generic;
 
 public class ThunderClapHitbox : MonoBehaviour {
 	public SpellHitbox spellHitbox;
-	public float damagePercent;
 	public CharacterAPI characterAPI;
-	public float efficiency = 100f;
 	string path = "Prefabs/SkillPrefabs/ThunderClapHitBoxCenter";
+	public SpellHitbox.ObjectsAction action;
 
 
 	public IEnumerator MakeDamageAndThrow(){
@@ -23,17 +22,18 @@ public class ThunderClapHitbox : MonoBehaviour {
 				foreach (GameObject obj in objects) {
 					//Debug.Log (obj.name);
 					CharacterAPI enemyTarget = obj.GetComponent<CharacterAPI> ();
-					int randomVectorValue = Random.Range (100, 150);
+					int randomVectorValue = Random.Range (50, 75);
 					//enemyTarget.stats.inJump = true;
 					if (obj.transform.position.x >= this.gameObject.transform.position.x) {
+						enemyTarget.movementController.NullSpeedWhenGround ();
 						enemyTarget.movementController.AddForceWithoutAnimation (new Vector3 (randomVectorValue, 250, 0));
-						enemyTarget.stats.FullStun (3f);
 					} else {
+						enemyTarget.movementController.NullSpeedWhenGround ();
 						enemyTarget.movementController.AddForceWithoutAnimation (new Vector3 (randomVectorValue * -1, 250, 0));
-						enemyTarget.stats.FullStun (3f);
 					} 
-					//Debug.Log (characterAPI.skills.SkillDamage (2.98718f, Stats.physicalDamageType));
-					enemyTarget.stats.MakeDamage (characterAPI.skills.SkillDamage (2.98718f, Stats.physicalDamageType, efficiency), Stats.physicalDamageType, true);
+					if (action != null) {
+						action (enemyTarget);
+					}
 				}
 			}
 			//yield return null;

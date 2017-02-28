@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class HitboxDamagerOptions : MonoBehaviour {
+[System.Serializable]
+public class HitboxDamagerOptions {
 	public GameObject hitBox;
 	public SpellHitbox spellHitbox;
 	public float damagePercent;
@@ -10,4 +11,6 @@ public class HitboxDamagerOptions : MonoBehaviour {
 	public bool withStun = false;
 	public float stunTime = 0;
 	public float efficienty = 100f;
+
+	public SpellHitbox.ObjectsAction action;
 }

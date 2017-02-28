@@ -15,6 +15,7 @@ public class SpellHitbox : MonoBehaviour {
 	public Vector3 nullColliderCenter;
 	public string path;
 	public Transform centerTransform;
+	public int selectingLayer;
 
 	public delegate void ObjectsAction (CharacterAPI targetAPI);
 
@@ -22,7 +23,8 @@ public class SpellHitbox : MonoBehaviour {
 	void OnTriggerEnter(Collider col){
 		if (objects.FindIndex (o => o == col.gameObject) == -1 && 
 			ignoreColliders.FindIndex (o => o == col.gameObject) == -1 &&
-			col.gameObject.tag == "Character"
+			col.gameObject.tag == "Character" &&
+			col.gameObject.layer == selectingLayer
 		) {
 			objects.Add (col.gameObject);
 			objectColliders.Add (col);
@@ -42,7 +44,8 @@ public class SpellHitbox : MonoBehaviour {
 	void OnTriggerStay(Collider col){
 		if (objects.FindIndex (o => o == col.gameObject) == -1 && 
 			ignoreColliders.FindIndex (o => o == col.gameObject) == -1 &&
-			col.gameObject.tag == "Character"
+			col.gameObject.tag == "Character" &&
+			col.gameObject.layer == selectingLayer
 		) {
 			objects.Add (col.gameObject);
 		}

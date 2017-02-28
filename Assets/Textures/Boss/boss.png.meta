@@ -1,0 +1,272 @@
+fileFormatVersion: 2
+guid: 8dd8606e27d4f5a429f3ab87a721b578
+timeCreated: 1486042811
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: pl
+    21300002: elbow_r_boss
+    21300004: elbow_l_boss
+    21300006: head_boss
+    21300008: tors_boss
+    21300010: heand_3_boss
+    21300012: heand_r_boss
+    21300014: heand_l_boss
+    21300016: ll
+    21300018: lh
+    21300020: leg_boss
+    21300022: shin_boss
+    21300024: feet
+    21300026: s-f
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: pl
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 725
+        width: 217
+        height: 374
+      alignment: 9
+      pivot: {x: 0.53867215, y: 0.728904}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: elbow_r_boss
+      rect:
+        serializedVersion: 2
+        x: 229
+        y: 763
+        width: 114
+        height: 320
+      alignment: 9
+      pivot: {x: 0.63218075, y: 0.93625563}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: elbow_l_boss
+      rect:
+        serializedVersion: 2
+        x: 367
+        y: 779
+        width: 103
+        height: 300
+      alignment: 9
+      pivot: {x: 0.6217912, y: 0.944847}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: head_boss
+      rect:
+        serializedVersion: 2
+        x: 555
+        y: 842
+        width: 230
+        height: 208
+      alignment: 9
+      pivot: {x: 0.376748, y: 0.63513035}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: tors_boss
+      rect:
+        serializedVersion: 2
+        x: 485
+        y: 227
+        width: 357
+        height: 464
+      alignment: 9
+      pivot: {x: 0.3062197, y: 0.14234772}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: heand_3_boss
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 570
+        width: 131
+        height: 146
+      alignment: 9
+      pivot: {x: 0.4143912, y: 0.91991353}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: heand_r_boss
+      rect:
+        serializedVersion: 2
+        x: 180
+        y: 433
+        width: 146
+        height: 198
+      alignment: 9
+      pivot: {x: 0.34946612, y: 0.9531219}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: heand_l_boss
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 429
+        width: 142
+        height: 196
+      alignment: 9
+      pivot: {x: 0.357841, y: 0.96156}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ll
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 644
+        width: 138
+        height: 64
+      alignment: 9
+      pivot: {x: 0.19660549, y: 0.75700474}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: lh
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 645
+        width: 73
+        height: 67
+      alignment: 9
+      pivot: {x: 0.46927443, y: 0.58927166}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: leg_boss
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 69
+        width: 202
+        height: 348
+      alignment: 9
+      pivot: {x: 0.65149945, y: 0.90246123}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: shin_boss
+      rect:
+        serializedVersion: 2
+        x: 223
+        y: 77
+        width: 182
+        height: 352
+      alignment: 9
+      pivot: {x: 0.50410795, y: 0.85046136}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: feet
+      rect:
+        serializedVersion: 2
+        x: 386
+        y: 10
+        width: 205
+        height: 69
+      alignment: 9
+      pivot: {x: 0.2994108, y: 0.6625332}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: s-f
+      rect:
+        serializedVersion: 2
+        x: 228
+        y: 9
+        width: 139
+        height: 65
+      alignment: 9
+      pivot: {x: 0.39242423, y: 0.62652594}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

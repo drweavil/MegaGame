@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class AIAction : MonoBehaviour {
+[System.Serializable]
+public class AIAction{
 	public string name;
 	public delegate bool Condition(AIControllerParams conditionParams);
 	public Condition actionCondition;

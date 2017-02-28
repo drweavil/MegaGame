@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EffectOptions : MonoBehaviour {
+[System.Serializable]
+public class EffectOptions  {
 	public float minRandomDuration;
 	public float maxRandomDuration;
 	public bool isRandomDuration = true;
@@ -11,4 +12,5 @@ public class EffectOptions : MonoBehaviour {
 	public Vector3 transformPosition;
 	public bool isLocalPosition = true;
 	public bool revertRotationY = false;
+	public bool revertScaleX = false;
 }

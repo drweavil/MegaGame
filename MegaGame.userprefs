@@ -1,0 +1,32 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlayerEnemyScripts\Spells\SkillSettingsSet.cs">
+    <Files>
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\AI\AIActionParam.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\MovementController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\AI\AIController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\AI\AIActions.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\AI\AIControllerParams.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\CharacterAPI.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\PlayerScript.cs" Line="61" Column="29" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Stats.cs" Line="647" Column="40" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\PlayerController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Timer.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Effects\EffectOptions.cs" Line="15" Column="35" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\AI\EnemyType.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\SpellHitbox.cs" Line="11" Column="2" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\StreamHitbox.cs" Line="11" Column="42" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\HitboxDamagerOptions.cs" Line="15" Column="42" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\ThunderClapHitbox.cs" Line="25" Column="6" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Effects\Effect.cs" Line="22" Column="33" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\SpellBall.cs" Line="53" Column="76" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\Skills.cs" Line="1699" Column="56" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\SkillSettingsSet.cs" Line="67" Column="24" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\SkillSettings.cs" Line="21" Column="32" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

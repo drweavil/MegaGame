@@ -7,17 +7,19 @@ public class SpellBall : MonoBehaviour {
 	public float speed;
 	public Vector3 direction;
 	RaycastHit ballHit;
-	public float damagePercent;
-	public int damageType;
+	//public float damagePercent;
+	//public int damageType;
 	public string path;
 	public CharacterAPI characterAPI;
 	public bool ready = false;
-	public int energyPoints;
+	//public int energyPoints;
 	public float time;
 	public float currentTime = 0;
 	public Transform transform;
 	public List<Collider> ignoreColliders = new List<Collider> ();
-	public float efficiency = 100f;
+	//public float efficiency = 100f;
+	public SpellHitbox.ObjectsAction action;
+	public int selectingLayer;
 
 
 
@@ -46,20 +48,10 @@ public class SpellBall : MonoBehaviour {
 	void OnTriggerEnter (Collider col) {
 		if (ready) {
 			if (col.gameObject.layer != LayerMask.NameToLayer ("Ground")) {
-				if (col.gameObject.tag == "Character") {
+				if (col.gameObject.tag == "Character" && col.gameObject.layer == selectingLayer) {
 					if (ignoreColliders.FindIndex (c => c == col) == -1) {
 						CharacterAPI enemyAPI = col.gameObject.GetComponent<CharacterAPI> ();
-						enemyAPI.stats.MakeDamage ((int)(characterAPI.skills.SkillDamage (damagePercent, damageType) * (efficiency/100f)), damageType, true);
-						if (damageType == Stats.elementalDamageType) {
-							characterAPI.stats.AddMagicEnergyPoints (energyPoints, true);
-						} else {
-							if (damageType == Stats.hybridDamageType) {
-								characterAPI.stats.AddFireEnergyPoints (energyPoints, true);
-							} else {
-								characterAPI.stats.AddMeleeEnergyPoints (energyPoints, true);
-							}
-						}
-	
+						action (enemyAPI);
 						ready = false;
 						ObjectsPool.PushObject (path, this.gameObject);
 					}

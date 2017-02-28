@@ -4,6 +4,7 @@ using System;
 
 public class MovementController : MonoBehaviour {
 	public static Vector2 speed = new Vector2 (2.5f, 1f);
+	public static Vector2 walkSpeed = new Vector2 (1.25f, 1f);
 
 	public Vector2 movement;
 	public Vector2 externalMovement = new Vector2(0, 0);
@@ -29,10 +30,13 @@ public class MovementController : MonoBehaviour {
 	public bool isGrounded = true;
 	//bool onlyMovementStun = false;
 	bool dontUseVelocityY = false;
-	public GameObject leftSlot;
+	public Transform slots;
+	public Transform leftSlot;
 	public CharacterAPI leftCharacterSlot;
-	public GameObject rightSlot;
+	public Transform leftPrecipiceCheck;
+	public Transform rightSlot;
 	public CharacterAPI rightCharacterSlot;
+	public Transform rightPrecipiceCheck;
 
 
 
@@ -83,12 +87,15 @@ public class MovementController : MonoBehaviour {
 	}
 				
 
-	private void Flip(){
+	public void Flip(){
 		toForward = !toForward;
 		Vector3 newScale = gameObject.transform.localScale;
 		newScale.x *=  -1;
 		transform.localScale = newScale;
 		transform.rotation = Quaternion.Euler (new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z) * -1);
+		Vector3 newSlotsScale = slots.localScale;
+		newSlotsScale.x *= -1;
+		slots.localScale = newSlotsScale;
 	}
 
 	public void SetMovement(Vector2 newMovement){
@@ -141,6 +148,20 @@ public class MovementController : MonoBehaviour {
 		inJump = true;
 		StartCoroutine (WaitSeveralFramesWhileIdleAnimation(10));
 	}
+	public void NullSpeedWhenGround(){
+		StartCoroutine (NullSpeedWhenGroundCoroutine ());
+	}
+	IEnumerator NullSpeedWhenGroundCoroutine(){
+		for (int i = 0; i < 10; i++) {
+			yield return null;
+		}
+
+		while (!isGrounded) {
+			yield return null;
+		}
+		rigidbody.velocity = new Vector3 (0, 0, 0);
+		yield break;
+	}
 
 	IEnumerator WaitSeveralFramesWhileIdleAnimation(int frames){
 		anim.Play ("jumpIdle", 0);
@@ -184,6 +205,15 @@ public class MovementController : MonoBehaviour {
 			MovementController.speed.y * direction.y * stats.currentSpeed
 		);
 	}
+
+	public Vector2 GetCurrentWalkingSpeed(Vector2 direction){
+		return new Vector2 (
+			MovementController.walkSpeed.x * direction.x * stats.currentSpeed, 
+			MovementController.walkSpeed.y * direction.y * stats.currentSpeed
+		);
+	}
+
+
 
 	/*IEnumerator StartIdleAndJumpEndAnimation(){
 		anim.Play ("jumpIdle");

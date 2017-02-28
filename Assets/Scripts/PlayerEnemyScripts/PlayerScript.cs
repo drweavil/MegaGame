@@ -40,6 +40,8 @@ public class PlayerScript : MonoBehaviour {
 
 
 
+
+
 	void Awake () {
 		anim = gameObject.GetComponent<Animator> ();
 		anim.SetBool ("OnGround", true);
@@ -53,11 +55,12 @@ public class PlayerScript : MonoBehaviour {
 	void Update () {
 		//Debug.Log (direction);
 		if (Input.GetKeyDown (KeyCode.I)) {
-			//stats.MakeDamage (100, Stats.physicalDamageType, true);
-			//stats.IceStun(3f);
-			//Debug.Log(11%10);
+			//EnemyType type = EnemyType.GetType (3);
+			List<float> lol = new List<float>();
 
+			Debug.Log (lol.Min(o => o));
 		}
+
 
 		if (!stats.withoutControl) {
 			if (direction.x == 0.0 && direction.y == 0.0) {

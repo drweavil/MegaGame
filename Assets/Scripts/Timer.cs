@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Timer : MonoBehaviour {
+[System.Serializable]
+public class Timer {
 	private float endTime = 0;
 	public delegate void TimerAction ();
 

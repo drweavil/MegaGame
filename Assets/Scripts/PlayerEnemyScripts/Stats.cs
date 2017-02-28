@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System;
 
 public class Stats : MonoBehaviour {
@@ -55,14 +57,22 @@ public class Stats : MonoBehaviour {
 	public int maximumMagicEnergy = 100;
 
 	public bool isDeath = false;
+	public bool deathPlayed = false;
 	public bool isGrounded = true;
 	public bool withoutControl = false;
 	public bool inSilence = false;
+	public bool inIceStun = false;
+	public int inIceStunProcess = 0;
 	public bool inJump = false;
 	bool itIsBurn = false;
 	//float burnPercent = 0;
 	float minimumSpeed;
 	public float currentSpeed = 1f;
+	public float maximumSpeed = 1f;
+	public List<float> minimumSpeedValues = new List<float> ();
+
+	public bool onGlobalCooldown = false;
+	private List<int> skillsOnCD = new List<int> ();
 
 
 
@@ -104,6 +114,8 @@ public class Stats : MonoBehaviour {
 	public bool isPlayerStats = false;
 	public PlayerHealthBar playerHealthBar;
 	public CharacterAPI characterAPI;
+
+	
 	//private Object playerScript;
 
 
@@ -113,6 +125,7 @@ public class Stats : MonoBehaviour {
 		RestoreMaximumHealth ();*/
 		shieldTimer = new Timer ();
 		SetStatsByComplexity (600);
+		deathPlayed = false;
 		//SetMaximumFireResource ();
 	}
 
@@ -151,6 +164,12 @@ public class Stats : MonoBehaviour {
 					magicResourceTimer.SetTimer (magicRemoveTime);
 				}
 			}
+		}
+
+
+		if (isDeath && !deathPlayed) {
+			deathPlayed = true;
+			Death ();
 		}
 	}
 
@@ -553,7 +572,7 @@ public class Stats : MonoBehaviour {
 	}
 
 
-	public IEnumerator ControlStun(float stunTime, bool withAnimation = false){
+	public IEnumerator ControlStun(float stunTime, bool withAnimation = false, bool withNullSpeed = true){
 		if (withAnimation) {
 			//if(characterAPI.movementController.inJump == false){
 				characterAPI.skills.anim.SetBool("InStun", true);
@@ -570,6 +589,10 @@ public class Stats : MonoBehaviour {
 			//	}
 			//}
 			//Debug.Log ("stun");
+			//characterAPI.movementController.SetMovement(new Vector3(0, 0, 0));
+			if (withNullSpeed) {
+				characterAPI.movementController.rigidbody.velocity = new Vector3 (0, 0, 0);
+			}
 			yield return null;
 		}
 		withoutControl = false;
@@ -592,8 +615,8 @@ public class Stats : MonoBehaviour {
 		yield break;
 	}
 
-	public void FullStun(float stunTime){
-		StartCoroutine (ControlStun (stunTime, true));
+	public void FullStun(float stunTime, bool withNullSpeed = true){
+		StartCoroutine (ControlStun (stunTime, true, withNullSpeed));
 		StartCoroutine (Silence (stunTime));
 	}
 
@@ -602,14 +625,28 @@ public class Stats : MonoBehaviour {
 		characterAPI.skills.anim.SetFloat("RunAnimationSpeed", speed);
 	}
 
-	public IEnumerator GetMovementSlowly(float time, float toSpeed){
+
+	public void GetMovementSlowly(float time, float toSpeed){
+		StartCoroutine(GetMovementSlowlyCoroutine(time, toSpeed));
+	}
+	IEnumerator GetMovementSlowlyCoroutine(float time, float toSpeed){
+		minimumSpeedValues.Add (toSpeed);
+		float minimumValueSpeed = minimumSpeedValues.Min (o => o);
 		slowMovementTimer.SetTimer (time);
-		minimumSpeed = toSpeed;
+		minimumSpeed = minimumValueSpeed;
 		while (!slowMovementTimer.TimeIsOver ()) {
 			SetCurrentSpeed (minimumSpeed);
 			yield return null;
 		}
-		SetCurrentSpeed(1f);
+
+		if (minimumSpeedValues.Count - 1 != 0) {
+			minimumSpeedValues.Remove (toSpeed);
+			minimumValueSpeed = minimumSpeedValues.Min (o => o);
+			minimumSpeed = minimumValueSpeed;
+		} else {
+			minimumSpeedValues.Remove (toSpeed);
+		}
+		SetCurrentSpeed(maximumSpeed);
 		yield break;
 	}
 
@@ -644,6 +681,7 @@ public class Stats : MonoBehaviour {
 
 
 	public void IceStun(float time){
+		
 		GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Elemental/iceBlock");
 		Effect effect = effectObject.GetComponent<Effect> ();
 		effect.path = "Prefabs/Particles/Elemental/iceBlock";
@@ -653,17 +691,31 @@ public class Stats : MonoBehaviour {
 		effectOptions.isRandomDuration = false;
 		effectOptions.duration = time;
 		effectOptions.objectDuration = time;
-		effect.StartEffect (effectOptions);
 
+
+		if (inIceStun) {
+			ObjectsPool.PushObject("Prefabs/Particles/Elemental/iceBlock", characterAPI.skills.iceStunEffect.gameObject);
+			characterAPI.skills.iceStunEffect = effect;
+		} else {
+			inIceStun = true;
+			characterAPI.skills.iceStunEffect = effect;
+		}
+
+		effect.StartEffect (effectOptions);
 		StartCoroutine (ControlStun (time));
 		StartCoroutine (Silence(time));
+
+		inIceStunProcess = inIceStunProcess + 1;
 
 		Timer timer = new Timer ();
 		timer.SetTimer (time);
 		characterAPI.skills.anim.speed = 0f;
 		Timer.TimerAction action = () => {
-			characterAPI.skills.anim.speed = 1f;
-			Debug.Log("asdf");
+			if(inIceStunProcess == 1){
+				characterAPI.skills.anim.speed = 1f;
+				inIceStun = false;
+			}
+			inIceStunProcess -= 1;
 		};
 		StartCoroutine(timer.ActionAfterTimer (action));
 	}
@@ -690,4 +742,64 @@ public class Stats : MonoBehaviour {
 		yield break;
 	}
 
+	public bool IsMaximumSpeed(){
+		return currentSpeed == maximumSpeed;
+	}
+
+	public void Death(){
+		if (isPlayerStats) {
+		} else {
+			withoutControl = true;
+			characterAPI.movementController.rigidbody.velocity = new Vector3 (0, 0, 0);
+
+			List<object> paramsList = new List<object> ();
+			Skills.AfterAnimationAction afterAction = (List<object> actionParamsList) => {
+				ObjectsPool.PushObject("InteractionObjects/enemyH", this.gameObject);
+			};
+			int random = UnityEngine.Random.Range(0, 2);
+			if (random == 0) {
+				characterAPI.skills.anim.Play ("Death");
+				StartCoroutine (characterAPI.skills.WaitAnimationActionAndStartEvent ("Death", 0, afterAction, paramsList));
+			} else {
+				characterAPI.skills.anim.Play ("Death2");
+				StartCoroutine (characterAPI.skills.WaitAnimationActionAndStartEvent ("Death2", 0, afterAction, paramsList));
+			}
+		}
+	}
+
+	public void StartGCD(float cdTime){
+		StartCoroutine (StartGCDCoroutine(cdTime));
+	}
+	private IEnumerator StartGCDCoroutine(float cdTime){
+		Timer gcdTimer = new Timer();
+		gcdTimer.SetTimer(cdTime);
+		onGlobalCooldown = true;
+		while(!gcdTimer.TimeIsOver()){
+			onGlobalCooldown = true;
+			yield return null;
+		}
+		onGlobalCooldown = false;
+		yield break;
+	}
+
+	public void StartCD(float cdTime, int skillID){
+		Timer gcdTimer = new Timer();
+		gcdTimer.SetTimer(cdTime);
+		skillsOnCD.Add (skillID);
+		Timer.TimerAction timerAction = () => {
+			skillsOnCD.Remove(skillID);
+		};
+	}
+
+	public bool SkillOnCD(int skillID){
+		if (skillsOnCD.FindIndex (i => i == skillID) != -1) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public void Cauterization(int resource){
+		RestoreHealth (((maximumHealth * 0.1f) / 100f) * (float)resource);
+	}
 }

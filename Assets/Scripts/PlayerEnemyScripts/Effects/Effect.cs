@@ -19,6 +19,7 @@ public class Effect : MonoBehaviour {
 
 	public Vector3 nullPositionCoords;
 	public Vector3 nullRotationCoords;
+	public Vector3 nullScaleCoords;
 
 
 
