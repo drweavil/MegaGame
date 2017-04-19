@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class SlideAimButton : MonoBehaviour {
 
-
+	public SkillButton skillButton;
 	bool buttonDown = false;
 	public PlayerController playerController;
 
@@ -107,9 +107,9 @@ public class SlideAimButton : MonoBehaviour {
 				}
 			}
 		}
-
-
-		playerAPI.skills.Grenade (aim.transform.position);
+		skillButton.UseSkill ();
+		playerAPI.skills.aimCoord = aim.transform.position;
+		//playerAPI.skills.Grenade (aim.transform.position);
 		ObjectsPool.PushObject ("Prefabs/UI/grenadeAim", aim);
 		yield break;
 	}

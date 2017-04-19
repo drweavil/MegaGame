@@ -27,6 +27,8 @@ public class Skills : MonoBehaviour {
 	public Dictionary<int, SkillSettings> settingsSet = new Dictionary<int, SkillSettings>();
 	private Dictionary<string, object> tempSkillParams = new Dictionary<string, object>();
 
+	public Vector3 aimCoord;
+
 
 
 	void Awake(){
@@ -36,10 +38,6 @@ public class Skills : MonoBehaviour {
 	}
 
 	void Update(){
-		if (Input.GetKeyDown (KeyCode.Z)) {
-			//Debug.Log(TestSkillDamagePercent (100));
-			Debug.Log(gameObject.name + ":" + SkillDamage(0.1111111f, Stats.physicalDamageType).ToString());
-		}
 	}
 
 	public SkillSettings GetSkillSetting(int skillID){
@@ -56,9 +54,16 @@ public class Skills : MonoBehaviour {
 		return efficiency + (efficiency * (stats.magicEnergy/100f));
 	}
 
-	public float SkillDamage(float percent, int damageType, float efficiency = 100f){
+	public Stats.NumberParams SkillDamage(float percent, int damageType, float efficiency = 100f, int spec = 0){
 		float damage = 0;
-		float wd = (float)stats.weaponDamage;
+		float wd = 0;//(float)stats.weaponDamage;
+		if (spec == Stats.meleeSpec) {
+			wd = stats.weaponDamage;
+		} else if (spec == Stats.fireSpec) {
+			wd = stats.fireWeaponDamage;
+		} else if (spec == Stats.elementalSpec){
+			wd = stats.elementalWeaponDamage;
+		}
 		float ap = 0.3f; /*average enemy armor*/
 		float dp = 0;
 		if (damageType == Stats.elementalDamageType) {
@@ -74,21 +79,24 @@ public class Skills : MonoBehaviour {
 		if (damage == 0) {
 			damage = 1;
 		}
-		damage = TryCriticalDamage (damage);
-		damage = damage + (damage * ap)/(1 - ap);
-		return damage;
+		Stats.NumberParams finalDamage = TryCriticalDamage (damage);
+		finalDamage.number = finalDamage.number + (finalDamage.number * ap)/(1 - ap);
+		return finalDamage;
 	}
 		
-	float TryCriticalDamage(float damage){
+	Stats.NumberParams TryCriticalDamage(float damage){
+		Stats.NumberParams criticalParams = new Stats.NumberParams();
 		float finalDamage = damage;
 		float random = Random.Range (0f, 100.01f);
 		if (random <= stats.critical) {
 			finalDamage = damage * 2;
-		}
-		return finalDamage;
+			criticalParams.isCrit = true;
+		} 
+		criticalParams.number = finalDamage;
+		return criticalParams;
 	}
 
-	bool IsCritical(){
+	public bool IsCritical(){
 		bool isCriticalValue = false;
 		float random = Random.Range (0f, 100.01f);
 		if (random <= stats.critical) {
@@ -116,7 +124,7 @@ public class Skills : MonoBehaviour {
 			RaycastHit hit;
 			Physics.Raycast (transform.position, new Vector3(transform.localScale.x, 0, 0), out hit, skillSettings.distance, target);
 			if (hit.collider != null) {
-				float damage = SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType);
+				Stats.NumberParams damage = SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType);
 				//Debug.Log (damage);
 				CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI>();
 				targetCharacterAPI.stats.MakeDamage(damage, Stats.physicalDamageType,  true);
@@ -155,7 +163,7 @@ public class Skills : MonoBehaviour {
 			RaycastHit hit;
 			Physics.Raycast (transform.position, new Vector3(transform.localScale.x, 0, 0), out hit, skillSettings.distance, target);
 			if (hit.collider != null) {
-				float damage = SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType);
+				Stats.NumberParams damage = SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType);
 				//Debug.Log (damage);
 				CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI>();
 				targetCharacterAPI.stats.MakeDamage(damage, Stats.physicalDamageType,  true);
@@ -194,7 +202,7 @@ public class Skills : MonoBehaviour {
 			RaycastHit hit;
 			Physics.Raycast (transform.position, new Vector3(transform.localScale.x, 0, 0), out hit, skillSettings.distance, target);
 			if (hit.collider != null) {
-				float damage = SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType);
+				Stats.NumberParams damage = SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType);
 				//Debug.Log (damage);
 				CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI>();
 				targetCharacterAPI.stats.MakeDamage(damage, Stats.physicalDamageType,  true);
@@ -644,7 +652,7 @@ public class Skills : MonoBehaviour {
 	}
 
 
-	public void BlackHole(bool isSecondPart){
+	public void BlackHole(bool isSecondPart = false){
 		currentAction = "BlackHole";
 		if (isSecondPart) {
 			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.blackHole);
@@ -718,7 +726,7 @@ public class Skills : MonoBehaviour {
 	public void SiphonLife(bool isSecondPart = false){
 		currentAction = "SiphonLife";
 		if (isSecondPart) {
-			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.siphoneLife);
+			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.siphonLife);
 			stats.RemoveMeleeEnergyPoints (skillSettings.resourceRemove, true);
 
 			GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Melee/siphonLife");
@@ -749,7 +757,7 @@ public class Skills : MonoBehaviour {
 
 			stats.RestoreHealth(SkillDamage(skillSettings.restorePercent, Stats.physicalDamageType));
 			SpellHitbox.ObjectsAction spellHitboxAction = (CharacterAPI targetAPI) => {
-				float damage = SkillDamage(skillSettings.damagePercent, Stats.physicalDamageType);
+				Stats.NumberParams damage = SkillDamage(skillSettings.damagePercent, Stats.physicalDamageType);
 				targetAPI.stats.MakeDamage(damage, Stats.physicalDamageType, true);
 
 				if(IsCritical()){
@@ -847,7 +855,7 @@ public class Skills : MonoBehaviour {
 			RaycastHit hit;
 			Physics.Raycast (transform.position, new Vector3(transform.localScale.x, 0, 0), out hit, skillSettings.distance, target);
 			if (hit.collider != null) {
-				float damage = SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType);
+				Stats.NumberParams damage = SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType);
 				//Debug.Log (damage);
 				CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI>();
 				targetCharacterAPI.stats.MakeDamage(damage, Stats.physicalDamageType,  true);
@@ -1073,12 +1081,12 @@ public class Skills : MonoBehaviour {
 	}
 
 
-	private Vector3 aimCoord;
-	public void Grenade(Vector3 grenadeCoord){
+
+	/*public void Grenade(Vector3 grenadeCoord){
 		aimCoord = grenadeCoord;
 		ExplosiveMine ();
 		//Debug.Log ("lol");
-	}
+	}*/
 
 	public void GrenadeLaunch(bool isSecondPart = false){
 		currentAction = "GrenadeLaunch";
@@ -1257,7 +1265,7 @@ public class Skills : MonoBehaviour {
 	}
 
 
-	public void GrenadeWave(bool isSecondPart){
+	public void GrenadeWave(bool isSecondPart = false){
 		currentAction = "GrenadeWave";
 		if (isSecondPart) {
 			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.grenadeWave);
@@ -1277,7 +1285,7 @@ public class Skills : MonoBehaviour {
 		}
 	}
 
-	public void ToxicGrenadeWave(bool isSecondPart){
+	public void ToxicGrenadeWave(bool isSecondPart = false){
 		currentAction = "ToxicGrenadeWave";
 		if (isSecondPart) {
 			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.toxicGrenadeWave);
@@ -1610,7 +1618,9 @@ public class Skills : MonoBehaviour {
 				Timer slowMovementTimer = new Timer(); 
 				slowMovementTimer.SetTimer(slowMovementTime);
 				StartCoroutine(slowMovementTimer.ActionAfterTimer(() => {
-					streamHitbox.RemoveIgnoreObject(targetAPI.gameObject);
+					if(targetAPI.gameObject.activeInHierarchy){
+						streamHitbox.RemoveIgnoreObject(targetAPI.gameObject);
+					}
 				}));
 			};
 			streamHitbox.readyToTrigger = true;
@@ -2054,7 +2064,7 @@ public class Skills : MonoBehaviour {
 			//Physics.Raycast (new Vec);
 			if (hit.collider != null) {
 				if (hit.collider.gameObject.layer != LayerMask.NameToLayer ("Ground")) {
-					float damage = SkillDamage (skillSettings.damagePercent, Stats.hybridDamageType, MagicEfficiency(100));
+					Stats.NumberParams damage = SkillDamage (skillSettings.damagePercent, Stats.hybridDamageType, MagicEfficiency(100));
 					//Debug.Log (damage);
 					CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI> ();
 					//targetCharacterAPI.stats.MakeDamage (damage, Stats.hybridDamageType, true);
@@ -2117,7 +2127,7 @@ public class Skills : MonoBehaviour {
 		HitboxDamagerOptions damagerOptions = new HitboxDamagerOptions();
 		damagerOptions.hitBox = hitBox;
 		damagerOptions.spellHitbox = spellHitbox;
-		damagerOptions.damagePercent = 0.1025641f;
+		damagerOptions.damagePercent = 1.1025641f;
 		damagerOptions.damageType = Stats.elementalDamageType;
 		damagerOptions.path = "Prefabs/SkillPrefabs/lavaBurstHitbox";
 		damagerOptions.efficienty = percentAndDamage;
@@ -2249,8 +2259,8 @@ public class Skills : MonoBehaviour {
 		currentAction = "HybridShield";
 		if (isSecondPart) {
 			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.hybridShield);
-			stats.AddShieldPoints ((int)(SkillDamage(skillSettings.restorePercent, Stats.elementalDamageType, MagicEfficiency(100))), Stats.hybridDamageType);
-			stats.AddShieldPoints ((int)(SkillDamage(skillSettings.restorePercent, Stats.physicalDamageType, MagicEfficiency(100))), Stats.hybridDamageType);
+			stats.AddShieldPoints ((SkillDamage(skillSettings.restorePercent, Stats.elementalDamageType, MagicEfficiency(100))), Stats.hybridDamageType);
+			stats.AddShieldPoints ((SkillDamage(skillSettings.restorePercent, Stats.physicalDamageType, MagicEfficiency(100))), Stats.hybridDamageType);
 			if (stats.shieldTimer.TimeIsOver()) {
 				GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Elemental/hybridShield");
 				Effect effect = effectObject.GetComponent<Effect> ();
@@ -2359,16 +2369,22 @@ public class Skills : MonoBehaviour {
 				streamHitbox.selectingLayer = LayerMask.NameToLayer ("Player");
 			}
 
+
+
+
 			streamHitbox.action = (CharacterAPI targetAPI) => {
 				targetAPI.stats.GetMovementSlowly(slowTime, 0.3f);
 				targetAPI.stats.MakeDamage(SkillDamage (skillSettings.damagePercent, Stats.elementalDamageType, MagicEfficiency(100)), Stats.elementalDamageType, true);
-				if(IsCritical()){
+				float random = Random.Range(0, 100.01f);
+				if(random <= skillSettings.stunChance){
 					targetAPI.stats.IceStun(skillSettings.stunTime);
 				}
 				Timer slowMovementTimer = new Timer(); 
 				slowMovementTimer.SetTimer(slowTime);
 				StartCoroutine(slowMovementTimer.ActionAfterTimer(() => {
-					streamHitbox.RemoveIgnoreObject(targetAPI.gameObject);
+					if(targetAPI.gameObject.activeInHierarchy){
+						streamHitbox.RemoveIgnoreObject(targetAPI.gameObject);
+					}
 				}));
 			};
 			streamHitbox.readyToTrigger = true;
@@ -2637,8 +2653,10 @@ public class Skills : MonoBehaviour {
 		} else {
 			if (IsAction ()) {
 				anim.Play ("actionElementalCone");
+				StartCoroutine (WaitAnimationAction ("actionElementalCone", 3));
 			} else {
-				anim.Play ("elementalCone");	
+				anim.Play ("elementalCone");
+				StartCoroutine (WaitAnimationAction ("elementalCone", 3));
 			}
 		}
 	}

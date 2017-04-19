@@ -11,4 +11,13 @@ public class CharacterAPI : MonoBehaviour {
 	public Rigidbody rigidbody;
 	public MovementController movementController;
 	public AIController aiController;
+	public Animator animator;
+	public PlayerHealthBar healthBar;
+	public HealthBar healthBarController;
+
+
+	public void SetEnemyType(int complexity, int typeId){
+		aiController.SetActionsByEnemyID (typeId);
+		stats.SetStatsByComplexity (complexity, typeId);
+	}
 }

@@ -5,6 +5,7 @@ using System;
 public class MovementController : MonoBehaviour {
 	public static Vector2 speed = new Vector2 (2.5f, 1f);
 	public static Vector2 walkSpeed = new Vector2 (1.25f, 1f);
+	public static Vector2 jumpSpeed = new Vector2 (0, 250f);
 
 	public Vector2 movement;
 	public Vector2 externalMovement = new Vector2(0, 0);
@@ -38,6 +39,9 @@ public class MovementController : MonoBehaviour {
 	public CharacterAPI rightCharacterSlot;
 	public Transform rightPrecipiceCheck;
 
+	public CharacterAPI characterAPI;
+	int jumpCount = 0;
+
 
 
 
@@ -58,6 +62,7 @@ public class MovementController : MonoBehaviour {
 			anim.Play ("jumpEnd");
 			anim.SetBool ("isJump", false);
 			inJump = false;
+			jumpCount = 0;
 		}
 
 		if (!stats.withoutControl) {
@@ -131,8 +136,24 @@ public class MovementController : MonoBehaviour {
 	}
 
 	public void Jump(Vector3 jump){
-		anim.Play ("jumpStart");
-		AddForceWithStartAnimation(jump, "jumpStart", 0);
+		if (jumpCount < 2) {
+			if (jumpCount == 1) {
+				GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/DoubleJumpLighting");
+				Effect effect = effectObject.GetComponent<Effect> ();
+				effect.path = "Prefabs/Particles/DoubleJumpLighting";
+				EffectOptions effectOptions = new EffectOptions ();
+				Vector3 effectPosition = characterAPI.skills.nullEffectPosition.transform.position + effect.nullPositionCoords;
+
+				effectOptions.isLocalPosition = false;
+				effectOptions.transformPosition = effectPosition;
+				effectOptions.isRandomDuration = false;
+				effectOptions.duration = 0.5f;
+				effect.StartEffect (effectOptions);
+			}
+			anim.Play ("jumpStart");
+			AddForceWithStartAnimation (jump, "jumpStart", 0);
+			jumpCount += 1;
+		}
 	}
 
 

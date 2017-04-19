@@ -15,15 +15,20 @@ public class AIController : MonoBehaviour {
 
 
 	void Awake(){
-		foreach(AIAction action in AIActions.MeleeBase()){
+		/*foreach(AIAction action in AIActions.MeleeBase()){
 			actions.Add (action.name, action);
 		}
 		foreach(AIAction action in AIActions.MeleeSkillActions()){
 			actions.Add (action.name, action);
-		}
+		}*/
 		controllerParams.characterAPI = characterAPI;
 		controllerParams.spawnCoords = characterAPI.transform.position;
 		controllerParams.patrolRadius = 100f;
+		//Debug.Log ("alive");
+
+		int random = Random.Range (0, 9);
+		List<int> types = new List<int>(new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9});
+		characterAPI.SetEnemyType (600, types[random]);
 	}
 	// Update is called once per frame
 	void Update () {
@@ -41,6 +46,7 @@ public class AIController : MonoBehaviour {
 				}
 			}
 		}
+		//Debug.Log(controllerParams.rangeDistance);
 	}
 
 	void UpdateParams(){
@@ -58,11 +64,29 @@ public class AIController : MonoBehaviour {
 		controllerParams.currentPosition = currentPosition;
 		Vector3 directionToTarget = playerPosition - currentPosition;
 		directionToTarget.Normalize ();
+		controllerParams.targetDirection = directionToTarget;
+
+		//Debug.Log (directionToTarget.y);
+		if (characterAPI.stats.specId == Stats.meleeSpec) {
+			controllerParams.resourceValue = characterAPI.stats.meleeEnergy;
+		} else {
+			if (characterAPI.stats.specId == Stats.fireSpec) {
+				controllerParams.resourceValue = characterAPI.stats.fireEnergy;
+				characterAPI.movementController.movement.y = directionToTarget.y;
+				characterAPI.animator.SetFloat ("DirectionY", directionToTarget.y);
+			} else {
+				controllerParams.resourceValue = characterAPI.stats.magicEnergy;
+				characterAPI.movementController.movement.y = directionToTarget.y;
+				characterAPI.animator.SetFloat ("DirectionY", directionToTarget.y);
+			}
+		}
+		//characterAPI.movementController.movement.y = directionToTarget.y;
+		//characterAPI.animator.SetFloat("DirectionY", directionToTarget.y);
 		Physics.Raycast (
 			currentPosition, 
 			directionToTarget,
 			out hitWithTarget,
-			100f, 
+			10f, 
 			(1 << LayerMask.NameToLayer ("Player")) | (1 << LayerMask.NameToLayer ("Ground")));
 		if (hitWithTarget.collider != null) {
 			if (hitWithTarget.collider.gameObject.layer == LayerMask.NameToLayer ("Player")) {
@@ -80,6 +104,12 @@ public class AIController : MonoBehaviour {
 			} else {
 				controllerParams.targetInLine = false;
 			}
+		}
+	}
+
+	public void SetActionsByEnemyID(int id){
+		foreach (AIAction action in AIActions.GetActionsType(id)) {
+			actions.Add (action.name, action);
 		}
 	}
 

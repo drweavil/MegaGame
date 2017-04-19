@@ -67,6 +67,10 @@ public class ReskinController : MonoBehaviour {
 	List<Sprite> armorSprites;
 	List<Sprite> weaponSprites;
 
+
+	public int meleeWeaponSkinID = 0;
+	public int fireWeaponSkinID = 0;
+	public int elementalWeaponSkinID = 0;
 	// Use this for initialization
 	void Awake () {
 		/************************Initialize renderers*************************************/
@@ -93,48 +97,27 @@ public class ReskinController : MonoBehaviour {
 		leftFeetRenderer = leftFeet.GetComponent<SpriteRenderer> ();
 		/********************************************************************/
 
-		armorSprites = new List<Sprite> (Resources.LoadAll<Sprite>("Textures/humanSprite 1"));
-		weaponSprites = new List<Sprite> (Resources.LoadAll<Sprite>("Textures/kower_weap"));
+		armorSprites = new List<Sprite> (Resources.LoadAll<Sprite>("Textures/armorSprites"));
+		weaponSprites = new List<Sprite> (Resources.LoadAll<Sprite>("Textures/weaponSprites"));
 
 
 		//headRenderer.sprite = armorSprites.Find (s => s.name == "head");
-		SetHelm ("standart");
-		SetChest ("standart");
-		SetLegs ("standart");
-		SetWeapon ("m_w_2_3");
+		SetHelm (0);
+		SetChest (0);
+		SetLegs (0);
+		SetMeleeWeapon (6);
 		SetSpritesToRenderers ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.Z)) {
-			/*SetHelm ("s1-1");
-			SetChest ("s1-1");
-			SetLegs ("s1-1");
-			SetWeapon ("r_w_13_1");*/
-			//armSprite = armorSprites.Find (s => s.name == "legs_m");
-			//Debug.Log (armSprite.name);
-		}
-
 		if (Input.GetKeyDown (KeyCode.X)) {
-			SetHelm ("s1-1");
-			SetChest ("s1-1");
-			SetLegs ("s1-1");
-			SetWeapon ("m_w_13_1");
+			//int lol = Random.Range (0, 64);
+			SetHelm (38);
+			SetChest (38);
+			SetLegs (38);
+			//SetWeapon ("m_w_13");
 		}
-
-
-
-
-
-
-
-
-
-
-
-
-
 	}
 		
 
@@ -218,49 +201,67 @@ public class ReskinController : MonoBehaviour {
 
 
 
-	void SetHelm(string setName){
-		if (setName == "standart") {
-			headSprite = armorSprites.Find (s => s.name == "head");
-			helmSprite = armorSprites.Find (s => s.name == "hairWF");
-		}else{
-			helmSprite = armorSprites.Find (s => s.name == setName +"-head");
-		}
+	public void SetHelm(int id){
+		//if (setName == "standart") {
+		headSprite = armorSprites.Find (s => s.name == "head");
+		//	helmSprite = armorSprites.Find (s => s.name == "hairWF");
+		//}else{
+		helmSprite = armorSprites.Find (s => s.name == "head_" + id.ToString());
+		//}
 	}
 
-	void SetChest(string setName){
-		if (setName == "standart") {
+	public void SetChest(int id){
+		/*if (setName == "standart") {
 			torsSprite = armorSprites.Find (s => s.name == "tors_m");
 			armSprite = armorSprites.Find (s => s.name == "legs_m");
 			forearmSprite = armorSprites.Find (s => s.name == "elbow_m");
 			wristSprite = armorSprites.Find (s => s.name == "wrist"); 
 			wrist90Sprite = armorSprites.Find (s => s.name == "wrist90"); 
 			wrist180Sprite = armorSprites.Find (s => s.name == "wrist180");
-		} else {
-			torsSprite = armorSprites.Find (s => s.name == setName + "-tors");
-			armSprite = armorSprites.Find (s => s.name == setName + "-legs-r");
-			forearmSprite = armorSprites.Find (s => s.name == setName + "-elbow-r");
-			wristSprite = armorSprites.Find (s => s.name == setName + "-wrist"); 
-			wrist90Sprite = armorSprites.Find (s => s.name == setName + "-wrist90"); 
-			wrist180Sprite = armorSprites.Find (s => s.name == setName + "-wrist180");
-		}
+		} else {*/
+		torsSprite = armorSprites.Find (s => s.name == "tors_" + id.ToString());
+		armSprite = armorSprites.Find (s => s.name == "arm_" + id.ToString());
+		forearmSprite = armorSprites.Find (s => s.name == "elbow_" + id.ToString());
+		wristSprite = armorSprites.Find (s => s.name == "wrist_" + id.ToString()); 
+		wrist90Sprite = armorSprites.Find (s => s.name == "wrist90_" + id.ToString()); 
+		wrist180Sprite = armorSprites.Find (s => s.name == "wrist180_" + id.ToString());
+		//}
 	}
 
-	void SetLegs(string setName){
-		if (setName == "standart") {
+	public void SetLegs(int id){
+		/*if (setName == "standart") {
 			legSprite = armorSprites.Find (s => s.name ==  "r_m_leg");
 			shinSprite = armorSprites.Find (s => s.name == "shin_m");
 			feetSpriteA = armorSprites.Find (s => s.name ==  "feet_a");
 			feetSpriteB = armorSprites.Find (s => s.name ==  "feet_b");
-		} else {
-			legSprite = armorSprites.Find (s => s.name == setName + "-leg-r");
-			shinSprite = armorSprites.Find (s => s.name == setName + "-shin");
-			feetSpriteA = armorSprites.Find (s => s.name == setName + "-feet-a");
-			feetSpriteB = armorSprites.Find (s => s.name == setName + "-feet-b");
+		} else {*/
+		legSprite = armorSprites.Find (s => s.name == "leg_" + id.ToString());
+		shinSprite = armorSprites.Find (s => s.name == "shin_" + id.ToString());
+		feetSpriteA = armorSprites.Find (s => s.name == "feet_a_" + id.ToString());
+		feetSpriteB = armorSprites.Find (s => s.name == "feet_b_" + id.ToString());
+		//}
+	}
+
+	public void ChangeSpec(int specId){
+		if (specId == Stats.meleeSpec) {
+			SetMeleeWeapon (meleeWeaponSkinID);
+		} else if (specId == Stats.fireSpec) {
+			SetFireWeapon (fireWeaponSkinID);
+		} else if (specId == Stats.elementalSpec) {
+			SetElementalWeapon (elementalWeaponSkinID);
 		}
 	}
 
-	void SetWeapon(string setName){
-		weaponSprite = weaponSprites.Find (s => s.name == setName);
+	public void SetMeleeWeapon(int id){
+		weaponSprite = weaponSprites.Find (s => s.name == "m_w_"+ id.ToString());
+	}
+
+	public void SetFireWeapon(int id){
+		weaponSprite = weaponSprites.Find (s => s.name == "r_w_" + id.ToString());
+	}
+
+	public void SetElementalWeapon(int id){
+		weaponSprite = weaponSprites.Find (s => s.name == "e_w_" + id.ToString());
 	}
 
 	void SetSpritesToRenderers(){

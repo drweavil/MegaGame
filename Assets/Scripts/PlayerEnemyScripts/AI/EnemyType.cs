@@ -12,6 +12,7 @@ public class EnemyType {
 	public float physicalArmorPointsPercent;
 	public float elementalArmorPointsPercent;
 	public int id;
+	public int specID;
 
 
 	public static EnemyType GetType(int id){
@@ -29,6 +30,7 @@ public class EnemyType {
 		type.physicalArmorPointsPercent = 34f;
 		type.criticalPointsPercent = 34f;
 		type.elementalArmorPointsPercent = 8f;
+		type.specID = Stats.meleeSpec;
 		return type;
 	}
 
@@ -41,6 +43,7 @@ public class EnemyType {
 		type.physicalArmorPointsPercent = 34f;
 		type.criticalPointsPercent = 8f;
 		type.elementalArmorPointsPercent = 8f;
+		type.specID = Stats.meleeSpec;
 		return type;
 	}
 
@@ -53,6 +56,7 @@ public class EnemyType {
 		type.physicalArmorPointsPercent = 8f;
 		type.criticalPointsPercent = 8f;
 		type.elementalArmorPointsPercent = 34f;
+		type.specID = Stats.fireSpec;
 		return type;
 	}
 
@@ -65,6 +69,7 @@ public class EnemyType {
 		type.physicalArmorPointsPercent = 8f;
 		type.criticalPointsPercent = 34f;
 		type.elementalArmorPointsPercent = 8f;
+		type.specID = Stats.fireSpec;
 		return type;
 	}
 
@@ -77,6 +82,7 @@ public class EnemyType {
 		type.physicalArmorPointsPercent = 8f;
 		type.criticalPointsPercent = 34f;
 		type.elementalArmorPointsPercent = 8f;
+		type.specID = Stats.elementalSpec;
 		return type;
 	}
 
@@ -89,6 +95,7 @@ public class EnemyType {
 		type.physicalArmorPointsPercent = 8f;
 		type.criticalPointsPercent = 8f;
 		type.elementalArmorPointsPercent = 8f;
+		type.specID = Stats.elementalSpec;
 		return type;
 	}
 
@@ -101,6 +108,7 @@ public class EnemyType {
 		type.physicalArmorPointsPercent = 8f;
 		type.criticalPointsPercent = 8f;
 		type.elementalArmorPointsPercent = 8f;
+		type.specID = Stats.meleeSpec;
 		return type;
 	}
 
@@ -113,6 +121,7 @@ public class EnemyType {
 		type.physicalArmorPointsPercent = 1f;
 		type.criticalPointsPercent = 1f;
 		type.elementalArmorPointsPercent = 1f;
+		type.specID = Stats.fireSpec;
 		return type;
 	}
 
@@ -125,6 +134,7 @@ public class EnemyType {
 		type.physicalArmorPointsPercent = 1f;
 		type.criticalPointsPercent = 1f;
 		type.elementalArmorPointsPercent = 1f;
+		type.specID = Stats.elementalSpec;
 		return type;
 	}
 

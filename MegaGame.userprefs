@@ -1,28 +1,33 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlayerEnemyScripts\Spells\SkillSettingsSet.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Tools\Editor\Tools.cs">
     <Files>
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\AI\AIActionParam.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\MovementController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\AI\AIController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\AI\AIActions.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\AI\AIControllerParams.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\CharacterAPI.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\PlayerScript.cs" Line="61" Column="29" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\Stats.cs" Line="647" Column="40" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\PlayerController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Timer.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\Effects\EffectOptions.cs" Line="15" Column="35" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\AI\EnemyType.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\SpellHitbox.cs" Line="11" Column="2" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\StreamHitbox.cs" Line="11" Column="42" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\HitboxDamagerOptions.cs" Line="15" Column="42" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\ThunderClapHitbox.cs" Line="25" Column="6" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\Effects\Effect.cs" Line="22" Column="33" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\SpellBall.cs" Line="53" Column="76" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\Skills.cs" Line="1699" Column="56" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\SkillSettingsSet.cs" Line="67" Column="24" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\SkillSettings.cs" Line="21" Column="32" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\PlayerController.cs" Line="123" Column="61" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Equipment\EquipmentGenerator.cs" Line="85" Column="15" />
+      <File FileName="Assets\Scripts\GUI\Inventory\Equipment.cs" Line="16" Column="34" />
+      <File FileName="Assets\Scripts\GUI\Inventory\EquipmentRune.cs" Line="12" Column="14" />
+      <File FileName="Assets\Scripts\GUI\HealthBar\HealthBar.cs" Line="33" Column="42" />
+      <File FileName="Assets\Scripts\GUI\HealthBar\HealthBarPool.cs" Line="22" Column="17" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\MovementController.cs" Line="8" Column="57" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\Skills.cs" Line="65" Column="24" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Stats.cs" Line="645" Column="21" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\PlayerHealthBar.cs" Line="122" Column="41" />
+      <File FileName="Assets\Scripts\StartProcess.cs" Line="7" Column="47" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\ReskinController.cs" Line="119" Column="6" />
+      <File FileName="Assets\Scripts\GUI\SlideAimButton.cs" Line="111" Column="54" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\Perk.cs" Line="8" Column="4" />
+      <File FileName="Assets\Scripts\GUI\Inventory\BuffButton.cs" Line="8" Column="3" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\AI\EnemyType.cs" Line="20" Column="1" />
+      <File FileName="Assets\Scripts\GUI\InterfaceSystemController.cs" Line="23" Column="46" />
+      <File FileName="Assets\Scripts\GUI\BattleInterface\BattleInterfaceController.cs" Line="92" Column="66" />
+      <File FileName="Assets\Scripts\InteractiveObjects\PortalScript.cs" Line="21" Column="4" />
+      <File FileName="Assets\Scripts\GUI\ButtonsController.cs" Line="7" Column="31" />
+      <File FileName="Assets\Scripts\GUI\BattleInterface\BattleSkillsPanel\SkillPanelController.cs" Line="7" Column="28" />
+      <File FileName="Assets\Scripts\GUI\BattleInterface\BattleSkillsPanel\SkillPanelChanger.cs" Line="74" Column="6" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\AI\AIController.cs" Line="48" Column="4" />
+      <File FileName="Assets\Scripts\GUI\EquipmentInterface\EquipmentController.cs" Line="53" Column="97" />
+      <File FileName="Assets\Scripts\Tools\Editor\MenuExtends.cs" Line="42" Column="3" />
+      <File FileName="Assets\Scripts\Tools\Editor\Tools.cs" Line="139" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

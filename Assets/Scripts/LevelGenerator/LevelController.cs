@@ -31,7 +31,7 @@ public class LevelController : MonoBehaviour {
 
 	public GameObject levelEnvironment;
 	public GameObject levelInteractiveObjects;
-	public ButtonsController buttonsController;
+	//public ButtonsController buttonsController;
 
 	string levelTextureName = "earth";
 	public Texture levelTexture;
@@ -51,7 +51,7 @@ public class LevelController : MonoBehaviour {
 		levelMeshPrefab = (GameObject)Resources.Load ("LevelMesh");
 		player = GameObject.Find ("Player");
 		generator = GameObject.Find ("LevelController").GetComponent<LevelGeneration>();
-		buttonsController = GameObject.Find ("ButtonsController").GetComponent<ButtonsController>();
+		//buttonsController = GameObject.Find ("ButtonsController").GetComponent<ButtonsController>();
 		//level = generator.CreateLevelPath (10, 10);
 
 		levelChunkFilesInfo = SaveLoadManager.LoadLevelChunkFilesInfo();
@@ -276,7 +276,7 @@ public class LevelController : MonoBehaviour {
 
 				SerializableVector3 portalCoords = portal.coord;// newPortalInfo.portalCoord;
 				newPortal.transform.position = new Vector3 (portalCoords.x + coord.x, portalCoords.y + coord.y, portalCoords.z + coord.z);
-				newPortal.GetComponent<PortalScript> ().teleportButton = buttonsController.teleportButton;
+				//newPortal.GetComponent<PortalScript> ().teleportButton = buttonsController.teleportButton;
 
 				portals.Add (newPortalScript); 
 			}

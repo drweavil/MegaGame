@@ -17,7 +17,9 @@ public class PortalScript : MonoBehaviour {
 
 
 	void Awake(){
-		teleportButton = GameObject.Find ("ButtonsController").GetComponent<ButtonsController> ().teleportButton;
+		StartProcess.StartActionAfterFewFrames(10, () => {
+			teleportButton = ButtonsController.buttonsController.teleportButton;//GameObject.Find ("ButtonsController").GetComponent<ButtonsController> ().teleportButton;
+		});
 		linkWithLevel = -1;
 		direction = -1;
 	}
@@ -33,13 +35,17 @@ public class PortalScript : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider player){
-		teleportButton.GetComponent<ButtonScript> ().teleport = this;
-		teleportButton.gameObject.SetActive(true);
+		if (player.gameObject.layer == LayerMask.NameToLayer ("Player")) {
+			teleportButton.GetComponent<ButtonScript> ().teleport = this;
+			teleportButton.gameObject.SetActive (true);
+		}
 		//Debug.Log (this.gameObject.name);
 	}
 
 	void OnTriggerExit(Collider player){
-		teleportButton.gameObject.SetActive(false);
+		if (player.gameObject.layer == LayerMask.NameToLayer ("Player")) {
+			teleportButton.gameObject.SetActive (false);
+		}
 	}
 
 	public void SetData(PortalInfo portalInfo){

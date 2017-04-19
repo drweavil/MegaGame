@@ -55,17 +55,22 @@ public class PlayerScript : MonoBehaviour {
 	void Update () {
 		//Debug.Log (direction);
 		if (Input.GetKeyDown (KeyCode.I)) {
-			//EnemyType type = EnemyType.GetType (3);
-			List<float> lol = new List<float>();
-
-			Debug.Log (lol.Min(o => o));
+			//PlayerController.ChangePlayerSpec(0);
+			//stats.AddShieldPoints(1200, Stats.physicalDamageType);
+			//Debug.Log(8%4);
 		}
+		if (Input.GetKeyDown (KeyCode.O)) {
+			//PlayerController.ChangePlayerSpec(0);
+			//stats.MakeDamage(100, Stats.physicalDamageType, true);
+		}		
 
 
 		if (!stats.withoutControl) {
+			//Debug.Log (direction);
 			if (direction.x == 0.0 && direction.y == 0.0) {
 				float inputX = Input.GetAxisRaw ("Horizontal");
 				float inputY = Input.GetAxisRaw ("Vertical");
+
 
 				anim.SetFloat ("DirectionY", inputY);
 

@@ -7,7 +7,7 @@ using System;
 public class Stats : MonoBehaviour {
 	public const int physicalDamageType = 0, hybridDamageType = 1, elementalDamageType = 2; 
 	public const int meleeSpec = 0, fireSpec=1, elementalSpec = 2;
-	public int specId;
+	public int specId = 0;
 
 	public float health;
 	public float elementalShield;
@@ -15,35 +15,37 @@ public class Stats : MonoBehaviour {
 	public float hybridShield;
 
 	public float maximumHealth;
-	public int stamina = 0;
+	public float stamina = 0;
 	const float staminaCoeff = 10;
 	private static float healthPercent = 0.2f;
 
 	public float physicalDamage;
-	public int physicalDamagePoints = 0;
+	public float physicalDamagePoints = 0;
 	public float maximumPhysicalDamage = 100;
 	private static float physicalDamagePercent = 0.15f;
 
 	public float elementalDamage;
-	public int elementalDamagePoints = 0;
+	public float elementalDamagePoints = 0;
 	public float maximumElementalDamage = 100;
 	private static float elementalDamagePercent = 0.15f;
 
 	public float armor;
-	public int armorPoints = 0;
+	public float armorPoints = 0;
 	public float maximumArmor = 60;
 	private static float armorPercent = 0.15f;
 
 	public float elementalArmor;
-	public int elementalArmorPoints = 0;
+	public float elementalArmorPoints = 0;
 	public float maximumElementalArmor = 60;
 	private static float elementalArmorPercent = 0.15f;
 
 	public float critical;
-	public int criticalPoints = 0;
+	public float criticalPoints = 0;
 	public float maximumCritical = 50;
 	private static float criticalPercent = 0.2f;
-	public int weaponDamage = 0;
+	public float weaponDamage = 0;
+	public float fireWeaponDamage = 0;
+	public float elementalWeaponDamage = 0;
 
 
 
@@ -115,6 +117,9 @@ public class Stats : MonoBehaviour {
 	public PlayerHealthBar playerHealthBar;
 	public CharacterAPI characterAPI;
 
+
+
+
 	
 	//private Object playerScript;
 
@@ -124,7 +129,9 @@ public class Stats : MonoBehaviour {
 		/*SetMaximumHealth ();
 		RestoreMaximumHealth ();*/
 		shieldTimer = new Timer ();
-		SetStatsByComplexity (600);
+		if (isPlayerStats) {
+			SetStatsByComplexity (10);
+		}
 		deathPlayed = false;
 		//SetMaximumFireResource ();
 	}
@@ -132,9 +139,14 @@ public class Stats : MonoBehaviour {
 
 
 	void Update(){
+		/*if (Input.GetKeyDown (KeyCode.U)) {
+			SetSpec (1);
+		}*/
 		if (canRestoreHealthTimer.TimeIsOver()) {
 			if(restoreHealthTimer.TimeIsOver() && health != GetMaximumHealth()){
-				RestoreHealth (healthRestorePoints);
+				Stats.NumberParams restore = new Stats.NumberParams ();
+				restore.number = GetMaximumHealth() * 0.02f;
+				RestoreHealth (restore);
 				restoreHealthTimer.SetTimer (healthRestoreTime);
 			}
 		}
@@ -173,6 +185,34 @@ public class Stats : MonoBehaviour {
 		}
 	}
 
+	public int GetResourceBySpec(){
+		int value = 0;
+		if (specId == Stats.meleeSpec) {
+			value = meleeEnergy;
+		} else if (specId == Stats.fireSpec) {
+			value = fireEnergy;
+		} else if (specId == Stats.elementalSpec) {
+			value = magicEnergy;
+		}
+		return value;
+	}
+
+	public void SetStatsToNull(){
+		health = 0;
+		stamina = 0;
+		maximumHealth = 0;
+		physicalDamage = 0;
+		physicalDamagePoints = 0;
+		elementalDamage = 0;
+		elementalDamagePoints = 0;
+		critical = 0;
+		criticalPoints = 0;
+		elementalArmor = 0;
+		elementalArmorPoints = 0;
+		armor = 0;
+		armorPoints = 0;
+	}
+
 
 	public void SetMaximumHealth(){
 		maximumHealth = GetMaximumHealth();
@@ -194,34 +234,47 @@ public class Stats : MonoBehaviour {
 
 
 
-	public void MakeDamage(float damage, int damageType = -1, bool withResTimer = false){
+	public void MakeDamage(NumberParams damage, int damageType = -1, bool withResTimer = true, SkillSettings skillSettings = default(SkillSettings)){
 		if (damageType == physicalDamageType) {
-			damage = damage - ((damage*armor)/100f);
+			damage.number = damage.number - ((damage.number*armor)/100f);
 			if (physicalShield > 0) {
-				damage = RemoveShieldPoints (damage, Stats.physicalDamageType);
+				damage.number = RemoveShieldPoints (damage.number, Stats.physicalDamageType);
 			}
 		}
 		if (damageType == elementalDamageType) {
-			damage = damage - ((damage*elementalArmor)/100f);
+			damage.number = damage.number - ((damage.number*elementalArmor)/100f);
 			if (elementalShield > 0) {
-				damage = RemoveShieldPoints (damage, Stats.elementalDamageType);
+				damage.number = RemoveShieldPoints (damage.number, Stats.elementalDamageType);
 			}
 		}
 
 		if (hybridShield > 0) {
-			float residualDamage = RemoveShieldPoints (damage, Stats.hybridDamageType);
-			damage = (damage / 2f) + residualDamage;
+			float residualDamage = RemoveShieldPoints (damage.number, Stats.hybridDamageType);
+			damage.number = (damage.number / 2f) + residualDamage;
 		}
 
-		if (damage < 0) {
-			damage = 0;
+		if (damage.number < 0) {
+			damage.number = 0;
 		}
 
-		health -= damage;
+		health -= damage.number;
 
 
-		if(isPlayerStats){
-			playerHealthBar.SetHealth (health);
+		if (BattleInterfaceController.battleInterfaceController.battleInterface.activeInHierarchy) {
+			if (playerHealthBar.gameObject.activeInHierarchy) {
+				playerHealthBar.SetHealth (health);
+				if (damage.number != 0) {
+					int hpBarDamage = (int)damage.number;
+					if (hpBarDamage == 0) {
+						hpBarDamage = 1;
+					}
+					PlayerHealthBar.NumberParams numberParams = new PlayerHealthBar.NumberParams ();
+					numberParams.damageType = damageType;
+					numberParams.number = hpBarDamage;
+					numberParams.isCrit = damage.isCrit;
+					playerHealthBar.AddDamage (numberParams);
+				}
+			}
 		}
 
 		if (health <= 0) {
@@ -233,35 +286,39 @@ public class Stats : MonoBehaviour {
 		}
 	}
 
-	public void AddShieldPoints(float shieldPoints, int shieldType){
+	public void AddShieldPoints(NumberParams shieldPoints, int shieldType){
 		if (Stats.physicalDamageType == shieldType) {
-			physicalShield += shieldPoints;
+			physicalShield += shieldPoints.number;
 			elementalShield = 0;
 			hybridShield = 0;
 
-			if(isPlayerStats){
+			if(playerHealthBar.gameObject.activeInHierarchy){
 				playerHealthBar.SetShield (physicalShield);
 			}
 		}
 
 		if (Stats.elementalDamageType == shieldType) {
 			physicalShield = 0;
-			elementalShield += shieldPoints;
+			elementalShield += shieldPoints.number;
 			hybridShield = 0;
 
-			if(isPlayerStats){
+			//if(isPlayerStats){
 				playerHealthBar.SetShield (elementalShield);
-			}
+			//}
 		}
 
 		if (Stats.hybridDamageType == shieldType) {
 			physicalShield = 0;
 			elementalShield = 0;
-			hybridShield += shieldPoints;
+			hybridShield += shieldPoints.number;
 
-			if(isPlayerStats){
-				playerHealthBar.SetShield (hybridShield);
+			//if(isPlayerStats){
+			if (BattleInterfaceController.battleInterfaceController.battleInterface) {
+				if (playerHealthBar.gameObject.activeInHierarchy) {
+					playerHealthBar.SetShield (hybridShield);
+				}
 			}
+			//}
 		}
 	}
 
@@ -276,7 +333,7 @@ public class Stats : MonoBehaviour {
 				physicalShield += physicalShield * -1f;
 			}
 
-			if(isPlayerStats){
+			if(playerHealthBar.gameObject.activeInHierarchy){
 				playerHealthBar.SetShield (physicalShield);
 			}
 		}
@@ -289,7 +346,7 @@ public class Stats : MonoBehaviour {
 				elementalShield += elementalShield * -1f;
 			}
 
-			if(isPlayerStats){
+			if(playerHealthBar.gameObject.activeInHierarchy){
 				playerHealthBar.SetShield (elementalShield);
 			}
 		}
@@ -302,20 +359,34 @@ public class Stats : MonoBehaviour {
 				hybridShield += hybridShield * -1f;
 			}
 
-			if(isPlayerStats){
-				playerHealthBar.SetShield (hybridShield);
+			if (BattleInterfaceController.battleInterfaceController.battleInterface.activeInHierarchy) {
+				if (playerHealthBar.gameObject.activeInHierarchy) {
+					playerHealthBar.SetShield (hybridShield);
+				}
 			}
 		}
 		return residualPoints;
 	}
 
-	public void RestoreHealth(float restore){
-		health += restore;
+	public void RestoreHealth(NumberParams restore){
+		health += restore.number;
 		if (health > GetMaximumHealth ()) {
 			health -= health - GetMaximumHealth ();
 		}
-		if(isPlayerStats){
-			playerHealthBar.SetHealth (health);
+		if (BattleInterfaceController.battleInterfaceController.battleInterface.activeInHierarchy) {
+			if (playerHealthBar.gameObject.activeInHierarchy) {
+				if (restore.number != 0) {
+					PlayerHealthBar.NumberParams numberParams = new PlayerHealthBar.NumberParams ();
+					numberParams.number = (int)restore.number;
+					numberParams.isDamage = false;
+					numberParams.isCrit = restore.isCrit;
+					if (restore.number < 1) {
+						numberParams.number = 1;
+					}
+					playerHealthBar.AddDamage (numberParams);
+				}
+				playerHealthBar.SetHealth (health);
+			}
 		}
 	}
 
@@ -341,9 +412,9 @@ public class Stats : MonoBehaviour {
 		if (meleeEnergy > maximumMeleeEnergy) {
 			meleeEnergy -= meleeEnergy - maximumMeleeEnergy;
 		}
-		if (isPlayerStats) {
+		//if (isPlayerStats) {
 			SetRecourceToBar ();
-		}
+		//}
 		if (withResTimer) {
 			canRemoveMeleResourceTimer.SetTimer (meleeCanRemoveTime);	
 		}
@@ -358,9 +429,9 @@ public class Stats : MonoBehaviour {
 			}
 			//fireEnergy -= fireEnergy - maximumFireEnergy;
 		}
-		if (isPlayerStats) {
+		//if (isPlayerStats) {
 			SetRecourceToBar ();
-		}
+		//}
 		if (withResTimer) {
 			canRestoreFireResourceTimer.SetTimer (fireCanRestoreTime);	
 		}
@@ -371,9 +442,9 @@ public class Stats : MonoBehaviour {
 		if (magicEnergy > maximumMagicEnergy) {
 			magicEnergy -= magicEnergy - maximumMagicEnergy;
 		}
-		if (isPlayerStats) {
+		//if (isPlayerStats) {
 			SetRecourceToBar ();
-		}
+		//}
 		if (withResTimer) {
 			canRemoveMagicResourceTimer.SetTimer (magicCanRemoveTime);	
 		}
@@ -385,9 +456,9 @@ public class Stats : MonoBehaviour {
 			if (meleeEnergy < 0) {
 				meleeEnergy += meleeEnergy * -1;
 			}
-			if (isPlayerStats) {
+			//if (isPlayerStats) {
 				SetRecourceToBar ();
-			}
+			//}
 		}
 		if (withResTimer) {
 			canRemoveMeleResourceTimer.SetTimer (meleeCanRemoveTime);	
@@ -403,9 +474,9 @@ public class Stats : MonoBehaviour {
 			if (fireEnergy < 0) {
 				fireEnergy += fireEnergy * -1;
 			}
-			if (isPlayerStats) {
+			//if (isPlayerStats) {
 				SetRecourceToBar ();
-			}
+			//}
 		}
 		if (withResTimer) {
 			canRestoreFireResourceTimer.SetTimer (fireCanRestoreTime);	
@@ -418,9 +489,9 @@ public class Stats : MonoBehaviour {
 			if (magicEnergy < 0) {
 				magicEnergy += magicEnergy * -1;
 			}
-			if (isPlayerStats) {
+			//if (isPlayerStats) {
 				SetRecourceToBar ();
-			}
+			//}
 		}
 		if (withResTimer) {
 			canRemoveMagicResourceTimer.SetTimer (magicCanRemoveTime);	
@@ -433,43 +504,47 @@ public class Stats : MonoBehaviour {
 	}
 
 
-	private void SetRecourceToBar(){
-		if(PlayerController.currentSpec == PlayerController.melee){
-			playerHealthBar.SetResource (meleeEnergy);
+	public void SetRecourceToBar(){
+		if (BattleInterfaceController.battleInterfaceController.battleInterface.activeInHierarchy) {
+			if (playerHealthBar.gameObject.activeInHierarchy) {
+				if (specId == PlayerController.melee) {
+					playerHealthBar.SetResource (meleeEnergy);
+				}
+				if (specId == PlayerController.fire) {
+					playerHealthBar.SetResource (fireEnergy);
+				}
+				if (specId == PlayerController.magic) {
+					playerHealthBar.SetResource (magicEnergy);
+				}
+			}
 		}
-		if(PlayerController.currentSpec == PlayerController.fire){
-			playerHealthBar.SetResource (fireEnergy);
-		}
-		if(PlayerController.currentSpec == PlayerController.magic){
-			playerHealthBar.SetResource (magicEnergy);
-		}
 	}
 
 
 
 
-	static int GetMaximumPhysicalDamagePoints(){
-		return (int)(PlayerController.maximumComplexity * physicalDamagePercent);
+	static float GetMaximumPhysicalDamagePoints(){
+		return (PlayerController.maximumComplexity * physicalDamagePercent);
 	}
 
-	static int GetMaximumElementalDamagePoints(){
-		return (int)(PlayerController.maximumComplexity * elementalDamagePercent);
+	static float GetMaximumElementalDamagePoints(){
+		return (PlayerController.maximumComplexity * elementalDamagePercent);
 	}
 
-	static int GetMaximumCriticalPoints(){
-		return (int)(PlayerController.maximumComplexity * criticalPercent);
+	static float GetMaximumCriticalPoints(){
+		return (PlayerController.maximumComplexity * criticalPercent);
 	}
 
-	static int GetMaximumArmorPoints(){
-		return (int)(PlayerController.maximumComplexity * armorPercent);
+	static float GetMaximumArmorPoints(){
+		return (PlayerController.maximumComplexity * armorPercent);
 	}
 
-	static int GetMaximumElementalArmorPoints(){
-		return (int)(PlayerController.maximumComplexity * elementalArmorPercent);
+	static float GetMaximumElementalArmorPoints(){
+		return (PlayerController.maximumComplexity * elementalArmorPercent);
 	}
 
 
-	public void ChangeHealthPoints(int points){
+	public void ChangeHealthPoints(float points){
 		stamina = stamina + points;
 		if (stamina < 0) {
 			stamina = 0;
@@ -477,10 +552,10 @@ public class Stats : MonoBehaviour {
 		SetMaximumHealth ();
 	}
 
-	public void SetPhysicalDamageByPoints (int points){
+	public void SetPhysicalDamageByPoints (float points){
 		physicalDamage = (float)Math.Round((float)(((float)points / (float)GetMaximumPhysicalDamagePoints ()) * (float)maximumPhysicalDamage), 2);
 	}
-	public void ChangePhysicalDamagePoints(int points){
+	public void ChangePhysicalDamagePoints(float points){
 		physicalDamagePoints = physicalDamagePoints + points;
 		if (physicalDamagePoints > 0) {
 			SetPhysicalDamageByPoints (physicalDamagePoints);
@@ -490,10 +565,10 @@ public class Stats : MonoBehaviour {
 		}
 	}
 
-	public void SetElementalDamageByPoints (int points){
+	public void SetElementalDamageByPoints (float points){
 		elementalDamage = (float)Math.Round((float)(((float)points / (float)GetMaximumElementalDamagePoints ()) * (float)maximumElementalDamage), 2);
 	}
-	public void ChangeElementalDamagePoints(int points){
+	public void ChangeElementalDamagePoints(float points){
 		elementalDamagePoints = elementalDamagePoints + points;
 		if (elementalDamagePoints > 0) {
 			SetElementalDamageByPoints (elementalDamagePoints);
@@ -503,13 +578,13 @@ public class Stats : MonoBehaviour {
 		}
 	}
 
-	public void SetArmorByPoints(int points){
+	public void SetArmorByPoints(float points){
 		armor = (float)Math.Round((float)(((float)points / (float)GetMaximumArmorPoints ()) * (float)maximumArmor), 2);
 		if (armor > maximumArmor) {
 			armor = maximumArmor;
 		}
 	}
-	public void ChangeArmorPoints(int points){
+	public void ChangeArmorPoints(float points){
 		armorPoints = armorPoints + points;
 		if (armorPoints > 0) {
 			SetArmorByPoints (armorPoints);
@@ -520,13 +595,13 @@ public class Stats : MonoBehaviour {
 	}
 
 
-	public void SetElementalArmorByPoints(int points){
+	public void SetElementalArmorByPoints(float points){
 		elementalArmor = (float)Math.Round((float)(((float)points / (float)GetMaximumElementalArmorPoints ()) * (float)maximumElementalArmor), 2);
 		if (elementalArmor > maximumElementalArmor) {
 			elementalArmor = maximumElementalArmor;
 		}
 	}
-	public void ChangeElementalArmorPoints(int points){
+	public void ChangeElementalArmorPoints(float points){
 		elementalArmorPoints = elementalArmorPoints + points;
 		if (elementalArmorPoints > 0) {
 			SetElementalArmorByPoints (elementalArmorPoints);
@@ -537,13 +612,13 @@ public class Stats : MonoBehaviour {
 	}
 
 
-	public void SetCriticalByPoints(int points){
+	public void SetCriticalByPoints(float points){
 		critical = (float)Math.Round((float)(((float)points / (float)GetMaximumCriticalPoints ()) * (float)maximumCritical), 2);
 		if (critical > maximumCritical) {
 			critical = maximumCritical;
 		}	
 	}
-	public void ChangeCriticalPoints(int points){
+	public void ChangeCriticalPoints(float points){
 		criticalPoints = criticalPoints + points;
 		if (criticalPoints > 0) {
 			SetCriticalByPoints (criticalPoints);
@@ -556,19 +631,43 @@ public class Stats : MonoBehaviour {
 	public void SetSpec(int newSpecId){
 		specId = newSpecId;
 		characterAPI.skills.anim.SetInteger ("SpecID", newSpecId); 
+		characterAPI.reskinController.ChangeSpec (newSpecId);
+		//Debug.Log (newSpecId);
+		StartCoroutine(StartProcess.StartActionAfterFewFrames(7, ()=>{
+			if(BattleInterfaceController.battleInterfaceController.battleInterface.activeInHierarchy){
+				if(this.gameObject.activeInHierarchy){
+					characterAPI.healthBar.ChangeToSpec (newSpecId);
+				}
+			}
+		}));
 	}
 
-	public void SetStatsByComplexity (int complexity){
-		ChangeHealthPoints ((int)Math.Round((float)complexity * healthPercent));
-		ChangePhysicalDamagePoints ((int)Math.Round((float)complexity * physicalDamagePercent));
-		ChangeElementalDamagePoints ((int)Math.Round((float)complexity * elementalDamagePercent));
-		ChangeArmorPoints ((int)Math.Round((float)complexity * armorPercent));
-		ChangeElementalArmorPoints ((int)Math.Round((float)complexity * elementalArmorPercent));
-		ChangeCriticalPoints ((int)Math.Round((float)complexity * criticalPercent));
-		RestoreMaximumHealth ();
+	public void SetStatsByComplexity (float complexity, int enemyID = -1){
+		SetStatsToNull ();
+
+		if (enemyID == -1) {
+			ChangeHealthPoints ((float)Math.Round ((float)complexity * healthPercent));
+			ChangePhysicalDamagePoints ((float)Math.Round ((float)complexity * physicalDamagePercent));
+			ChangeElementalDamagePoints ((float)Math.Round ((float)complexity * elementalDamagePercent));
+			ChangeArmorPoints ((float)Math.Round ((float)complexity * armorPercent));
+			ChangeElementalArmorPoints ((float)Math.Round ((float)complexity * elementalArmorPercent));
+			ChangeCriticalPoints ((float)Math.Round ((float)complexity * criticalPercent));
+			RestoreMaximumHealth ();
+			SetSpec (Stats.meleeSpec);
+		} else {
+			EnemyType enemyType = EnemyType.GetType (enemyID);
+			ChangeHealthPoints ((float)Math.Round ((float)complexity * (enemyType.staminaPercent/100)));
+			ChangePhysicalDamagePoints ((float)Math.Round ((float)complexity * (enemyType.physicalDamagePointsPercent/100)));
+			ChangeElementalDamagePoints ((float)Math.Round ((float)complexity * (enemyType.elementalDamagePointsPercent/100)));
+			ChangeArmorPoints ((float)Math.Round ((float)complexity * (enemyType.physicalArmorPointsPercent/100)));
+			ChangeElementalArmorPoints ((float)Math.Round ((float)complexity * (enemyType.elementalArmorPointsPercent/100)));
+			ChangeCriticalPoints ((float)Math.Round ((float)complexity * (enemyType.criticalPointsPercent/100)));
+			RestoreMaximumHealth ();
+			SetSpec (enemyType.specID);
+		}
 
 		weaponDamage = EquipmentGenerator.GetWeaponDamageByComplexity (complexity);
-		SetSpec (Stats.meleeSpec);
+		
 	}
 
 
@@ -650,11 +749,13 @@ public class Stats : MonoBehaviour {
 		yield break;
 	}
 
-	public IEnumerator DealDot(float damage, int damageType, float dotTime, int ticksNumber){
-		float eachTick = damage / ticksNumber;
+	public IEnumerator DealDot(NumberParams damage, int damageType, float dotTime, int ticksNumber){
+		float eachTick = damage.number / ticksNumber;
 		if (eachTick == 0) {
 			eachTick = 1f;
 		}
+		NumberParams eachTickDamage = new NumberParams();
+		eachTickDamage.number = eachTick;
 
 		//Debug.Log (damage.ToString() + ":" + eachTick.ToString());
 
@@ -665,7 +766,9 @@ public class Stats : MonoBehaviour {
 		while (ticksNumber != 0) {
 			if (tickTimer.TimeIsOver ()) {
 				//Debug.Log ("tick");
-				MakeDamage (eachTick, damageType, true);
+
+
+				MakeDamage (eachTickDamage, damageType, true);
 				ticksNumber -= 1;
 				if (ticksNumber == 0) {
 					yield break;
@@ -726,10 +829,13 @@ public class Stats : MonoBehaviour {
 		burnTimer.SetTimer (1f);
 		while (itIsBurn) {
 			if (burnTimer.TimeIsOver()) {
-				health -= GetMaximumHealth () * GetBurnPercent ();
-				if(isPlayerStats){
-					playerHealthBar.SetHealth (health);
-				}
+				NumberParams burnDamage = new NumberParams ();
+				burnDamage.number = GetMaximumHealth () * GetBurnPercent ();
+				//health -= GetMaximumHealth () * GetBurnPercent ();
+				//if(isPlayerStats){
+				MakeDamage(burnDamage, Stats.elementalDamageType, true);
+				//	playerHealthBar.SetHealth (health);
+				//}
 				canRestoreHealthTimer.SetTimer (healthCanRestoreTime);
 				burnTimer.SetTimer (1f);
 				if (health <= 0) {
@@ -749,14 +855,18 @@ public class Stats : MonoBehaviour {
 	public void Death(){
 		if (isPlayerStats) {
 		} else {
+			
 			withoutControl = true;
 			characterAPI.movementController.rigidbody.velocity = new Vector3 (0, 0, 0);
 
+
 			List<object> paramsList = new List<object> ();
 			Skills.AfterAnimationAction afterAction = (List<object> actionParamsList) => {
+				characterAPI.healthBarController.PushBarToPool();
 				ObjectsPool.PushObject("InteractionObjects/enemyH", this.gameObject);
 			};
 			int random = UnityEngine.Random.Range(0, 2);
+			//characterAPI.skills.anim.Stop ();
 			if (random == 0) {
 				characterAPI.skills.anim.Play ("Death");
 				StartCoroutine (characterAPI.skills.WaitAnimationActionAndStartEvent ("Death", 0, afterAction, paramsList));
@@ -783,16 +893,18 @@ public class Stats : MonoBehaviour {
 	}
 
 	public void StartCD(float cdTime, int skillID){
-		Timer gcdTimer = new Timer();
-		gcdTimer.SetTimer(cdTime);
-		skillsOnCD.Add (skillID);
-		Timer.TimerAction timerAction = () => {
-			skillsOnCD.Remove(skillID);
-		};
+		if (cdTime != 0) {
+			Timer gcdTimer = new Timer ();
+			gcdTimer.SetTimer (cdTime);
+			skillsOnCD.Add (skillID);
+			StartCoroutine(gcdTimer.ActionAfterTimer (() => {
+				skillsOnCD.Remove (skillID);
+			}));
+		}
 	}
 
 	public bool SkillOnCD(int skillID){
-		if (skillsOnCD.FindIndex (i => i == skillID) != -1) {
+		if (skillsOnCD.FindIndex (i => i == skillID) == -1) {
 			return false;
 		} else {
 			return true;
@@ -800,6 +912,14 @@ public class Stats : MonoBehaviour {
 	}
 
 	public void Cauterization(int resource){
-		RestoreHealth (((maximumHealth * 0.1f) / 100f) * (float)resource);
+		NumberParams restore = new NumberParams ();
+		restore.number = ((maximumHealth * 0.1f) / 100f) * (float)resource;
+		RestoreHealth (restore);
+	}
+
+
+	public class NumberParams{
+		public float number;
+		public bool isCrit;
 	}
 }
