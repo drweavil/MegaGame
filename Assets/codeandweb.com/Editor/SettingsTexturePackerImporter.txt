@@ -1,19 +1,28 @@
 version: 2
-importPivots: 1
+importPivots: 0
 tpsheetFileNames:
 - Assets/codeandweb.com/Example/SpriteSheet/sprites.tpsheet
+- Assets/Resources/Textures/accessoryIcons.tpsheet
+- Assets/Resources/Textures/armorIcons.tpsheet
 - Assets/Resources/Textures/armorSprites.tpsheet
 - Assets/Resources/Textures/skills.tpsheet
+- Assets/Resources/Textures/weaponIcons.tpsheet
 - Assets/Resources/Textures/weaponSprites.tpsheet
 - Assets/Textures/GUI/commonInterface.tpsheet
 textureFileNames:
 - Assets/codeandweb.com/Example/SpriteSheet/sprites.png
+- Assets/Resources/Textures/accessoryIcons.png
+- Assets/Resources/Textures/armorIcons.png
 - Assets/Resources/Textures/armorSprites.png
 - Assets/Resources/Textures/skills.png
+- Assets/Resources/Textures/weaponIcons.png
 - Assets/Resources/Textures/weaponSprites.png
 - Assets/Textures/GUI/commonInterface.png
 normalmapFileNames:
 - Assets/codeandweb.com/Example/SpriteSheet/sprites_n.png
+- 
+- 
+- 
 - 
 - 
 - 

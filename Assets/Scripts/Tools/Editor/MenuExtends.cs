@@ -41,4 +41,9 @@ public class MenuExtends : EditorWindow {
 		//Tools.SavePivots (armorSprites, "C://megaGameWorkDirectory/armorSprites");
 		Tools.SetPivots("Textures/armorSprites", "C://megaGameWorkDirectory/armorSprites/pivots.dct");
 	}
+
+	[MenuItem("Tools/Test")]
+	public static void Test(){
+		Debug.Log (System.Math.Round (0.001, 2));
+	}
 }

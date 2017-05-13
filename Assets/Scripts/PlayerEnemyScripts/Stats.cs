@@ -16,32 +16,32 @@ public class Stats : MonoBehaviour {
 
 	public float maximumHealth;
 	public float stamina = 0;
-	const float staminaCoeff = 10;
+	public const float staminaCoeff = 10;
 	private static float healthPercent = 0.2f;
 
 	public float physicalDamage;
 	public float physicalDamagePoints = 0;
-	public float maximumPhysicalDamage = 100;
+	public const float maximumPhysicalDamage = 100;
 	private static float physicalDamagePercent = 0.15f;
 
 	public float elementalDamage;
 	public float elementalDamagePoints = 0;
-	public float maximumElementalDamage = 100;
+	public const float maximumElementalDamage = 100;
 	private static float elementalDamagePercent = 0.15f;
 
 	public float armor;
 	public float armorPoints = 0;
-	public float maximumArmor = 60;
+	public const float maximumArmor = 60;
 	private static float armorPercent = 0.15f;
 
 	public float elementalArmor;
 	public float elementalArmorPoints = 0;
-	public float maximumElementalArmor = 60;
+	public const float maximumElementalArmor = 60;
 	private static float elementalArmorPercent = 0.15f;
 
 	public float critical;
 	public float criticalPoints = 0;
-	public float maximumCritical = 50;
+	public const float maximumCritical = 50;
 	private static float criticalPercent = 0.2f;
 	public float weaponDamage = 0;
 	public float fireWeaponDamage = 0;
@@ -523,6 +523,34 @@ public class Stats : MonoBehaviour {
 
 
 
+
+	public static float GetPlusHealthByPoints(float points){
+		return points * staminaCoeff;
+	}
+
+	public static float GetPlusPhysicalArmorByPoints(float points){
+		return (float)Math.Round((float)(((float)points / (float)GetMaximumArmorPoints ()) * (float)maximumArmor), 2);
+	}
+
+	public static float GetPlusElementalArmorByPoints(float points){
+		return (float)Math.Round((float)(((float)points / (float)GetMaximumElementalArmorPoints ()) * (float)maximumElementalArmor), 2);
+	}
+
+	public static float GetPlusCriticalByPoints(float points){
+		return (float)Math.Round((float)(((float)points / (float)GetMaximumCriticalPoints ()) * (float)maximumCritical), 2);
+	}
+
+	public static float GetPlusPhysicalDamageByPoints(float points){
+		return (float)Math.Round((float)(((float)points / (float)GetMaximumPhysicalDamagePoints ()) * (float)maximumPhysicalDamage), 2);
+	}
+
+	public static float GetPlusElementalDamageByPoints(float points){
+		return (float)Math.Round((float)(((float)points / (float)GetMaximumElementalDamagePoints ()) * (float)maximumElementalDamage), 2);
+	}
+
+
+
+
 	static float GetMaximumPhysicalDamagePoints(){
 		return (PlayerController.maximumComplexity * physicalDamagePercent);
 	}
@@ -552,8 +580,9 @@ public class Stats : MonoBehaviour {
 		SetMaximumHealth ();
 	}
 
+
 	public void SetPhysicalDamageByPoints (float points){
-		physicalDamage = (float)Math.Round((float)(((float)points / (float)GetMaximumPhysicalDamagePoints ()) * (float)maximumPhysicalDamage), 2);
+		physicalDamage = GetPlusPhysicalDamageByPoints(points);
 	}
 	public void ChangePhysicalDamagePoints(float points){
 		physicalDamagePoints = physicalDamagePoints + points;
@@ -565,8 +594,9 @@ public class Stats : MonoBehaviour {
 		}
 	}
 
+
 	public void SetElementalDamageByPoints (float points){
-		elementalDamage = (float)Math.Round((float)(((float)points / (float)GetMaximumElementalDamagePoints ()) * (float)maximumElementalDamage), 2);
+		elementalDamage = GetPlusElementalDamageByPoints(points);
 	}
 	public void ChangeElementalDamagePoints(float points){
 		elementalDamagePoints = elementalDamagePoints + points;
@@ -578,8 +608,9 @@ public class Stats : MonoBehaviour {
 		}
 	}
 
+
 	public void SetArmorByPoints(float points){
-		armor = (float)Math.Round((float)(((float)points / (float)GetMaximumArmorPoints ()) * (float)maximumArmor), 2);
+		armor = GetPlusPhysicalArmorByPoints (points);
 		if (armor > maximumArmor) {
 			armor = maximumArmor;
 		}
@@ -595,8 +626,9 @@ public class Stats : MonoBehaviour {
 	}
 
 
+
 	public void SetElementalArmorByPoints(float points){
-		elementalArmor = (float)Math.Round((float)(((float)points / (float)GetMaximumElementalArmorPoints ()) * (float)maximumElementalArmor), 2);
+		elementalArmor = GetPlusElementalArmorByPoints (points);
 		if (elementalArmor > maximumElementalArmor) {
 			elementalArmor = maximumElementalArmor;
 		}
@@ -613,7 +645,7 @@ public class Stats : MonoBehaviour {
 
 
 	public void SetCriticalByPoints(float points){
-		critical = (float)Math.Round((float)(((float)points / (float)GetMaximumCriticalPoints ()) * (float)maximumCritical), 2);
+		critical = GetPlusCriticalByPoints (points);
 		if (critical > maximumCritical) {
 			critical = maximumCritical;
 		}	
@@ -631,7 +663,10 @@ public class Stats : MonoBehaviour {
 	public void SetSpec(int newSpecId){
 		specId = newSpecId;
 		characterAPI.skills.anim.SetInteger ("SpecID", newSpecId); 
-		characterAPI.reskinController.ChangeSpec (newSpecId);
+		StartCoroutine(StartProcess.StartActionAfterFewFrames(2, () => {
+			characterAPI.reskinController.ChangeSpec (newSpecId);
+		}));
+
 		//Debug.Log (newSpecId);
 		StartCoroutine(StartProcess.StartActionAfterFewFrames(7, ()=>{
 			if(BattleInterfaceController.battleInterfaceController.battleInterface.activeInHierarchy){

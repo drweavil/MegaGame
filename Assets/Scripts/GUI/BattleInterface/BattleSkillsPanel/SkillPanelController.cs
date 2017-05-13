@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Reflection;
 
 public class SkillPanelController : MonoBehaviour {
-	public int currentPanelId;
+	public int currentPanelId = 1;
 
 
 	public SkillButton button1;

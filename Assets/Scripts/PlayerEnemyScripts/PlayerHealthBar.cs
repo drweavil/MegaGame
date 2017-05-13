@@ -183,7 +183,7 @@ public class PlayerHealthBar : MonoBehaviour {
 				yield return null;
 			}
 		} else {
-			damageNumber.transform.parent = HealthBarPool.healthBarPool.gameObject.transform;
+			damageNumber.transform.SetParent(HealthBarPool.healthBarPool.gameObject.transform);
 			float slotYPosition = 0;
 			while (slotYPosition < 10f) {
 				slotYPosition += 0.3f * damageNumbers.Count;
@@ -191,7 +191,7 @@ public class PlayerHealthBar : MonoBehaviour {
 				yield return null;
 			}
 		}
-		damageNumber.transform.parent = this.gameObject.transform;
+		damageNumber.transform.SetParent(this.gameObject.transform);
 		damageNumbers.RemoveAt (0);
 		damageNumber.SetActive(false);
 		if (damageNumbers.Count != 0) {
@@ -205,7 +205,7 @@ public class PlayerHealthBar : MonoBehaviour {
 
 	public void IsActive(bool active){
 		if (!active) {
-			damageNumber.transform.parent = this.transform;
+			damageNumber.transform.SetParent(this.transform);
 			gameObject.SetActive (false);
 		} else {
 			gameObject.SetActive (true);

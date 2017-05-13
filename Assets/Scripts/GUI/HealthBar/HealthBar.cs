@@ -27,7 +27,7 @@ public class HealthBar : MonoBehaviour {
 		characterAPI.healthBar = playerHealthBar;
 		StartCoroutine(StartProcess.StartActionAfterFewFrames (5, () => {
 			if(BattleInterfaceController.battleInterfaceController.battleInterface.activeInHierarchy){
-				bar.transform.parent = HealthBarPool.healthBarPool.transform;
+				bar.transform.SetParent(HealthBarPool.healthBarPool.transform);
 				HealthBarPool.healthBars.Add (this);
 			}else{
 				HealthBarPool.deferredHealthBars.Add (this);

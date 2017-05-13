@@ -52,7 +52,7 @@ public class HealthBarPool : MonoBehaviour {
 
 	public static void PublishDeferredHealthBars(){
 		foreach(HealthBar bar in deferredHealthBars){
-			bar.bar.transform.parent = HealthBarPool.healthBarPool.transform;
+			bar.bar.transform.SetParent(HealthBarPool.healthBarPool.transform);
 			healthBars.Add (bar);
 		}
 		deferredHealthBars.Clear ();
