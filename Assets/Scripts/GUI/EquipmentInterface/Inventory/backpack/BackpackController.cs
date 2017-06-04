@@ -11,6 +11,22 @@ public class BackpackController : MonoBehaviour {
 	}
 
 
+	public static void ChangeEquipBackpackItem(Equipment newEquip, int backpackItemID, bool withRedraw = false){
+		int itemIndex = GetBackpackItemIndexInInventoryList (backpackItemID);
+		List<BackpackItem> itemsList = PlayerController.backPackItems;
+		itemsList[itemIndex].weight -= itemsList[itemIndex].weight;
+		itemsList[itemIndex].price -= itemsList[itemIndex].price;
+
+		itemsList[itemIndex].weight += newEquip.weight;
+		itemsList[itemIndex].price += newEquip.price;
+		List<object> content = new List<object> ();
+		content.Add (newEquip);
+		itemsList[itemIndex].itemContent = content;
+		backpackController.backpackView.RecomputeWeight ();
+		if (withRedraw) {
+			backpackController.backpackView.RedrawBackpack ();
+		}
+	}
 
 	public static void AddBackpackItem(BackpackItem item, bool withRedrawBackpackContent = true){
 		PlayerController.backPackItems.Reverse ();
@@ -21,7 +37,7 @@ public class BackpackController : MonoBehaviour {
 
 		if (withRedrawBackpackContent) {
 			if (InterfaceSystemController.interfaceSystemController.equipmentController.equipmentInterface.activeInHierarchy) {
-				backpackController.backpackView.SetButtons (GetBackpackItemsByPage(backpackController.backpackView.currentPage));	
+				backpackController.backpackView.RedrawBackpack ();	
 			}
 		}
 	}
@@ -35,13 +51,17 @@ public class BackpackController : MonoBehaviour {
 
 		if (withRedrawBackpackContent) {
 			if (InterfaceSystemController.interfaceSystemController.equipmentController.equipmentInterface.activeInHierarchy) {
-				if (backpackController.backpackView.currentPage < GetPagesCount ()) {
-					backpackController.backpackView.SetButtons (GetBackpackItemsByPage(backpackController.backpackView.currentPage));
-				} else {
-					backpackController.backpackView.SetButtons (GetBackpackItemsByPage(backpackController.backpackView.currentPage));
-				}
+				backpackController.backpackView.RedrawBackpack ();
 			}
 		}
+	}
+
+	public static int GetBackpackItemIndexInInventoryList(int backpackItemID){
+		return PlayerController.backPackItems.FindIndex (i => i.itemID == backpackItemID);
+	}
+
+	public static BackpackItem GetBackpackItemByID(int ID){
+		return PlayerController.backPackItems.Find (i => i.itemID == ID);
 	}
 
 
@@ -57,7 +77,8 @@ public class BackpackController : MonoBehaviour {
 		if (deltaPageSize < 0) {
 			count = pageItemsCount + deltaPageSize;
 		}
- 
+ 	
+
 		return PlayerController.backPackItems.GetRange (index, count);
 	}
 
@@ -69,22 +90,10 @@ public class BackpackController : MonoBehaviour {
 		}
 
 		if (size > pageItemsCount) {
-			/*float floatPage = size/pageItemsCount;
-			float roundFloatPage = (float)System.Math.Round (floatPage, 0);
-			float deltaSize = floatPage - roundFloatPage;
-			if (deltaSize == 0) {
-				value = (int)floatPage;
-			}
-			if (deltaSize < 0) {
-				value = (int)roundFloatPage;
-			}
-			if (deltaSize > 0) {
-				value = (int)roundFloatPage + 1;
-			}*/
 			float floatPage = size / pageItemsCount;
 			float roundPage = (float)System.Math.Floor (floatPage);
 
-			if (floatPage % pageItemsCount == 0) {
+			if (size % pageItemsCount == 0) {
 				value = (int)floatPage;
 			} else {
 				value = (int)(roundPage + 1);

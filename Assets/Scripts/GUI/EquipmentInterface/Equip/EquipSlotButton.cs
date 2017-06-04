@@ -12,14 +12,12 @@ public class EquipSlotButton : MonoBehaviour {
 		
 		Equipment buttonEquipment = GetButtonEquipment ();
 
-		EquipDialog.equipDialogStatic.OpenDialogInfo (buttonEquipment, PlayerController.GetNullEquipment (buttonEquipment.slotID));
-		/*Debug.Log (Stats.GetPlusHealthByPoints(buttonEquipment.healthPoints));
-		Debug.Log (Stats.GetPlusPhysicalArmorByPoints(buttonEquipment.physicalArmorPoints));
-		Debug.Log (Stats.GetPlusElementalArmorByPoints(buttonEquipment.elementalArmorPoints));
-		Debug.Log (Stats.GetPlusCriticalByPoints(buttonEquipment.criticalPoints));
-		Debug.Log (Stats.GetPlusPhysicalDamageByPoints(buttonEquipment.physicalDamagePoints));
-		Debug.Log (Stats.GetPlusElementalDamageByPoints(buttonEquipment.elementalDamagePoints));
-		Debug.Log (buttonEquipment.weaponDamage);*/
+		if (!buttonEquipment.isNullEquip) {
+			EquipDialog.equipDialogStatic.OpenDialogInfo (buttonEquipment, PlayerController.GetNullEquipment (buttonEquipment.slotID));
+			DialogController.DeactivateButtons ();
+			DialogController.dialogController.equipmentSlotToBackpackButton.SetActive (true);
+			DialogController.dialogController.equipButtonIdInDialog = buttonEquipment.slotID;
+		}
 	}
 
 

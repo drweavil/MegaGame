@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BackpackItem : MonoBehaviour {
+[System.Serializable]
+public class BackpackItem{
 	public int itemID;
 	public List<object> itemContent = new List<object>();
 	public float weight=0;

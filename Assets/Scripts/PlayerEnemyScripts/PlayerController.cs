@@ -7,7 +7,11 @@ public class PlayerController : MonoBehaviour {
 	public static int currentSpec = 0;
 	public static  GameObject player;
 	public GameObject nonStaticPlayer;
-	public static float maximumComplexity = 1200;
+	public static float minimumPrice = 0.00001f;
+	public static float maximumPrice = 100f;
+	public static float minimumComplexity = 0.00001f;
+	public static float maximumComplexity = 1200f;
+	public static int maximumBackpackID = 0;
 	public static int healthInjectionPoolX = 10;
 	public static CharacterAPI playerCharacterAPI;
 	public CharacterAPI nonStaticCharacterAPI;
@@ -34,9 +38,7 @@ public class PlayerController : MonoBehaviour {
 	public static float currentWeight = 0;
 	public static float maximumWeight = 100f; 
 
-
-
-
+	int testInt = 1;
 
 	void Awake(){
 		player = nonStaticPlayer;
@@ -54,7 +56,7 @@ public class PlayerController : MonoBehaviour {
 			PlayerController.SetEquip(EquipmentGenerator.GetTestRandomEquipment(600, Equipment.fireWeapon));
 			PlayerController.SetEquip(EquipmentGenerator.GetTestRandomEquipment(600, Equipment.elementalWeapon));
 
-			for(int i = 0; i < 10; i++){
+			for(int i = 0; i < 8; i++){
 				BackpackController.AddBackpackItem(BackpackItemParamsController.GetNewBackpackItem(EquipmentGenerator.GetTestRandomEquipment(600, (int)Random.Range(0, 9))), false);
 			}
 
@@ -91,13 +93,52 @@ public class PlayerController : MonoBehaviour {
 			//Tools.SetPivots("Textures/weaponSprites", "C://megaGameWorkDirectory/weaponSprites/pivots.dct");
 			//Tools.RenameArmorSprites(ref armorSprites, "C://megaGameWorkDirectory/icons/smot/head/", "-head", "head_");
 
-			//Debug.Log (BackpackController.GetPagesCount());
+			BuffsController.StartBuff (Buffs.GetBuff(testInt));
+			testInt += 1;
+
+			/*BuffsController.StartBuff (Buffs.GetBuff(2));
+			BuffsController.StartBuff (Buffs.GetBuff(3));
+			BuffsController.StartBuff (Buffs.GetBuff(4));
+			BuffsController.StartBuff (Buffs.GetBuff(5));
+			BuffsController.StartBuff (Buffs.GetBuff(6));*/
+
+			//Debug.Log ((LanguageController.jsonFile["buffs"]["buff-1"]["patternsProcess"][0].ToString()));
+
 
 		}
 	}
 
+	public static int GetBackpackItemID(){
+		int value = maximumBackpackID;
+		maximumBackpackID = maximumBackpackID + 1;
+		return value;
+	}
 
-	public static void SetEquip(Equipment equip){
+	public static Equipment GetEquipmentBySlotID(int id){
+		Equipment equip = new Equipment ();
+		if (id == Equipment.head) {
+			equip = head;
+		} else if(id == Equipment.chest){
+			equip = chest;
+		} else if(id == Equipment.legs){
+			equip = legs;
+		} else if(id == Equipment.trinket){
+			equip = trinket;
+		} else if(id == Equipment.finger){
+			equip = finger;
+		} else if(id == Equipment.neck){
+			equip = neck;
+		} else if(id == Equipment.meleeWeapon){
+			equip = meleeWeapon;
+		} else if(id == Equipment.fireWeapon){
+			equip = fireWeapon;
+		} else if(id == Equipment.elementalWeapon){
+			equip = elementalWeapon;
+		}
+		return equip;
+	}
+
+	public static void SetEquip(Equipment equip, bool withRedrawIcon = false){
 		Equipment oldEquip = new Equipment();
 		oldEquip.slotID = -1;
 		if (equip.slotID == Equipment.head) {

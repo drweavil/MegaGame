@@ -33,4 +33,35 @@ public class Timer {
 		action();
 		yield break;
 	}
+
+	public static string GetTimeStringBySeconds(float seconds){
+		int timeH = (int)System.Math.Floor (seconds / 3600);
+		int timeM = (int)System.Math.Floor (seconds / 60);
+		float timeS = seconds;
+
+		int finalTimeH = timeH;
+		int finalTimeM = timeM - (timeH * 60);
+		float finalTimeS = timeS - (timeM * 60);
+
+		string timeString = "";
+
+		if (finalTimeH != 0) {
+			timeString += finalTimeH.ToString() + LanguageController.jsonFile["menu"]["timeAbbreviations"]["h"] + ". ";
+		}
+
+		if (finalTimeM != 0) {
+			timeString += finalTimeM.ToString() + LanguageController.jsonFile["menu"]["timeAbbreviations"]["m"] + ". ";
+		}
+
+		if (finalTimeS != 0) {
+			if ((finalTimeS % 1) == 0) {
+				finalTimeS = (float)System.Math.Round (finalTimeS, 0);
+			} else {
+				finalTimeS = (float)System.Math.Round (finalTimeS, 2);
+			}
+			timeString += finalTimeS.ToString() + LanguageController.jsonFile["menu"]["timeAbbreviations"]["s"] + ". ";
+		}
+
+		return timeString;
+	}
 }

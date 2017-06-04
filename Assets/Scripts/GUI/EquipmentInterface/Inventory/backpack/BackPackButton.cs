@@ -15,6 +15,49 @@ public class BackPackButton : MonoBehaviour {
 	public BackPackButtonEquipContent equipContent;
 
 
+	public void ButtonDown(){
+		active.SetActive (true);
+	}
+
+	public void ButtonUp(){
+		active.SetActive (false);
+
+		BackpackItem item = BackpackController.GetBackpackItemByID (inventoryObjectId);
+		DialogController.dialogController.currenBackpackItemInDialog = item;
+		if (item.itemContent [0].GetType () == typeof(Equipment)) {
+			Equipment equip = (Equipment)item.itemContent [0];
+			if (equip.slotID == Equipment.head) {
+				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.head, item);
+			} else if(equip.slotID == Equipment.chest) {
+				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.chest, item);
+			} else if(equip.slotID == Equipment.legs) {
+				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.legs, item);
+			} else if(equip.slotID == Equipment.neck) {
+				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.neck, item);
+			} else if(equip.slotID == Equipment.finger) {
+				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.finger, item);
+			} else if(equip.slotID == Equipment.trinket) {
+				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.trinket, item);
+			} else if(equip.slotID == Equipment.meleeWeapon) {
+				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.meleeWeapon, item);
+			} else if(equip.slotID == Equipment.fireWeapon) {
+				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.fireWeapon, item);
+			} else if(equip.slotID == Equipment.elementalWeapon) {
+				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.elementalWeapon, item);
+			}
+
+			DialogController.DeactivateButtons ();
+			DialogController.dialogController.backpackAreaDeleteItemButton.SetActive (true);
+			DialogController.dialogController.backpackAreaEquipButton.SetActive (true);
+
+
+		}
+	}
+
+
+
+
+
 	public void SetButton(BackpackItem item){
 		button.SetActive (true);
 		stackFrame.SetActive (false);
@@ -46,7 +89,7 @@ public class BackPackButton : MonoBehaviour {
 			} else if (equip.slotID == Equipment.elementalWeapon) {
 				buttonIcon.sprite = EquipmentController.equipmentController.GetWeaponIcon ("e_w_" + equip.skinID);
 			}
-			equipContent.SetEquipmentStats (equip);
+			equipContent.SetEquipmentStats (item, true);
 		}
 	}
 

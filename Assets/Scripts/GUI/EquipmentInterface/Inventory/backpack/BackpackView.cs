@@ -1,16 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BackpackView : MonoBehaviour {
-	public int currentPage = 0;
-	public int maximumPage = 0;
+	public int currentPage = 1;
+	public int maximumPage = 1;
+	public static BackpackView backpackView;
 	public BackPackButton button1;
 	public BackPackButton button2;
 	public BackPackButton button3;
 	public BackPackButton button4;
+	public Text pageInfo;
 
 
+	void Awake(){
+		backpackView = this;
+	}
 
 	public void SetButtons(List<BackpackItem> items){
 		DeactivateButtons ();
@@ -38,7 +44,34 @@ public class BackpackView : MonoBehaviour {
 
 
 	public void SetPage(int page){
-		SetButtons(BackpackController.GetBackpackItemsByPage (page));
+		if (page <= maximumPage) {
+			SetButtons (BackpackController.GetBackpackItemsByPage (page));
+			currentPage = page;
+		} else {
+			SetButtons (BackpackController.GetBackpackItemsByPage (maximumPage));
+			currentPage = maximumPage;
+		}
+		pageInfo.text = GetPageInfo ();
+	}
+
+	public static string GetPageInfo(){
+		return backpackView.currentPage.ToString () + "/" + backpackView.maximumPage.ToString ();
+	}
+
+	public void RedrawBackpack(){
+		if (InterfaceSystemController.interfaceSystemController.equipmentController.equipmentInterface.activeInHierarchy) {
+			maximumPage = BackpackController.GetPagesCount ();
+			SetPage (currentPage);
+			//RecomputeWeight ();
+			EquipmentController.equipmentController.equipmentBarsController.SetWeight (PlayerController.currentWeight);
+		}
+	}
+
+	public void RecomputeWeight(){
+		PlayerController.currentWeight = 0;
+		foreach (BackpackItem item in PlayerController.backPackItems){
+			PlayerController.currentWeight += item.weight;
+		}
 	}
 
 	public void DeactivateButtons(){

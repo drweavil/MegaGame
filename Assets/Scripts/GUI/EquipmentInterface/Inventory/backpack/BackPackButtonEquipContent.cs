@@ -20,6 +20,10 @@ public class BackPackButtonEquipContent : MonoBehaviour {
 	public Text elementalArmorText;
 	public GameObject weaponDamage;
 	public Text weaponDamageText;
+	public Text weightText;
+
+	public GameObject priceLine;
+	public Text priceText;
 
 
 	public GameObject gem1Line;
@@ -32,7 +36,8 @@ public class BackPackButtonEquipContent : MonoBehaviour {
 	public GameObject gem2;
 	public Image gem2Sprite;
 
-	public void SetEquipmentStats(Equipment equip){
+	public void SetEquipmentStats(BackpackItem item, bool priceLineActive = false){
+		Equipment equip = (Equipment)item.itemContent[0];
 		DeactiveAll ();
 		title.text = equip.GetTitle ();
 
@@ -47,11 +52,11 @@ public class BackPackButtonEquipContent : MonoBehaviour {
 		List<KeyValuePair<string, float>> euipStatsList = new List<KeyValuePair<string, float>> ();
 		euipStatsList = equipStats.OrderBy (x => x.Value).ToList ();
 
-		int statsNumber = 2;
+		int statsNumber = 3;
 		if (equip.slotID == Equipment.meleeWeapon || 
 			equip.slotID == Equipment.fireWeapon ||
 			equip.slotID == Equipment.elementalWeapon) {
-			statsNumber = 1;
+			statsNumber = 2;
 			weaponDamage.SetActive (true);
 			weaponDamageText.text = System.Math.Round(equip.weaponDamage, 2).ToString ();
 		}
@@ -82,6 +87,13 @@ public class BackPackButtonEquipContent : MonoBehaviour {
 		if (equipStats.ContainsKey ("elemArmor")) {
 			elementalArmor.SetActive (true);
 			elementalArmorText.text = System.Math.Round(Stats.GetPlusElementalArmorByPoints(equip.elementalArmorPoints), 2).ToString ();
+		}
+
+		weightText.text = System.Math.Round (item.weight, 2).ToString();
+
+		if (priceLineActive) {
+			priceLine.SetActive (true);
+			priceText.text = System.Math.Round (item.price, 2).ToString();
 		}
 			
 
@@ -115,7 +127,7 @@ public class BackPackButtonEquipContent : MonoBehaviour {
 		physicalArmor.SetActive (false);
 		elementalArmor.SetActive (false);
 		weaponDamage.SetActive (false);
-
+		priceLine.SetActive (false);
 		gem1Line.SetActive (false);
 		gem1.SetActive (false);
 		emptyGem1.SetActive (false);

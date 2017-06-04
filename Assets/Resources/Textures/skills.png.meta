@@ -60,6 +60,12 @@ TextureImporter:
     21300106: rune_8
     21300108: rune_9
     21300110: rune_10
+    21300112: burst_1
+    21300114: burst_2
+    21300116: burst_3
+    21300118: burst_4
+    21300120: burst_5
+    21300122: burst_6
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -142,6 +148,84 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
+      name: burst_1
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1919
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: burst_2
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 1919
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: burst_3
+      rect:
+        serializedVersion: 2
+        x: 261
+        y: 1919
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: burst_4
+      rect:
+        serializedVersion: 2
+        x: 391
+        y: 1919
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: burst_5
+      rect:
+        serializedVersion: 2
+        x: 521
+        y: 1919
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: burst_6
+      rect:
+        serializedVersion: 2
+        x: 651
+        y: 1919
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
       name: jump
       rect:
         serializedVersion: 2
@@ -158,7 +242,7 @@ TextureImporter:
       name: rune_1
       rect:
         serializedVersion: 2
-        x: 1
+        x: 781
         y: 1919
         width: 128
         height: 128
@@ -171,8 +255,8 @@ TextureImporter:
       name: rune_2
       rect:
         serializedVersion: 2
-        x: 261
-        y: 1919
+        x: 131
+        y: 1789
         width: 128
         height: 128
       alignment: 0
@@ -184,8 +268,8 @@ TextureImporter:
       name: rune_3
       rect:
         serializedVersion: 2
-        x: 391
-        y: 1919
+        x: 261
+        y: 1789
         width: 128
         height: 128
       alignment: 0
@@ -197,8 +281,8 @@ TextureImporter:
       name: rune_4
       rect:
         serializedVersion: 2
-        x: 521
-        y: 1919
+        x: 391
+        y: 1789
         width: 128
         height: 128
       alignment: 0
@@ -210,8 +294,8 @@ TextureImporter:
       name: rune_5
       rect:
         serializedVersion: 2
-        x: 651
-        y: 1919
+        x: 521
+        y: 1789
         width: 128
         height: 128
       alignment: 0
@@ -223,8 +307,8 @@ TextureImporter:
       name: rune_6
       rect:
         serializedVersion: 2
-        x: 781
-        y: 1919
+        x: 651
+        y: 1789
         width: 128
         height: 128
       alignment: 0
@@ -236,7 +320,7 @@ TextureImporter:
       name: rune_7
       rect:
         serializedVersion: 2
-        x: 1
+        x: 781
         y: 1789
         width: 128
         height: 128
@@ -249,8 +333,8 @@ TextureImporter:
       name: rune_8
       rect:
         serializedVersion: 2
-        x: 131
-        y: 1789
+        x: 1
+        y: 1659
         width: 128
         height: 128
       alignment: 0
@@ -262,8 +346,8 @@ TextureImporter:
       name: rune_9
       rect:
         serializedVersion: 2
-        x: 261
-        y: 1789
+        x: 131
+        y: 1659
         width: 128
         height: 128
       alignment: 0
@@ -275,8 +359,8 @@ TextureImporter:
       name: rune_10
       rect:
         serializedVersion: 2
-        x: 131
-        y: 1919
+        x: 1
+        y: 1789
         width: 128
         height: 128
       alignment: 0
@@ -288,8 +372,8 @@ TextureImporter:
       name: skill--1
       rect:
         serializedVersion: 2
-        x: 261
-        y: 1011
+        x: 1
+        y: 751
         width: 126
         height: 126
       alignment: 0
@@ -301,8 +385,8 @@ TextureImporter:
       name: skill-0
       rect:
         serializedVersion: 2
-        x: 391
-        y: 1789
+        x: 261
+        y: 1659
         width: 128
         height: 128
       alignment: 0
@@ -314,8 +398,8 @@ TextureImporter:
       name: skill-1
       rect:
         serializedVersion: 2
-        x: 521
-        y: 1789
+        x: 391
+        y: 1659
         width: 128
         height: 128
       alignment: 0
@@ -327,8 +411,8 @@ TextureImporter:
       name: skill-2
       rect:
         serializedVersion: 2
-        x: 131
-        y: 1529
+        x: 1
+        y: 1399
         width: 128
         height: 128
       alignment: 0
@@ -340,8 +424,8 @@ TextureImporter:
       name: skill-3
       rect:
         serializedVersion: 2
-        x: 651
-        y: 1399
+        x: 521
+        y: 1269
         width: 128
         height: 128
       alignment: 0
@@ -353,8 +437,8 @@ TextureImporter:
       name: skill-4
       rect:
         serializedVersion: 2
-        x: 261
-        y: 1139
+        x: 131
+        y: 1009
         width: 128
         height: 128
       alignment: 0
@@ -366,8 +450,8 @@ TextureImporter:
       name: skill-5
       rect:
         serializedVersion: 2
-        x: 521
-        y: 1139
+        x: 391
+        y: 1009
         width: 128
         height: 128
       alignment: 0
@@ -379,8 +463,8 @@ TextureImporter:
       name: skill-6
       rect:
         serializedVersion: 2
-        x: 651
-        y: 1139
+        x: 521
+        y: 1009
         width: 128
         height: 128
       alignment: 0
@@ -392,8 +476,8 @@ TextureImporter:
       name: skill-7
       rect:
         serializedVersion: 2
-        x: 781
-        y: 1139
+        x: 651
+        y: 1009
         width: 128
         height: 128
       alignment: 0
@@ -405,7 +489,7 @@ TextureImporter:
       name: skill-8
       rect:
         serializedVersion: 2
-        x: 1
+        x: 781
         y: 1009
         width: 128
         height: 128
@@ -418,8 +502,8 @@ TextureImporter:
       name: skill-9
       rect:
         serializedVersion: 2
-        x: 131
-        y: 1009
+        x: 1
+        y: 879
         width: 128
         height: 128
       alignment: 0
@@ -431,8 +515,8 @@ TextureImporter:
       name: skill-10
       rect:
         serializedVersion: 2
-        x: 651
-        y: 1789
+        x: 521
+        y: 1659
         width: 128
         height: 128
       alignment: 0
@@ -444,8 +528,8 @@ TextureImporter:
       name: skill-11
       rect:
         serializedVersion: 2
-        x: 781
-        y: 1789
+        x: 651
+        y: 1659
         width: 128
         height: 128
       alignment: 0
@@ -457,7 +541,7 @@ TextureImporter:
       name: skill-12
       rect:
         serializedVersion: 2
-        x: 1
+        x: 781
         y: 1659
         width: 128
         height: 128
@@ -470,8 +554,8 @@ TextureImporter:
       name: skill-13
       rect:
         serializedVersion: 2
-        x: 131
-        y: 1659
+        x: 1
+        y: 1529
         width: 128
         height: 128
       alignment: 0
@@ -483,8 +567,8 @@ TextureImporter:
       name: skill-14
       rect:
         serializedVersion: 2
-        x: 261
-        y: 1659
+        x: 131
+        y: 1529
         width: 128
         height: 128
       alignment: 0
@@ -496,8 +580,8 @@ TextureImporter:
       name: skill-15
       rect:
         serializedVersion: 2
-        x: 391
-        y: 1659
+        x: 261
+        y: 1529
         width: 128
         height: 128
       alignment: 0
@@ -509,8 +593,8 @@ TextureImporter:
       name: skill-16
       rect:
         serializedVersion: 2
-        x: 521
-        y: 1659
+        x: 391
+        y: 1529
         width: 128
         height: 128
       alignment: 0
@@ -522,8 +606,8 @@ TextureImporter:
       name: skill-17
       rect:
         serializedVersion: 2
-        x: 651
-        y: 1659
+        x: 521
+        y: 1529
         width: 128
         height: 128
       alignment: 0
@@ -535,8 +619,8 @@ TextureImporter:
       name: skill-18
       rect:
         serializedVersion: 2
-        x: 781
-        y: 1659
+        x: 651
+        y: 1529
         width: 128
         height: 128
       alignment: 0
@@ -548,7 +632,7 @@ TextureImporter:
       name: skill-19
       rect:
         serializedVersion: 2
-        x: 1
+        x: 781
         y: 1529
         width: 128
         height: 128
@@ -561,8 +645,8 @@ TextureImporter:
       name: skill-20
       rect:
         serializedVersion: 2
-        x: 261
-        y: 1529
+        x: 131
+        y: 1399
         width: 128
         height: 128
       alignment: 0
@@ -574,8 +658,8 @@ TextureImporter:
       name: skill-21
       rect:
         serializedVersion: 2
-        x: 391
-        y: 1529
+        x: 261
+        y: 1399
         width: 128
         height: 128
       alignment: 0
@@ -587,8 +671,8 @@ TextureImporter:
       name: skill-22
       rect:
         serializedVersion: 2
-        x: 521
-        y: 1529
+        x: 391
+        y: 1399
         width: 128
         height: 128
       alignment: 0
@@ -600,8 +684,8 @@ TextureImporter:
       name: skill-23
       rect:
         serializedVersion: 2
-        x: 651
-        y: 1529
+        x: 521
+        y: 1399
         width: 128
         height: 128
       alignment: 0
@@ -613,8 +697,8 @@ TextureImporter:
       name: skill-24
       rect:
         serializedVersion: 2
-        x: 781
-        y: 1529
+        x: 651
+        y: 1399
         width: 128
         height: 128
       alignment: 0
@@ -626,7 +710,7 @@ TextureImporter:
       name: skill-25
       rect:
         serializedVersion: 2
-        x: 1
+        x: 781
         y: 1399
         width: 128
         height: 128
@@ -639,8 +723,8 @@ TextureImporter:
       name: skill-26
       rect:
         serializedVersion: 2
-        x: 131
-        y: 1399
+        x: 1
+        y: 1269
         width: 128
         height: 128
       alignment: 0
@@ -652,8 +736,8 @@ TextureImporter:
       name: skill-27
       rect:
         serializedVersion: 2
-        x: 261
-        y: 1399
+        x: 131
+        y: 1269
         width: 128
         height: 128
       alignment: 0
@@ -665,8 +749,8 @@ TextureImporter:
       name: skill-28
       rect:
         serializedVersion: 2
-        x: 391
-        y: 1399
+        x: 261
+        y: 1269
         width: 128
         height: 128
       alignment: 0
@@ -678,71 +762,6 @@ TextureImporter:
       name: skill-29
       rect:
         serializedVersion: 2
-        x: 521
-        y: 1399
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: -1
-    - serializedVersion: 2
-      name: skill-30
-      rect:
-        serializedVersion: 2
-        x: 781
-        y: 1399
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: -1
-    - serializedVersion: 2
-      name: skill-31
-      rect:
-        serializedVersion: 2
-        x: 1
-        y: 1269
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: -1
-    - serializedVersion: 2
-      name: skill-32
-      rect:
-        serializedVersion: 2
-        x: 131
-        y: 1269
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: -1
-    - serializedVersion: 2
-      name: skill-33
-      rect:
-        serializedVersion: 2
-        x: 261
-        y: 1269
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: -1
-    - serializedVersion: 2
-      name: skill-34
-      rect:
-        serializedVersion: 2
         x: 391
         y: 1269
         width: 128
@@ -753,20 +772,7 @@ TextureImporter:
       outline: []
       tessellationDetail: -1
     - serializedVersion: 2
-      name: skill-35
-      rect:
-        serializedVersion: 2
-        x: 521
-        y: 1269
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: -1
-    - serializedVersion: 2
-      name: skill-36
+      name: skill-30
       rect:
         serializedVersion: 2
         x: 651
@@ -779,7 +785,7 @@ TextureImporter:
       outline: []
       tessellationDetail: -1
     - serializedVersion: 2
-      name: skill-37
+      name: skill-31
       rect:
         serializedVersion: 2
         x: 781
@@ -792,7 +798,7 @@ TextureImporter:
       outline: []
       tessellationDetail: -1
     - serializedVersion: 2
-      name: skill-38
+      name: skill-32
       rect:
         serializedVersion: 2
         x: 1
@@ -805,7 +811,7 @@ TextureImporter:
       outline: []
       tessellationDetail: -1
     - serializedVersion: 2
-      name: skill-39
+      name: skill-33
       rect:
         serializedVersion: 2
         x: 131
@@ -818,11 +824,89 @@ TextureImporter:
       outline: []
       tessellationDetail: -1
     - serializedVersion: 2
-      name: skill-40
+      name: skill-34
+      rect:
+        serializedVersion: 2
+        x: 261
+        y: 1139
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: skill-35
       rect:
         serializedVersion: 2
         x: 391
         y: 1139
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: skill-36
+      rect:
+        serializedVersion: 2
+        x: 521
+        y: 1139
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: skill-37
+      rect:
+        serializedVersion: 2
+        x: 651
+        y: 1139
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: skill-38
+      rect:
+        serializedVersion: 2
+        x: 781
+        y: 1139
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: skill-39
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1009
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: skill-40
+      rect:
+        serializedVersion: 2
+        x: 261
+        y: 1009
         width: 128
         height: 128
       alignment: 0

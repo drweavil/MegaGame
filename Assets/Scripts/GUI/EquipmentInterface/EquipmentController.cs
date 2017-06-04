@@ -47,15 +47,6 @@ public class EquipmentController : MonoBehaviour {
 		accessoryIcons = new List<Sprite> (Resources.LoadAll<Sprite>("Textures/accessoryIcons"));
 	}
 
-	void Update(){
-		if (Input.GetKeyDown (KeyCode.Q)) {
-			equipmentBarsController.SetHealthInjectionPool (1000f);
-		}
-		if (Input.GetKeyDown (KeyCode.W)) {
-			equipmentBarsController.SetHealthInjectionPool (PlayerController.GetMaximumHealthInjectionPool());
-		}
-	}
-
 
 
 	public void ActivateInterface(){
@@ -66,13 +57,22 @@ public class EquipmentController : MonoBehaviour {
 		SetResources ();
 		SetEquipButtonImages ();
 
-		backpackController.backpackView.SetButtons (BackpackController.GetBackpackItemsByPage(1));
-		backpackController.backpackView.currentPage = 1;
+		/*backpackController.backpackView.currentPage = 1;
 		backpackController.backpackView.maximumPage = BackpackController.GetPagesCount ();
+		backpackController.backpackView.SetPage (1);*/
+		backpackController.backpackView.currentPage = 1;
+		backpackController.backpackView.RedrawBackpack ();
+		BuffsView.RedrawBuffs ();
+
 	}
 
 	public void DeactivateInterface(){
 		equipmentInterface.SetActive (false);
+	}
+
+	public void RedrawEquipAndStats(){
+		SetStats ();
+		SetEquipButtonImages ();
 	}
 
 

@@ -1,0 +1,126 @@
+{
+  "menu": {
+    "timeAbbreviations": {
+      "s": "c",
+      "m": "м",
+      "h": "ч"
+    },
+    "inventoryMenuButton": {
+      "text": "Инвентарь",
+      "size": 20
+    },
+    "talentsMenuButton": {
+      "text": "Таланты",
+      "size": 20
+    },
+    "skillsMenuButton": {
+      "text": "Инвентарь",
+      "size": 20
+    }
+  },
+  "head": {
+    "head-titles": {
+      "head-title-1": "Шапка 1",
+      "head-title-2": "Шапка 2",
+      "head-title-3": "Шапка 3",
+      "head-title-4": "Шапка \"4\"",
+      "head-title-5": "Шапка 5",
+      "head-title-6": "Шапка 6",
+      "head-title-7": "Шапка 7",
+      "head-title-8": "Шапка 8",
+      "head-title-9": "Шапка 9",
+      "head-title-10": "Шапка 10",
+      "head-title-11": "Шапка 11",
+      "head-title-12": "Шапка 12",
+      "head-title-13": "Шапка 13",
+      "head-title-14": "Шапка 14",
+      "head-title-15": "Шапка 15",
+      "head-title-16": "Шапка 16",
+      "head-title-17": "Шапка 17",
+      "head-title-18": "Шапка 18",
+      "head-title-19": "Шапка 19",
+      "head-title-20": "Шапка 20",
+      "head-title-21": "Шапка 21",
+      "head-title-22": "Шапка 22",
+      "head-title-23": "Шапка 23",
+      "head-title-24": "Шапка 24",
+      "head-title-25": "Шапка 25",
+      "head-title-26": "Шапка 26",
+      "head-title-27": "Шапка 27",
+      "head-title-28": "Шапка 28",
+      "head-title-29": "Шапка 29",
+      "head-title-30": "Шапка 30",
+      "head-title-31": "Шапка 31",
+      "head-title-32": "Шапка 32",
+      "head-title-33": "Шапка 33",
+      "head-title-34": "Шапка 34",
+      "head-title-35": "Шапка 35",
+      "head-title-36": "Шапка 36",
+      "head-title-37": "Шапка 37",
+      "head-title-38": "Шапка 38",
+      "head-title-39": "Шапка 39",
+      "head-title-40": "Шапка 40",
+      "head-title-41": "Шапка 41",
+      "head-title-42": "Шапка 42",
+      "head-title-43": "Шапка 43",
+      "head-title-44": "Шапка 44",
+      "head-title-45": "Шапка 45",
+      "head-title-46": "Шапка 46",
+      "head-title-47": "Шапка 47",
+      "head-title-48": "Шапка 48",
+      "head-title-49": "Шапка 49",
+      "head-title-50": "Шапка 50",
+      "head-title-51": "Шапка 51",
+      "head-title-52": "Шапка 52",
+      "head-title-53": "Шапка 53"
+    },
+    "head-descriptions": {
+      "head-description-1": "Дофига шапка 1, типо описание"
+    },
+    "": "10"
+  },
+  "buffs": {
+    "buff-1": {
+      "title": "Жидкостный экзоскелет",
+      "description": "Увеличивает физический урон на [p!000!p]% в течении [p!001!p].",
+      "patterns" : ["[p!000!p]", "[p!001!p]"],
+      "descriptionInProcess": "Физический урон увеличен на [p!000!p]% от текущего.",
+      "patternsProcess" : ["[p!000!p]"]
+    },
+    "buff-2": {
+      "title": "Стимулятор атомарно-энергетических элементов",
+      "description": "Увеличивает стихийный урон на [p!000!p]% в течении [p!001!p].",
+      "patterns" : ["[p!000!p]", "[p!001!p]"],
+      "descriptionInProcess": "Стихийный урон увеличен на [p!000!p]% от текущего.",
+      "patternsProcess" : ["[p!000!p]"]
+    },
+    "buff-3": {
+      "title": "Инъекция анаболических нано-манипуляторов",
+      "description": "Увеличивает здоровье на [p!000!p]% в течении [p!001!p].",
+      "patterns" : ["[p!000!p]", "[p!001!p]"],
+      "descriptionInProcess": "Здоровье увеличено на [p!000!p]% от текущего.",
+      "patternsProcess" : ["[p!000!p]"]
+    },
+    "buff-4": {
+      "title": "Ускоритель внутричерепной вычислительной машины",
+      "description": "Увеличивает шанс критического урона на [p!000!p]% в течении [p!001!p].",
+      "patterns" : ["[p!000!p]", "[p!001!p]"],
+      "descriptionInProcess": "Шанс критического удара увеличен на [p!000!p]% от текущего.",
+      "patternsProcess" : ["[p!000!p]"]
+    },
+    "buff-5": {
+      "title": "Мутаген титановой кожи",
+      "description": "Увеличивает физическую броню на [p!000!p]% в течении [p!001!p].",
+      "patterns" : ["[p!000!p]", "[p!001!p]"],
+      "descriptionInProcess": "Физическая броня улучшена на [p!000!p]% от текущей.",
+      "patternsProcess" : ["[p!000!p]"]
+    },
+    "buff-6": {
+      "title": "Межкапиллярный резонируюший гель",
+      "description": "Увеличивает стихийную броню на [p!000!p]% в течении [p!001!p].",
+      "patterns" : ["[p!000!p]", "[p!001!p]"],
+      "descriptionInProcess": "Броня броня улучшена на [p!000!p]% от текущей.",
+      "patternsProcess" : ["[p!000!p]"]
+    }
+  }
+}

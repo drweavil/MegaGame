@@ -64,6 +64,7 @@
      <None Include="Assets\Tiled2Unity\Prefabs\_ReadMe.txt" />
      <None Include="Assets\Tiled2Unity\Shaders\shaTiledMap.shader" />
      <None Include="Assets\Tiled2Unity\Tiled2Unity.export.txt" />
+     <None Include="Assets\Resources\Text\ru.txt" />
      <None Include="Assets\Resources\LevelChunkFilesInfo.txt" />
      <None Include="Assets\Tiled2Unity\Materials\_ReadMe.txt" />
      <None Include="Assets\Tiled2Unity\Textures\_ReadMe.txt" />
@@ -149,6 +150,8 @@
  </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{3A21593C-A52C-3CA6-FA67-3B5BB29707E6}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
     <ProjectReference Include="Assembly-CSharp.csproj">
       <Project>{92B785B5-7C0F-2BAF-2C6D-C6F1BBB5FFB3}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
   </ItemGroup>

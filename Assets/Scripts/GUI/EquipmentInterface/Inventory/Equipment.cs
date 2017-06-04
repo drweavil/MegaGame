@@ -14,6 +14,8 @@ public class Equipment{
 	public int slotID;
 	public int skinID = 0;
 	public float weight = 0;
+	public float price = 0;
+	public float complexity = 0;
 	public string title = "";
 	public string description = "";
 	public bool isNullEquip = false;

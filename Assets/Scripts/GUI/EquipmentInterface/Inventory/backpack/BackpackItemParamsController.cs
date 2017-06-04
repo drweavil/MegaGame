@@ -10,8 +10,14 @@ public class BackpackItemParamsController : MonoBehaviour {
 			float weight = GetWeightByEquip (equip);
 			equip.weight = weight;
 			newItem.itemContent.Add (equip);
+			newItem.weight = weight;
+			float price = GetPriceByEquip (equip);
+			equip.price = price;
+			newItem.price = price;
 		}
 
+		newItem.itemID = PlayerController.GetBackpackItemID ();//PlayerController.maximumBackpackID;
+		//PlayerController.maximumBackpackID += 1;
 		return newItem;
 	}
 
@@ -40,6 +46,31 @@ public class BackpackItemParamsController : MonoBehaviour {
 		return value;
 	}
 
+	public static float GetPriceByEquip(Equipment equip){
+		float value = 0;
+		if (equip.slotID == Equipment.head) {
+			value = Random.Range (10f, 100f);
+		} else if (equip.slotID == Equipment.chest) {
+			value = Random.Range (10f, 100f);
+		} else if (equip.slotID == Equipment.legs) {
+			value = Random.Range (7f, 100f);
+		} else if (equip.slotID == Equipment.trinket) {
+			value = Random.Range (50f, 100f);
+		} else if (equip.slotID == Equipment.finger) {
+			value = Random.Range (50f, 100f);
+		} else if (equip.slotID == Equipment.neck) {
+			value = Random.Range (50f, 100f);
+		} else if (equip.slotID == Equipment.meleeWeapon) {
+			value = Random.Range (20f, 100f);
+		} else if (equip.slotID == Equipment.fireWeapon) {
+			value = Random.Range (20f, 100f);
+		} else if (equip.slotID == Equipment.elementalWeapon) {
+			value = Random.Range (20f, 100f);
+		}
+
+		value = EquipmentGenerator.GetPriceByComplexity (equip.complexity);
+		return value;
+	}
 
 
 }

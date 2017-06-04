@@ -64,14 +64,19 @@
      <Compile Include="Assets\Scripts\GUI\BattleInterface\JoystickScript.cs" />
      <Compile Include="Assets\Scripts\GUI\ButtonScript.cs" />
      <Compile Include="Assets\Scripts\GUI\ButtonsController.cs" />
-     <Compile Include="Assets\Scripts\GUI\DialogController.cs" />
+     <Compile Include="Assets\Scripts\GUI\Dialog\DialogButton.cs" />
+     <Compile Include="Assets\Scripts\GUI\Dialog\DialogController.cs" />
+     <Compile Include="Assets\Scripts\GUI\Dialog\EquipDialog.cs" />
+     <Compile Include="Assets\Scripts\GUI\Dialog\EquipDialogBuffInfo.cs" />
+     <Compile Include="Assets\Scripts\GUI\Dialog\EquipDialogInfo.cs" />
+     <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Buffs\Buff.cs" />
+     <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Buffs\BuffButton.cs" />
+     <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Buffs\Buffs.cs" />
+     <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Buffs\BuffsController.cs" />
+     <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Buffs\BuffsView.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Equip\EquipSlotButton.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\EquipmentBarsController.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\EquipmentController.cs" />
-     <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\BuffButton.cs" />
-     <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\DialogButton.cs" />
-     <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\EquipDialog.cs" />
-     <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\EquipDialogInfo.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\Equipment.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\EquipmentRune.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackPackButton.cs" />
@@ -83,9 +88,12 @@
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackView.cs" />
      <Compile Include="Assets\Scripts\GUI\HealthBar\HealthBar.cs" />
      <Compile Include="Assets\Scripts\GUI\HealthBar\HealthBarPool.cs" />
+     <Compile Include="Assets\Scripts\GUI\HoldChanger.cs" />
      <Compile Include="Assets\Scripts\GUI\InterfaceSystemController.cs" />
+     <Compile Include="Assets\Scripts\GUI\LanguageController.cs" />
      <Compile Include="Assets\Scripts\GUI\SlideAimButton.cs" />
      <Compile Include="Assets\Scripts\GameMath.cs" />
+     <Compile Include="Assets\Scripts\GameSettings.cs" />
      <Compile Include="Assets\Scripts\InteractiveObjects\MiniPortal.cs" />
      <Compile Include="Assets\Scripts\InteractiveObjects\PortalScript.cs" />
      <Compile Include="Assets\Scripts\LevelGenerator\LevelChunk.cs" />
@@ -149,6 +157,7 @@
      <None Include="Assets\Tiled2Unity\Prefabs\_ReadMe.txt" />
      <None Include="Assets\Tiled2Unity\Shaders\shaTiledMap.shader" />
      <None Include="Assets\Tiled2Unity\Tiled2Unity.export.txt" />
+     <None Include="Assets\Resources\Text\ru.txt" />
      <None Include="Assets\Resources\LevelChunkFilesInfo.txt" />
      <None Include="Assets\Tiled2Unity\Materials\_ReadMe.txt" />
      <None Include="Assets\Tiled2Unity\Textures\_ReadMe.txt" />
@@ -181,6 +190,10 @@
  <Reference Include="UnityEditor.iOS.Extensions.Common">
  <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Common.dll</HintPath>
  </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{3A21593C-A52C-3CA6-FA67-3B5BB29707E6}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

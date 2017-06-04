@@ -33,6 +33,7 @@ public class EquipmentGenerator : MonoBehaviour {
 
 		float complexityPercent = (complexity * SlotPercent (slotID));
 
+		newEquip.complexity = complexity;
 		newEquip.healthPoints = (complexityPercent * (type.staminaPercent/100));
 		newEquip.criticalPoints = (complexityPercent * (type.criticalPointsPercent/100));
 		newEquip.physicalArmorPoints = (complexityPercent * (type.physicalArmorPointsPercent/100));
@@ -173,5 +174,9 @@ public class EquipmentGenerator : MonoBehaviour {
 			value = 0.1f;
 		}
 		return value;
+	}
+
+	public static float GetPriceByComplexity(float complexity){
+		return (PlayerController.maximumPrice * complexity) / PlayerController.maximumComplexity;
 	}
 }
