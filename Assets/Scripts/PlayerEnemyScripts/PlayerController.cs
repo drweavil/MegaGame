@@ -93,8 +93,8 @@ public class PlayerController : MonoBehaviour {
 			//Tools.SetPivots("Textures/weaponSprites", "C://megaGameWorkDirectory/weaponSprites/pivots.dct");
 			//Tools.RenameArmorSprites(ref armorSprites, "C://megaGameWorkDirectory/icons/smot/head/", "-head", "head_");
 
-			BuffsController.StartBuff (Buffs.GetBuff(testInt));
-			testInt += 1;
+			/*BuffsController.StartBuff (Buffs.GetBuff(testInt));
+			testInt += 1;*/
 
 			/*BuffsController.StartBuff (Buffs.GetBuff(2));
 			BuffsController.StartBuff (Buffs.GetBuff(3));
@@ -104,6 +104,16 @@ public class PlayerController : MonoBehaviour {
 
 			//Debug.Log ((LanguageController.jsonFile["buffs"]["buff-1"]["patternsProcess"][0].ToString()));
 
+			/*BackpackItem lol = new BackpackItem ();
+			BackpackItem lol2 = lol;
+
+			lol = new BackpackItem ();
+
+			lol.itemID = 1;
+			lol2.itemID = 2;
+
+			Debug.Log (lol.itemID);
+			Debug.Log (lol2.itemID);*/
 
 		}
 	}

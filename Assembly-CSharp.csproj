@@ -69,6 +69,7 @@
      <Compile Include="Assets\Scripts\GUI\Dialog\EquipDialog.cs" />
      <Compile Include="Assets\Scripts\GUI\Dialog\EquipDialogBuffInfo.cs" />
      <Compile Include="Assets\Scripts\GUI\Dialog\EquipDialogInfo.cs" />
+     <Compile Include="Assets\Scripts\GUI\Dialog\SlideDialog.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Buffs\Buff.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Buffs\BuffButton.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Buffs\Buffs.cs" />
