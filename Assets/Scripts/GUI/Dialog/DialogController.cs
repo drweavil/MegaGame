@@ -13,10 +13,13 @@ public class DialogController : MonoBehaviour {
 	public BackpackItem currenBackpackItemInDialog;
 	public int currentBuffID;
 
+	public GameObject deleteBackpackItemFromSlideDialog;
 	public GameObject backpackAreaEquipButton;
 	public GameObject backpackAreaDeleteItemButton;
 	public GameObject equipmentSlotToBackpackButton;
 	public GameObject buffRemoveButton;
+	public GameObject activateBuffButton;
+	public GameObject useInventorySkillButton;
 
 
 	void Awake(){
@@ -29,10 +32,13 @@ public class DialogController : MonoBehaviour {
 	}
 
 	public static void DeactivateButtons(){
+		dialogController.deleteBackpackItemFromSlideDialog.SetActive (false);
 		dialogController.backpackAreaEquipButton.SetActive (false);
 		dialogController.backpackAreaDeleteItemButton.SetActive (false);
 		dialogController.equipmentSlotToBackpackButton.SetActive (false);
 		dialogController.buffRemoveButton.SetActive (false);
+		dialogController.activateBuffButton.SetActive (false);
+		dialogController.useInventorySkillButton.SetActive (false);
 	}
 
 
@@ -52,7 +58,23 @@ public class DialogController : MonoBehaviour {
 	}
 
 	public void BackpackAreaDeleteItemButton(){
-		BackpackController.RemoveBackpackItemByID (currenBackpackItemInDialog.itemID, true);
+		if (currenBackpackItemInDialog.itemCount <= 1) {
+			BackpackController.RemoveBackpackItemByID (currenBackpackItemInDialog.itemID, true);
+			CloseCurrentDialog ();
+		} else {
+			EquipDialog.equipDialogStatic.OpenSlideDialog (1, currenBackpackItemInDialog.itemCount);
+		}
+	}
+
+	public void DeleteBackpackItemFromSlideDialog(){
+		BackpackItem item = PlayerController.backPackItems.Find (i => i == DialogController.dialogController.currenBackpackItemInDialog);
+		if (EquipDialog.equipDialogStatic.slideDialog.currentValue == item.itemCount) {
+			BackpackController.RemoveBackpackItemByID (item.itemID);
+		} else {
+			item.ChangeItemCount(item.itemCount - EquipDialog.equipDialogStatic.slideDialog.currentValue);
+			BackpackView.backpackView.RecomputeWeight ();
+			BackpackView.backpackView.RedrawBackpack ();
+		}
 		CloseCurrentDialog ();
 	}
 
@@ -95,6 +117,33 @@ public class DialogController : MonoBehaviour {
 		BackpackController.AddBackpackItem (item);
 
 		EquipmentController.equipmentController.RedrawEquipAndStats ();
+		BackpackController.backpackController.backpackView.RedrawBackpack ();
+		CloseCurrentDialog ();
+	}
+
+
+	public void ActivateBuffButton(){
+		Buff buff = ((Buff)dialogController.currenBackpackItemInDialog.itemContent [0]).Clone ();
+		BuffsController.StartBuff (buff);
+		if (dialogController.currenBackpackItemInDialog.itemCount == 1) {
+			PlayerController.backPackItems.Remove (dialogController.currenBackpackItemInDialog);
+		} else {
+			dialogController.currenBackpackItemInDialog.itemCount -= 1;
+		}
+		BackpackController.backpackController.backpackView.RedrawBackpack ();
+		CloseCurrentDialog ();
+	}
+
+
+	public void UseInventorySkillButton(){
+		InventorySkill skill = ((InventorySkill)dialogController.currenBackpackItemInDialog.itemContent [0]).Clone ();
+		InventorySkills.UseSkill (InventorySkills.GetSkillInfoByID(skill.skillID));
+
+		if (dialogController.currenBackpackItemInDialog.itemCount == 1) {
+			PlayerController.backPackItems.Remove (dialogController.currenBackpackItemInDialog);
+		} else {
+			dialogController.currenBackpackItemInDialog.itemCount -= 1;
+		}
 		BackpackController.backpackController.backpackView.RedrawBackpack ();
 		CloseCurrentDialog ();
 	}

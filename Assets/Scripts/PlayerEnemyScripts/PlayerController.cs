@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour {
 	public static float minimumPrice = 0.00001f;
 	public static float maximumPrice = 100f;
 	public static float minimumComplexity = 0.00001f;
+	public static float currentComplexity = 600f;
 	public static float maximumComplexity = 1200f;
 	public static int maximumBackpackID = 0;
 	public static int healthInjectionPoolX = 10;
@@ -60,6 +61,18 @@ public class PlayerController : MonoBehaviour {
 				BackpackController.AddBackpackItem(BackpackItemParamsController.GetNewBackpackItem(EquipmentGenerator.GetTestRandomEquipment(600, (int)Random.Range(0, 9))), false);
 			}
 
+			BackpackController.AddBackpackItem (BackpackItemParamsController.GetNewBackpackItem (EquipmentGenerator.GetEquipmentRuneByComplexity (Random.Range (1, maximumComplexity), EquipmentGenerator.smallRunePercent)), false);
+			BackpackController.AddBackpackItem(BackpackItemParamsController.GetNewBackpackItem(EquipmentGenerator.GetRandomBuff()), false);
+			InventorySkill testSkill = new InventorySkill();
+			testSkill.skillID = 1;
+			BackpackController.AddBackpackItem(BackpackItemParamsController.GetNewBackpackItem(testSkill), false);
+
+			InventorySkill testSkill2 = new InventorySkill();
+			testSkill2.skillID = 2;
+			BackpackController.AddBackpackItem(BackpackItemParamsController.GetNewBackpackItem(testSkill2), false);
+		}));
+		StartCoroutine (StartProcess.StartActionAfterFewFrames (12, () => {
+			
 		}));
 	}
 
@@ -114,6 +127,19 @@ public class PlayerController : MonoBehaviour {
 
 			Debug.Log (lol.itemID);
 			Debug.Log (lol2.itemID);*/
+
+			/*Buff buff1 = Buffs.GetBuff (1);
+			Buff buff2 = (Buff)ObjectCloneTool.CloneObject (buff1);
+
+			buff1.buffID = 234;
+
+			Debug.Log (buff1.buffID);
+			Debug.Log (buff2.buffID);*/
+			//Debug.Log (backPackItems.Count);
+			//BackpackController.AddBackpackItem (BackpackItemParamsController.GetNewBackpackItem (EquipmentGenerator.GetEquipmentRuneByComplexity (Random.Range (1, maximumComplexity), EquipmentGenerator.smallRunePercent)));
+			/*InventorySkill testSkill = new InventorySkill();
+			testSkill.skillID = 1;
+			BackpackController.AddBackpackItem(BackpackItemParamsController.GetNewBackpackItem(testSkill));*/
 
 		}
 	}

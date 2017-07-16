@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Reflection;
 
 [System.Serializable]
 public class Buff{
@@ -12,6 +13,24 @@ public class Buff{
 	public bool canDeactivate = true;
 	public float currentBuffNumber = 0;
 	public float maximumTime = 3600;
+
+
+
+	public Buff Clone(){
+		Buff newBuff = new Buff ();
+		newBuff.SetData (this);
+		return newBuff;
+	}
+
+
+	void SetData(Buff zoneChunk){
+		foreach (FieldInfo field in zoneChunk.GetType().GetFields()) {
+			FieldInfo thisField = this.GetType ().GetField (field.Name);
+			if(thisField != null){
+				thisField.SetValue(this, field.GetValue(zoneChunk));
+			}
+		}
+	}
 
 
 	public string GetTitle(){

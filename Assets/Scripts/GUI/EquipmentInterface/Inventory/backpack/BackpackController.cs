@@ -30,7 +30,61 @@ public class BackpackController : MonoBehaviour {
 
 	public static void AddBackpackItem(BackpackItem item, bool withRedrawBackpackContent = true){
 		PlayerController.backPackItems.Reverse ();
-		PlayerController.backPackItems.Add (item);
+
+		if (item.itemContent [0].GetType () == typeof(Equipment)) {
+			PlayerController.backPackItems.Add (item);
+		} else if (item.itemContent [0].GetType () == typeof(Buff)) {
+			//PlayerController.backPackItems.FindIndex (b => b.itemContent[0]);
+			Buff buff = (Buff)item.itemContent [0];
+			int itemIndex = PlayerController.backPackItems.FindLastIndex (b => {
+				if (b.itemContent [0].GetType () == typeof(Buff)) {
+					Buff findingBuff = (Buff)b.itemContent [0];
+					if (findingBuff.buffID == buff.buffID) {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			});
+
+			if (itemIndex == -1) {
+				PlayerController.backPackItems.Add (item);
+			} else {
+				
+				List<BackpackItem> additionalItems = PlayerController.backPackItems [itemIndex].CombineItems (item);
+				foreach (BackpackItem iterItem in additionalItems) {
+					PlayerController.backPackItems.Add (iterItem);
+				}
+			}
+		}else if(item.itemContent [0].GetType () == typeof(InventorySkill)){
+			InventorySkillInfo skillInfo = InventorySkills.GetSkillInfoByID (((InventorySkill)item.itemContent [0]).skillID);
+			int itemIndex = PlayerController.backPackItems.FindLastIndex (b => {
+				if (b.itemContent [0].GetType () == typeof(InventorySkill)) {
+					InventorySkill findingSkill = (InventorySkill)b.itemContent [0];
+					if (findingSkill.skillID == skillInfo.skillID) {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			});
+
+			if (itemIndex == -1) {
+				PlayerController.backPackItems.Add (item);
+			} else {
+
+				List<BackpackItem> additionalItems = PlayerController.backPackItems [itemIndex].CombineItems (item);
+				foreach (BackpackItem iterItem in additionalItems) {
+					PlayerController.backPackItems.Add (iterItem);
+				}
+			}
+		} else {
+			PlayerController.backPackItems.Add (item);	
+		}
 		PlayerController.backPackItems.Reverse ();
 
 		PlayerController.currentWeight += item.weight;
@@ -55,6 +109,7 @@ public class BackpackController : MonoBehaviour {
 			}
 		}
 	}
+		
 
 	public static int GetBackpackItemIndexInInventoryList(int backpackItemID){
 		return PlayerController.backPackItems.FindIndex (i => i.itemID == backpackItemID);

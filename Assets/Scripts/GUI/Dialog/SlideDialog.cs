@@ -13,16 +13,29 @@ public class SlideDialog : MonoBehaviour {
 	public Slider slider;
 
 	public int currentValue;
-	public int currentPrice;
+	public float currentPrice;
 
 
-	int unitPrice = 2;
+	float unitPrice = 2;
 
-
+	public void SetParams(int minimum, int maximum, bool withPrice = false, float newUnitPrice = 0){
+		priceLine.SetActive (false);
+		minimumValueText.text = minimum.ToString ();
+		maximumValueText.text = maximum.ToString ();
+		currentValue = minimum;
+		slider.minValue = minimum;
+		slider.maxValue = maximum;
+		if (withPrice) {
+			priceLine.SetActive (true);
+			unitPrice = newUnitPrice;
+			currentPrice = minimum * newUnitPrice;
+		}
+		ChangeValue ();
+	}
 
 	public void ChangeValue(){
 		currentValue = (int)slider.value;
-		currentPrice = unitPrice * currentValue;
+		currentPrice = (float)System.Math.Round(unitPrice * currentValue, 2);
 
 		valueText.text = currentValue.ToString ();
 		priceText.text = currentPrice.ToString ();

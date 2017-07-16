@@ -79,8 +79,7 @@ public class EquipDialogInfo : MonoBehaviour {
 	public GameObject description;
 	public Text descriptionText;
 
-
-	public Scrollbar scrollBar;
+	public ScrollRectUpdater scrollRectUpdater;
 
 
 
@@ -137,7 +136,7 @@ public class EquipDialogInfo : MonoBehaviour {
 
 		descriptionText.text = equip.description;
 		description.SetActive (true);
-		scrollBar.value = 1;
+		scrollRectUpdater.UpdateRect ();
 	}
 
 

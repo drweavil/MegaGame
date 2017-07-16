@@ -13,6 +13,9 @@ public class BackPackButton : MonoBehaviour {
 	public GameObject backLight;
 	public GameObject active;
 	public BackPackButtonEquipContent equipContent;
+	public BackpackButtonBuffContent buffContent;
+	public BackpackButtonRuneContent runeContent;
+	public BackpackButtonInventorySkillContent inventorySkillContent;
 
 
 	public void ButtonDown(){
@@ -28,21 +31,21 @@ public class BackPackButton : MonoBehaviour {
 			Equipment equip = (Equipment)item.itemContent [0];
 			if (equip.slotID == Equipment.head) {
 				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.head, item);
-			} else if(equip.slotID == Equipment.chest) {
+			} else if (equip.slotID == Equipment.chest) {
 				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.chest, item);
-			} else if(equip.slotID == Equipment.legs) {
+			} else if (equip.slotID == Equipment.legs) {
 				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.legs, item);
-			} else if(equip.slotID == Equipment.neck) {
+			} else if (equip.slotID == Equipment.neck) {
 				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.neck, item);
-			} else if(equip.slotID == Equipment.finger) {
+			} else if (equip.slotID == Equipment.finger) {
 				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.finger, item);
-			} else if(equip.slotID == Equipment.trinket) {
+			} else if (equip.slotID == Equipment.trinket) {
 				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.trinket, item);
-			} else if(equip.slotID == Equipment.meleeWeapon) {
+			} else if (equip.slotID == Equipment.meleeWeapon) {
 				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.meleeWeapon, item);
-			} else if(equip.slotID == Equipment.fireWeapon) {
+			} else if (equip.slotID == Equipment.fireWeapon) {
 				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.fireWeapon, item);
-			} else if(equip.slotID == Equipment.elementalWeapon) {
+			} else if (equip.slotID == Equipment.elementalWeapon) {
 				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.elementalWeapon, item);
 			}
 
@@ -51,6 +54,22 @@ public class BackPackButton : MonoBehaviour {
 			DialogController.dialogController.backpackAreaEquipButton.SetActive (true);
 
 
+		} else if (item.itemContent [0].GetType () == typeof(Buff)) {
+			Buff buff = item.itemContent [0] as Buff;
+			EquipDialog.equipDialogStatic.OpenDialogBuffInfo (buff.buffID);
+
+			DialogController.DeactivateButtons ();
+			DialogController.dialogController.backpackAreaDeleteItemButton.SetActive (true);
+			DialogController.dialogController.activateBuffButton.SetActive (true);
+		} else if (item.itemContent [0].GetType () == typeof(EquipmentRune)) {
+			EquipDialog.equipDialogStatic.OpenRuneDialog (item);
+			DialogController.DeactivateButtons ();
+			DialogController.dialogController.backpackAreaDeleteItemButton.SetActive (true);
+		} else if (item.itemContent [0].GetType () == typeof(InventorySkill)) {
+			EquipDialog.equipDialogStatic.OpenInventorySkillDialog (item);
+			DialogController.DeactivateButtons ();
+			DialogController.dialogController.useInventorySkillButton.SetActive (true);
+			DialogController.dialogController.backpackAreaDeleteItemButton.SetActive (true);
 		}
 	}
 
@@ -60,15 +79,17 @@ public class BackPackButton : MonoBehaviour {
 
 	public void SetButton(BackpackItem item){
 		button.SetActive (true);
+		DeactivateContents ();
 		stackFrame.SetActive (false);
-		if (item.itemContent.Count > 1) {
+		if (item.itemCount > 1) {
 			stackFrame.SetActive (true);
-			stackText.text = item.itemContent.Count.ToString ();
+			stackText.text = item.itemCount.ToString ();
 		}
 
 		inventoryObjectId = item.itemID;
 
-		if (item.itemContent [0].GetType() == typeof(Equipment)) {
+		if (item.itemContent [0].GetType () == typeof(Equipment)) {
+			equipContent.gameObject.SetActive (true);
 			Equipment equip = (Equipment)item.itemContent [0];
 			if (equip.slotID == Equipment.head) {
 				buttonIcon.sprite = EquipmentController.equipmentController.GetArmorIcon ("head_" + equip.skinID);
@@ -90,7 +111,29 @@ public class BackPackButton : MonoBehaviour {
 				buttonIcon.sprite = EquipmentController.equipmentController.GetWeaponIcon ("e_w_" + equip.skinID);
 			}
 			equipContent.SetEquipmentStats (item, true);
+		} else if (item.itemContent [0].GetType () == typeof(Buff)) {
+			Buff buff = (Buff)item.itemContent [0];
+			buttonIcon.sprite = SkillPanelController.skillPanelController.GetSkillTexture ("burst_" + buff.buffID);
+			buffContent.gameObject.SetActive (true);
+			buffContent.SetContent (item);
+		} else if (item.itemContent [0].GetType () == typeof(EquipmentRune)) {
+			EquipmentRune rune = item.itemContent [0] as EquipmentRune;
+			runeContent.gameObject.SetActive (true);
+			buttonIcon.sprite = SkillPanelController.skillPanelController.GetSkillTexture ("rune_" + rune.skinID.ToString ());;
+			runeContent.SetInfo (item);
+		} else if (item.itemContent [0].GetType () == typeof(InventorySkill)) {
+			InventorySkill skill = item.itemContent [0] as InventorySkill;
+			inventorySkillContent.gameObject.SetActive (true);
+			buttonIcon.sprite = SkillPanelController.skillPanelController.GetSkillTexture ("inventorySkill_" + skill.skillID.ToString ());;
+			inventorySkillContent.SetInfo (item);
 		}
+	}
+
+	void DeactivateContents(){
+		equipContent.gameObject.SetActive (false);
+		buffContent.gameObject.SetActive (false);
+		runeContent.gameObject.SetActive (false);
+		inventorySkillContent.gameObject.SetActive (false);
 	}
 
 

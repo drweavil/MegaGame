@@ -16,7 +16,7 @@ public class MiniPortal : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider col){
-		Debug.Log ("lol");
+		//Debug.Log ("lol");
 		PlayerScript player = col.gameObject.GetComponent<PlayerScript> ();
 		if (isActive) {
 			if (type == left) {

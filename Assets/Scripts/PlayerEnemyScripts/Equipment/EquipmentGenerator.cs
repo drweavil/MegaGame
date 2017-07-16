@@ -104,13 +104,39 @@ public class EquipmentGenerator : MonoBehaviour {
 			rune.elementalArmorPoints = equip.elementalArmorPoints * (runePercent / 100);
 		}
 
-		rune.skinID = GetRuneSkinByComplexyty (600);
+		rune.skinID = GetRuneSkinByComplexyty (equip.complexity);
+		rune.complexity = equip.complexity;
 		return rune;
 	}
 
 
 	public static int GetRuneSkinByComplexyty(float complexity){
-		return Random.Range (0, 11);
+		List<int> tier_1 = new List<int> (new int[]{1, 2, 3, 4, 5, 6});
+		List<int> tier_2 = new List<int> (new int[]{7, 8, 9, 10, 11, 12});
+		List<int> tier_3 = new List<int> (new int[]{13, 14, 15, 16, 17, 18});
+		List<int> tier_4 = new List<int> (new int[]{19, 20, 21, 22, 23, 24});
+
+		float tier1Complexity = (PlayerController.maximumComplexity / 2)/2;
+		float tier2Complexity = PlayerController.maximumComplexity / 2;
+		float tier3Complexity = tier2Complexity + tier1Complexity;
+		float tier4Complexity = PlayerController.maximumComplexity;
+
+		List<int> finalList = new List<int> ();
+		if (complexity <= tier1Complexity) {
+			finalList = tier_1;
+		} else if (complexity > tier1Complexity || complexity <= tier2Complexity) {
+			finalList = tier_2;
+		} else if (complexity > tier2Complexity || complexity <= tier3Complexity) {
+			finalList = tier_3;
+		} else if (complexity > tier3Complexity || complexity <= tier4Complexity) {
+			finalList = tier_4;
+		}
+		return finalList[Random.Range (0, 6)];
+	}
+
+	public static EquipmentRune GetEquipmentRuneByComplexity(float complexity, float runePercent){
+		Equipment equip = GetEquipment (complexity, Equipment.fireWeapon);
+		return GetEquipmentRune (equip, runePercent, 3);
 	}
 
 	public static Equipment GetTestRandomEquipment(float complexity, int slotID){
@@ -174,6 +200,12 @@ public class EquipmentGenerator : MonoBehaviour {
 			value = 0.1f;
 		}
 		return value;
+	}
+
+
+	public static Buff GetRandomBuff(){
+		int buffID = Random.Range (1, 7);
+		return Buffs.GetBuff (buffID);
 	}
 
 	public static float GetPriceByComplexity(float complexity){
