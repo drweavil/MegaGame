@@ -16,10 +16,12 @@ public class CommonDialogInfo : MonoBehaviour {
 
 	public Text title;
 	public Text description;
+	public GameObject commonDescription;
+	public Text commonDescriptionText;
 
 
 
-	public void SetItemInfo(BackpackItem item, bool withWeightPrice = true){
+	public void SetItemInfo(BackpackItem item, bool withWeightPrice = true, bool withCommonDescription = false){
 		donatePrice.SetActive (false);
 		if (withWeightPrice) {
 			weightPriceLine.SetActive (true);
@@ -29,12 +31,18 @@ public class CommonDialogInfo : MonoBehaviour {
 			weightPriceLine.SetActive (false);
 		}
 
+
 		priceText.text = System.Math.Round (item.price, 2).ToString();
 		weightText.text = System.Math.Round (item.weight, 2).ToString();
 
+		commonDescription.SetActive (false);
+		if (withCommonDescription) {
+			commonDescription.SetActive (true);
+		}
 		if (item.donatePrice != 0) {
 			donatePrice.SetActive (true);
 			donatePriceText.text = System.Math.Round(item.donatePrice, 2).ToString();
 		}
+		scrollRectUpdater.UpdateRect ();
 	}
 }

@@ -12,6 +12,8 @@ public class DialogController : MonoBehaviour {
 
 	public BackpackItem currenBackpackItemInDialog;
 	public int currentBuffID;
+	public Equipment currentEquipmentInDialog;
+	public bool currentEquipmentInDialogEquipped = false;
 
 	public GameObject deleteBackpackItemFromSlideDialog;
 	public GameObject backpackAreaEquipButton;

@@ -83,7 +83,7 @@ public class EquipDialogInfo : MonoBehaviour {
 
 
 
-	public void SetStatsByEquip(Equipment equip, Equipment sweepingEquip, BackpackItem item = null, bool withPrice = false){
+	public void SetStatsByEquip(Equipment equip, Equipment sweepingEquip, BackpackItem item = null/*, bool withPrice = false*/){
 		DisactiveAllLinesAndValues ();
 
 		titleText.text = equip.title;
@@ -125,14 +125,16 @@ public class EquipDialogInfo : MonoBehaviour {
 		}
 
 
-		if (item != null) {
+		weightText.text = System.Math.Round (equip.weight, 2).ToString();
+		priceText.text = System.Math.Round (equip.price, 2).ToString();
+		/*if (item != null) {
 			weightPriceLine.SetActive (true);
 			weightText.text = System.Math.Round (item.weight, 2).ToString();
 			if (withPrice) {
 				price.SetActive (true);
 				priceText.text = System.Math.Round (item.price, 2).ToString();
 			}
-		}
+		}*/
 
 		descriptionText.text = equip.description;
 		description.SetActive (true);
@@ -496,8 +498,8 @@ public class EquipDialogInfo : MonoBehaviour {
 		weaponDamageRune1.SetActive (false);
 		weaponDamageRune2.SetActive (false);
 
-		weightPriceLine.SetActive (false);
-		price.SetActive (false);
+		/*weightPriceLine.SetActive (false);
+		price.SetActive (false);*/
 
 		description.SetActive (false);
 	}

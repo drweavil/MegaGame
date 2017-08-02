@@ -17,6 +17,8 @@ public class EquipSlotButton : MonoBehaviour {
 			DialogController.DeactivateButtons ();
 			DialogController.dialogController.equipmentSlotToBackpackButton.SetActive (true);
 			DialogController.dialogController.equipButtonIdInDialog = buttonEquipment.slotID;
+			DialogController.dialogController.currentEquipmentInDialog = buttonEquipment;
+			DialogController.dialogController.currentEquipmentInDialogEquipped = true;
 		}
 	}
 

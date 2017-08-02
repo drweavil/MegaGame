@@ -57,12 +57,11 @@ public class EquipmentController : MonoBehaviour {
 		SetResources ();
 		SetEquipButtonImages ();
 
-		/*backpackController.backpackView.currentPage = 1;
-		backpackController.backpackView.maximumPage = BackpackController.GetPagesCount ();
-		backpackController.backpackView.SetPage (1);*/
 		backpackController.backpackView.currentPage = 1;
-		backpackController.backpackView.RedrawBackpack ();
+		//backpackController.backpackView.RedrawBackpack ();
 		BuffsView.RedrawBuffs ();
+
+		BackpackFilter.RefreshFilter ();
 
 	}
 

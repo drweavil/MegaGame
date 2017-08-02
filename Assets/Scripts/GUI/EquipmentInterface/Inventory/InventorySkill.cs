@@ -18,9 +18,11 @@ public class InventorySkill {
 
 	void SetData(InventorySkill data){
 		foreach (FieldInfo field in data.GetType().GetFields()) {
-			FieldInfo thisField = this.GetType ().GetField (field.Name);
-			if(thisField != null){
-				thisField.SetValue(this, field.GetValue(data));
+			if (!field.IsStatic) {
+				FieldInfo thisField = this.GetType ().GetField (field.Name);
+				if (thisField != null) {
+					thisField.SetValue (this, field.GetValue (data));
+				}
 			}
 		}
 	}

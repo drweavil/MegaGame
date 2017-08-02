@@ -82,6 +82,33 @@ public class BackpackController : MonoBehaviour {
 					PlayerController.backPackItems.Add (iterItem);
 				}
 			}
+		} else if(item.itemContent[0].GetType() == typeof(Consumable)){
+			Consumable consumable = item.itemContent [0] as Consumable;
+			int itemIndex = PlayerController.backPackItems.FindLastIndex (b => {
+				if (b.itemContent [0].GetType () == typeof(Consumable)) {
+					Consumable findingConsumable = (Consumable)b.itemContent [0];
+					if (
+						findingConsumable.consumableType == consumable.consumableType &&
+						findingConsumable.consumableSubType == consumable.consumableSubType
+					) {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			});
+
+			if (itemIndex == -1) {
+				PlayerController.backPackItems.Add (item);
+			} else {
+
+				List<BackpackItem> additionalItems = PlayerController.backPackItems [itemIndex].CombineItems (item);
+				foreach (BackpackItem iterItem in additionalItems) {
+					PlayerController.backPackItems.Add (iterItem);
+				}
+			}
 		} else {
 			PlayerController.backPackItems.Add (item);	
 		}
@@ -89,6 +116,11 @@ public class BackpackController : MonoBehaviour {
 
 		PlayerController.currentWeight += item.weight;
 
+
+
+		if (BackpackFilter.currentFilterID != 0) {
+			BackpackFilter.ReFindItems ();
+		}
 		if (withRedrawBackpackContent) {
 			if (InterfaceSystemController.interfaceSystemController.equipmentController.equipmentInterface.activeInHierarchy) {
 				backpackController.backpackView.RedrawBackpack ();	
@@ -122,7 +154,12 @@ public class BackpackController : MonoBehaviour {
 
 	public static List<BackpackItem> GetBackpackItemsByPage(int page){
 		//List<BackpackItem> items = new List<BackpackItem> ();
-		int size = PlayerController.backPackItems.Count;
+		int size = 0;
+		if (BackpackFilter.currentFilterID == 0) {
+			size = PlayerController.backPackItems.Count;
+		} else {
+			size = BackpackFilter.backpackFilter.filteredItems.Count;
+		}
 		int index = (page * pageItemsCount) - pageItemsCount;
 		int count = 0;
 		int deltaPageSize = size - page * pageItemsCount;
@@ -133,13 +170,21 @@ public class BackpackController : MonoBehaviour {
 			count = pageItemsCount + deltaPageSize;
 		}
  	
-
-		return PlayerController.backPackItems.GetRange (index, count);
+		if (BackpackFilter.currentFilterID == 0) {
+			return PlayerController.backPackItems.GetRange (index, count);
+		} else {
+			return BackpackFilter.backpackFilter.filteredItems.GetRange (index, count);
+		}
 	}
 
 	public static int GetPagesCount(){
 		int value = 0;
-		int size = PlayerController.backPackItems.Count;
+		int size = 0;
+		if (BackpackFilter.currentFilterID == 0) {
+			size = PlayerController.backPackItems.Count;
+		} else {
+			size = BackpackFilter.backpackFilter.filteredItems.Count;
+		}
 		if (size <= pageItemsCount) {
 			value = 1;
 		}

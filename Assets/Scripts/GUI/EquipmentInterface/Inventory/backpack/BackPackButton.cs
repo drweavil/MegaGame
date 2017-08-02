@@ -16,6 +16,7 @@ public class BackPackButton : MonoBehaviour {
 	public BackpackButtonBuffContent buffContent;
 	public BackpackButtonRuneContent runeContent;
 	public BackpackButtonInventorySkillContent inventorySkillContent;
+	public BackpackButtonCommonContent commonContent;
 
 
 	public void ButtonDown(){
@@ -29,7 +30,7 @@ public class BackPackButton : MonoBehaviour {
 		DialogController.dialogController.currenBackpackItemInDialog = item;
 		if (item.itemContent [0].GetType () == typeof(Equipment)) {
 			Equipment equip = (Equipment)item.itemContent [0];
-			if (equip.slotID == Equipment.head) {
+			/*if (equip.slotID == Equipment.head) {
 				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.head, item);
 			} else if (equip.slotID == Equipment.chest) {
 				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.chest, item);
@@ -47,7 +48,11 @@ public class BackPackButton : MonoBehaviour {
 				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.fireWeapon, item);
 			} else if (equip.slotID == Equipment.elementalWeapon) {
 				EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.elementalWeapon, item);
-			}
+			}*/
+			EquipDialog.equipDialogStatic.OpenDialogInfo (equip, PlayerController.GetEquipmentBySlotID(equip.slotID), item);
+			DialogController.dialogController.currentEquipmentInDialog = equip;
+			DialogController.dialogController.currentEquipmentInDialogEquipped = false;
+
 
 			DialogController.DeactivateButtons ();
 			DialogController.dialogController.backpackAreaDeleteItemButton.SetActive (true);
@@ -56,7 +61,7 @@ public class BackPackButton : MonoBehaviour {
 
 		} else if (item.itemContent [0].GetType () == typeof(Buff)) {
 			Buff buff = item.itemContent [0] as Buff;
-			EquipDialog.equipDialogStatic.OpenDialogBuffInfo (buff.buffID);
+			EquipDialog.equipDialogStatic.OpenDialogBuffInfo (buff.buffID, item);
 
 			DialogController.DeactivateButtons ();
 			DialogController.dialogController.backpackAreaDeleteItemButton.SetActive (true);
@@ -69,6 +74,11 @@ public class BackPackButton : MonoBehaviour {
 			EquipDialog.equipDialogStatic.OpenInventorySkillDialog (item);
 			DialogController.DeactivateButtons ();
 			DialogController.dialogController.useInventorySkillButton.SetActive (true);
+			DialogController.dialogController.backpackAreaDeleteItemButton.SetActive (true);
+		} else if (item.itemContent [0].GetType () == typeof(Consumable)) {
+			Consumable consumable = item.itemContent [0] as Consumable;
+			EquipDialog.equipDialogStatic.OpenCommonDialog (item, consumable.GetTitle(), consumable.GetDescription(), true, consumable.GetCommonDescription());
+			DialogController.DeactivateButtons ();
 			DialogController.dialogController.backpackAreaDeleteItemButton.SetActive (true);
 		}
 	}
@@ -119,13 +129,20 @@ public class BackPackButton : MonoBehaviour {
 		} else if (item.itemContent [0].GetType () == typeof(EquipmentRune)) {
 			EquipmentRune rune = item.itemContent [0] as EquipmentRune;
 			runeContent.gameObject.SetActive (true);
-			buttonIcon.sprite = SkillPanelController.skillPanelController.GetSkillTexture ("rune_" + rune.skinID.ToString ());;
+			buttonIcon.sprite = SkillPanelController.skillPanelController.GetSkillTexture ("rune_" + rune.skinID.ToString ());
+			;
 			runeContent.SetInfo (item);
 		} else if (item.itemContent [0].GetType () == typeof(InventorySkill)) {
 			InventorySkill skill = item.itemContent [0] as InventorySkill;
 			inventorySkillContent.gameObject.SetActive (true);
-			buttonIcon.sprite = SkillPanelController.skillPanelController.GetSkillTexture ("inventorySkill_" + skill.skillID.ToString ());;
+			buttonIcon.sprite = SkillPanelController.skillPanelController.GetSkillTexture ("inventorySkill_" + skill.skillID.ToString ());
+			;
 			inventorySkillContent.SetInfo (item);
+		} else if (item.itemContent [0].GetType () == typeof(Consumable)) {
+			Consumable consumable = (Consumable)item.itemContent [0];
+			commonContent.gameObject.SetActive (true);
+			buttonIcon.sprite = SkillPanelController.skillPanelController.GetSkillTexture (consumable.GetConsumableIconName() + consumable.consumableSubType.ToString());
+			commonContent.SetInfo (item, consumable.GetTitle ());
 		}
 	}
 
@@ -134,6 +151,7 @@ public class BackPackButton : MonoBehaviour {
 		buffContent.gameObject.SetActive (false);
 		runeContent.gameObject.SetActive (false);
 		inventorySkillContent.gameObject.SetActive (false);
+		commonContent.gameObject.SetActive (false);
 	}
 
 

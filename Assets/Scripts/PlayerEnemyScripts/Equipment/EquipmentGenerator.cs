@@ -208,6 +208,13 @@ public class EquipmentGenerator : MonoBehaviour {
 		return Buffs.GetBuff (buffID);
 	}
 
+	public static Consumable GetHammer(int type){
+		Consumable hammer = new Consumable ();
+		hammer.consumableType = Consumable.hammer;
+		hammer.consumableSubType = type;
+		return hammer;
+	}
+
 	public static float GetPriceByComplexity(float complexity){
 		return (PlayerController.maximumPrice * complexity) / PlayerController.maximumComplexity;
 	}

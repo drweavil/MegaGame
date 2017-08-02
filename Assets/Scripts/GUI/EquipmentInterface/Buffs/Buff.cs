@@ -25,9 +25,11 @@ public class Buff{
 
 	void SetData(Buff zoneChunk){
 		foreach (FieldInfo field in zoneChunk.GetType().GetFields()) {
-			FieldInfo thisField = this.GetType ().GetField (field.Name);
-			if(thisField != null){
-				thisField.SetValue(this, field.GetValue(zoneChunk));
+			if (!field.IsStatic) {
+				FieldInfo thisField = this.GetType ().GetField (field.Name);
+				if (thisField != null) {
+					thisField.SetValue (this, field.GetValue (zoneChunk));
+				}
 			}
 		}
 	}

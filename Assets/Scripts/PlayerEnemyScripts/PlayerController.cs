@@ -39,6 +39,8 @@ public class PlayerController : MonoBehaviour {
 	public static float currentWeight = 0;
 	public static float maximumWeight = 100f; 
 
+
+	public DialogRectResizer testResizer;
 	int testInt = 1;
 
 	void Awake(){
@@ -70,6 +72,10 @@ public class PlayerController : MonoBehaviour {
 			InventorySkill testSkill2 = new InventorySkill();
 			testSkill2.skillID = 2;
 			BackpackController.AddBackpackItem(BackpackItemParamsController.GetNewBackpackItem(testSkill2), false);
+
+			BackpackController.AddBackpackItem (BackpackItemParamsController.GetNewBackpackItem (EquipmentGenerator.GetHammer(1)), false);
+			BackpackController.AddBackpackItem (BackpackItemParamsController.GetNewBackpackItem (EquipmentGenerator.GetHammer(2)), false);
+			BackpackController.AddBackpackItem (BackpackItemParamsController.GetNewBackpackItem (EquipmentGenerator.GetHammer(3)), false);
 		}));
 		StartCoroutine (StartProcess.StartActionAfterFewFrames (12, () => {
 			
@@ -140,7 +146,16 @@ public class PlayerController : MonoBehaviour {
 			/*InventorySkill testSkill = new InventorySkill();
 			testSkill.skillID = 1;
 			BackpackController.AddBackpackItem(BackpackItemParamsController.GetNewBackpackItem(testSkill));*/
+			//BackpackController.AddBackpackItem (BackpackItemParamsController.GetNewBackpackItem (EquipmentGenerator.GetHammer(1)));
+			//BackpackController.AddBackpackItem (BackpackItemParamsController.GetNewBackpackItem (EquipmentGenerator.GetHammer(2)));
+			BackpackController.AddBackpackItem (BackpackItemParamsController.GetNewBackpackItem (EquipmentGenerator.GetHammer(3)));
 
+		}
+		if (Input.GetKeyDown (KeyCode.B)) {
+			testResizer.SetFullSize ();
+		}
+		if (Input.GetKeyDown (KeyCode.N)) {
+			testResizer.SetWeightPriceSize ();
 		}
 	}
 

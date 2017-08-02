@@ -73,6 +73,10 @@
      <Compile Include="Assets\Scripts\GUI\Dialog\EquipDialogInfo.cs" />
      <Compile Include="Assets\Scripts\GUI\Dialog\EquipDialogInventorySkillInfo.cs" />
      <Compile Include="Assets\Scripts\GUI\Dialog\EquipDialogRuneInfo.cs" />
+     <Compile Include="Assets\Scripts\GUI\Dialog\Pages\DeconstructionPage.cs" />
+     <Compile Include="Assets\Scripts\GUI\Dialog\Pages\DialogPages.cs" />
+     <Compile Include="Assets\Scripts\GUI\Dialog\Pages\ModificationsPage.cs" />
+     <Compile Include="Assets\Scripts\GUI\Dialog\Pages\PageButton.cs" />
      <Compile Include="Assets\Scripts\GUI\Dialog\ScrollRectUpdater.cs" />
      <Compile Include="Assets\Scripts\GUI\Dialog\SlideDialog.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Buffs\Buff.cs" />
@@ -83,6 +87,7 @@
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Equip\EquipSlotButton.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\EquipmentBarsController.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\EquipmentController.cs" />
+     <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\Consumable.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\Equipment.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\EquipmentRune.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\InventorySkill.cs" />
@@ -99,6 +104,8 @@
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackItemParamsController.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackPanelButtons.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackView.cs" />
+     <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\Filter\BackpackFilter.cs" />
+     <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\Filter\BackpackFilterButton.cs" />
      <Compile Include="Assets\Scripts\GUI\HealthBar\HealthBar.cs" />
      <Compile Include="Assets\Scripts\GUI\HealthBar\HealthBarPool.cs" />
      <Compile Include="Assets\Scripts\GUI\HoldChanger.cs" />

@@ -12,7 +12,7 @@ public class BackpackButtonCommonContent : MonoBehaviour {
 	public Text priceText;
 
 
-	public void SetInfo(BackpackItem item, string title){
+	public void SetInfo(BackpackItem item, string titleText){
 		donatPrice.SetActive (false);
 		if (item.donatePrice != 0) {
 			donatPrice.SetActive (true);
@@ -21,5 +21,6 @@ public class BackpackButtonCommonContent : MonoBehaviour {
 
 		weightText.text = System.Math.Round(item.weight, 2).ToString();
 		priceText.text = System.Math.Round(item.price, 2).ToString();
+		title.text = titleText;
 	}
 }

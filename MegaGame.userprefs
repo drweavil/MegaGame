@@ -1,19 +1,16 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackButtonCommonContent.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GUI\Dialog\EquipDialog.cs">
     <Files>
-      <File FileName="Assets\Scripts\GUI\Dialog\DialogController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\PlayerController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackItem.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackPackButton.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\Equipment\EquipmentGenerator.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GUI\Dialog\DialogController.cs" Line="16" Column="44" />
+      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackView.cs" Line="62" Column="118" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\PlayerController.cs" Line="158" Column="34" />
+      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackItem.cs" Line="26" Column="1" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Equipment\EquipmentGenerator.cs" Line="214" Column="35" />
       <File FileName="Assets\Scripts\GUI\InterfaceSystemController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\EquipmentController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Equip\EquipSlotButton.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackItemParamsController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\Equipment.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackView.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GUI\EquipmentInterface\EquipmentController.cs" Line="61" Column="5" />
+      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Equip\EquipSlotButton.cs" Line="18" Column="4" />
+      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\Equipment.cs" Line="21" Column="34" />
       <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackPackButtonEquipContent.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackPanelButtons.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\EquipmentInterface\EquipmentBarsController.cs" Line="1" Column="1" />
@@ -22,17 +19,22 @@
       <File FileName="Assets\Scripts\GUI\HoldChanger.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\PlayerEnemyScripts\Effects\Effect.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Timer.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Buffs\Buff.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Buffs\Buffs.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Buffs\BuffsController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Buffs\BuffsView.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Buffs\BuffButton.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\Dialog\DialogButton.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\Dialog\EquipDialog.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\Dialog\EquipDialogInfo.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\Dialog\EquipDialogBuffInfo.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\Dialog\SlideDialog.cs" Line="27" Column="29" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackButtonCommonContent.cs" Line="23" Column="63" />
+      <File FileName="Assets\Scripts\GUI\Dialog\EquipDialogInfo.cs" Line="86" Column="98" />
+      <File FileName="Assets\Scripts\GUI\Dialog\EquipDialogBuffInfo.cs" Line="16" Column="55" />
+      <File FileName="Assets\Scripts\GUI\Dialog\SlideDialog.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\Filter\BackpackFilterButton.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\Filter\BackpackFilter.cs" Line="120" Column="45" />
+      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackButtonCommonContent.cs" Line="24" Column="25" />
+      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\Consumable.cs" Line="39" Column="1" />
+      <File FileName="Assets\Scripts\GUI\Dialog\CommonDialogInfo.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackButtonInventorySkillContent.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackItemParamsController.cs" Line="39" Column="53" />
+      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackPackButton.cs" Line="58" Column="4" />
+      <File FileName="Assets\Scripts\GUI\Dialog\DialogRectResizer.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GUI\Dialog\Pages\PageButton.cs" Line="14" Column="33" />
+      <File FileName="Assets\Scripts\GUI\Dialog\EquipDialog.cs" Line="99" Column="49" />
+      <File FileName="Assets\Scripts\GUI\Dialog\Pages\DialogPages.cs" Line="33" Column="85" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
