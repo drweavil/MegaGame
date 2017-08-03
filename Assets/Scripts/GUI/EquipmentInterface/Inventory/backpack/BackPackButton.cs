@@ -101,7 +101,7 @@ public class BackPackButton : MonoBehaviour {
 		if (item.itemContent [0].GetType () == typeof(Equipment)) {
 			equipContent.gameObject.SetActive (true);
 			Equipment equip = (Equipment)item.itemContent [0];
-			if (equip.slotID == Equipment.head) {
+			/*if (equip.slotID == Equipment.head) {
 				buttonIcon.sprite = EquipmentController.equipmentController.GetArmorIcon ("head_" + equip.skinID);
 			} else if (equip.slotID == Equipment.chest) {
 				buttonIcon.sprite = EquipmentController.equipmentController.GetArmorIcon ("chest_" + equip.skinID);
@@ -119,7 +119,8 @@ public class BackPackButton : MonoBehaviour {
 				buttonIcon.sprite = EquipmentController.equipmentController.GetWeaponIcon ("r_w_" + equip.skinID);
 			} else if (equip.slotID == Equipment.elementalWeapon) {
 				buttonIcon.sprite = EquipmentController.equipmentController.GetWeaponIcon ("e_w_" + equip.skinID);
-			}
+			}*/
+			buttonIcon.sprite = equip.GetIcon ();
 			equipContent.SetEquipmentStats (item, true);
 		} else if (item.itemContent [0].GetType () == typeof(Buff)) {
 			Buff buff = (Buff)item.itemContent [0];

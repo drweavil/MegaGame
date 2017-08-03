@@ -97,7 +97,7 @@ public class EquipDialogInfo : MonoBehaviour {
 					rune1Empty.SetActive (true);
 				} else {
 					rune1.SetActive (true);
-					rune1Image.sprite = SkillPanelController.skillPanelController.GetSkillTexture ("rune_"+equip.rune1.skinID);
+					rune1Image.sprite = equip.rune1.GetIcon();
 				}
 			}
 
@@ -107,7 +107,7 @@ public class EquipDialogInfo : MonoBehaviour {
 					rune2Empty.SetActive (true);
 				} else {
 					rune2.SetActive (true);
-					rune2Image.sprite = SkillPanelController.skillPanelController.GetSkillTexture ("rune_"+equip.rune2.skinID);
+					rune2Image.sprite = equip.rune2.GetIcon();
 				}
 			}
 		}

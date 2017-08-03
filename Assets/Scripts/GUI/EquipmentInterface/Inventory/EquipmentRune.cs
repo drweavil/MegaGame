@@ -4,6 +4,7 @@ using UnityEngine;
 
 [System.Serializable]
 public class EquipmentRune{
+	public const int smallRune = 1, middleRune = 2, largeRune = 3;
 	public int skinID = 0;
 	public float healthPoints = 0;
 	public float complexity = 0;
@@ -20,5 +21,9 @@ public class EquipmentRune{
 
 	public string GetDesctiption(){
 		return "Rune desctiption";
+	}
+
+	public Sprite GetIcon(){
+		return SkillPanelController.skillPanelController.GetSkillTexture ("rune_" + skinID.ToString());
 	}
 }

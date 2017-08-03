@@ -14,6 +14,9 @@ public class DialogController : MonoBehaviour {
 	public int currentBuffID;
 	public Equipment currentEquipmentInDialog;
 	public bool currentEquipmentInDialogEquipped = false;
+	public float currentRunePercent;
+	public int currenHammerType;
+	public EquipmentRune currentDeconstructionEquipmentRune;
 
 	public GameObject deleteBackpackItemFromSlideDialog;
 	public GameObject backpackAreaEquipButton;
@@ -22,6 +25,7 @@ public class DialogController : MonoBehaviour {
 	public GameObject buffRemoveButton;
 	public GameObject activateBuffButton;
 	public GameObject useInventorySkillButton;
+	public GameObject deconstructionButton;
 
 
 	void Awake(){
@@ -41,6 +45,7 @@ public class DialogController : MonoBehaviour {
 		dialogController.buffRemoveButton.SetActive (false);
 		dialogController.activateBuffButton.SetActive (false);
 		dialogController.useInventorySkillButton.SetActive (false);
+		dialogController.deconstructionButton.SetActive (false);
 	}
 
 
@@ -154,5 +159,40 @@ public class DialogController : MonoBehaviour {
 	public void BuffRemoveButton(){
 		BuffsController.StopBuff (currentBuffID);
 		CloseCurrentDialog ();
+	}
+
+
+	public void DeconstructionButton(){
+		//Equipment equip = currentEquipmentInDialog;
+		if (currentEquipmentInDialogEquipped) {
+			PlayerController.SetEquip (PlayerController.GetNullEquipment (currentEquipmentInDialog.slotID));
+		} else {
+			BackpackItem item = PlayerController.backPackItems.Find (b => b.itemContent[0] == currentEquipmentInDialog);
+			BackpackController.RemoveBackpackItemByID (item.itemID);
+		}
+
+		BackpackItem hammerItem = PlayerController.backPackItems.Find (b => {
+			if(b.itemContent[0].GetType() == typeof(Consumable)){
+				Consumable cons = b.itemContent[0] as Consumable;
+				if(cons.consumableType == Consumable.hammer && cons.consumableSubType == currenHammerType){
+					return true;
+				}else{
+					return false;
+				}
+			}else{
+				return false;
+			}
+		});
+
+
+		if (hammerItem.itemCount == 1) {
+			BackpackController.RemoveBackpackItemByID (hammerItem.itemID);
+		} else {
+			hammerItem.ChangeItemCount (hammerItem.itemCount - 1);
+		}
+
+		CloseCurrentDialog ();
+		BackpackController.AddBackpackItem(BackpackItemParamsController.GetNewBackpackItem (currentDeconstructionEquipmentRune), true);
+		EquipmentController.equipmentController.RedrawEquipAndStats ();
 	}
 }

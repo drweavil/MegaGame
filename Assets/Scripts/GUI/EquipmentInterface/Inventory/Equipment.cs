@@ -116,4 +116,48 @@ public class Equipment{
 		return value;
 	}
 
+
+	public Sprite GetIcon(){
+		string name = "";
+		if (slotID == Equipment.head) {
+			name = "head_" + skinID.ToString();
+		} else if (slotID == Equipment.chest) {
+			name = "chest_" + skinID.ToString();
+		} else if (slotID == Equipment.legs) {
+			name = "legs_" + skinID.ToString();
+		} else if (slotID == Equipment.trinket) {
+			name = "trinket_" + skinID.ToString();
+		} else if (slotID == Equipment.finger) {
+			name = "finger_" + skinID.ToString();
+		} else if (slotID == Equipment.neck) {
+			name = "neck_" + skinID.ToString();
+		} else if (slotID == Equipment.meleeWeapon) {
+			name = "m_w_" + skinID.ToString();
+		} else if (slotID == Equipment.fireWeapon) {
+			name = "r_w_" + skinID.ToString();
+		} else if (slotID == Equipment.elementalWeapon) {
+			name = "e_w_" + skinID.ToString();
+		}
+
+		if (
+			slotID == Equipment.head ||
+			slotID == Equipment.chest ||
+			slotID == Equipment.legs) {
+			return EquipmentController.equipmentController.GetArmorIcon (name);
+		} else if (
+			slotID == Equipment.trinket ||
+			slotID == Equipment.finger ||
+			slotID == Equipment.neck) {
+			return EquipmentController.equipmentController.GetAccessoryIcon (name);
+		} else if (
+			slotID == Equipment.meleeWeapon ||
+			slotID == Equipment.fireWeapon ||
+			slotID == Equipment.elementalWeapon) {
+			return EquipmentController.equipmentController.GetWeaponIcon (name);
+		} else {
+			return new Sprite ();
+		}
+
+	}
+
 }

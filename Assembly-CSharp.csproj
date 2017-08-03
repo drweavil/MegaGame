@@ -75,6 +75,8 @@
      <Compile Include="Assets\Scripts\GUI\Dialog\EquipDialogRuneInfo.cs" />
      <Compile Include="Assets\Scripts\GUI\Dialog\Pages\DeconstructionPage.cs" />
      <Compile Include="Assets\Scripts\GUI\Dialog\Pages\DialogPages.cs" />
+     <Compile Include="Assets\Scripts\GUI\Dialog\Pages\HammerButton.cs" />
+     <Compile Include="Assets\Scripts\GUI\Dialog\Pages\HammerButtonsSystem.cs" />
      <Compile Include="Assets\Scripts\GUI\Dialog\Pages\ModificationsPage.cs" />
      <Compile Include="Assets\Scripts\GUI\Dialog\Pages\PageButton.cs" />
      <Compile Include="Assets\Scripts\GUI\Dialog\ScrollRectUpdater.cs" />

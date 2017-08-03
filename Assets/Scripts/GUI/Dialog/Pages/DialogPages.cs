@@ -47,6 +47,10 @@ public class DialogPages : MonoBehaviour {
 	public void ActivateDeconstructionPage(){
 		EquipDialog.equipDialogStatic.DeactiveAllWindows();
 		EquipDialog.equipDialogStatic.deconstructionPage.gameObject.SetActive (true);
+		EquipDialog.equipDialogStatic.deconstructionPage.SetEquipStats (DialogController.dialogController.currentEquipmentInDialog);
+		EquipDialog.equipDialogStatic.deconstructionPage.SetNullRune ();
+		EquipDialog.equipDialogStatic.deconstructionPage.RecomputeHammerValues ();
+		EquipDialog.equipDialogStatic.deconstructionPage.SetDeactivateHammers ();
 	}
 
 	public static void DeactivateAllPages(){
