@@ -42,6 +42,9 @@ public class DialogPages : MonoBehaviour {
 	public void ActivateModificationsPage(){
 		EquipDialog.equipDialogStatic.DeactiveAllWindows();
 		EquipDialog.equipDialogStatic.modificationsPage.gameObject.SetActive (true);
+		EquipDialog.equipDialogStatic.modificationsPage.FindRunes ();
+		EquipDialog.equipDialogStatic.modificationsPage.DrawRunes ();
+		EquipDialog.equipDialogStatic.modificationsPage.SetRunesByEquip (DialogController.dialogController.currentEquipmentInDialog);
 	}
 
 	public void ActivateDeconstructionPage(){

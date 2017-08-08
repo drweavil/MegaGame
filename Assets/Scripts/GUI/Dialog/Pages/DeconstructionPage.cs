@@ -35,23 +35,23 @@ public class DeconstructionPage : MonoBehaviour {
 
 	public void SetEquipStats(Equipment equip){
 		equipIcon.sprite = equip.GetIcon ();
-		equipHealth.text = Stats.GetPlusHealthByPoints(equip.healthPoints).ToString();
-		equipPhysicalDamage.text = Stats.GetPlusPhysicalDamageByPoints(equip.physicalDamagePoints).ToString();
-		equipElementalDamage.text = Stats.GetPlusElementalDamageByPoints(equip.elementalDamagePoints).ToString();
-		equipCritical.text = Stats.GetPlusCriticalByPoints(equip.criticalPoints).ToString();
-		equipPhysicalArmor.text = Stats.GetPlusPhysicalArmorByPoints(equip.physicalArmorPoints).ToString();
-		equipElementalArmor.text = Stats.GetPlusElementalArmorByPoints(equip.elementalArmorPoints).ToString();
+		equipHealth.text = System.Math.Round(Stats.GetPlusHealthByPoints(equip.healthPoints), 2).ToString();
+		equipPhysicalDamage.text = System.Math.Round(Stats.GetPlusPhysicalDamageByPoints(equip.physicalDamagePoints), 2).ToString();
+		equipElementalDamage.text = System.Math.Round(Stats.GetPlusElementalDamageByPoints(equip.elementalDamagePoints), 2).ToString();
+		equipCritical.text = System.Math.Round(Stats.GetPlusCriticalByPoints(equip.criticalPoints), 2).ToString();
+		equipPhysicalArmor.text = System.Math.Round(Stats.GetPlusPhysicalArmorByPoints(equip.physicalArmorPoints), 2).ToString();
+		equipElementalArmor.text = System.Math.Round(Stats.GetPlusElementalArmorByPoints(equip.elementalArmorPoints), 2).ToString();
 	}
 
 	public void SetRuneStats(EquipmentRune rune){
 		runeIconObject.SetActive (true);
 		runeIcon.sprite = rune.GetIcon ();
-		runeHealth.text = Stats.GetPlusHealthByPoints(rune.healthPoints).ToString();
-		runePhysicalDamage.text = Stats.GetPlusPhysicalDamageByPoints(rune.physicalDamagePoints).ToString();
-		runeElementalDamage.text = Stats.GetPlusElementalDamageByPoints(rune.elementalDamagePoints).ToString();
-		runeCritical.text = Stats.GetPlusCriticalByPoints(rune.criticalPoints).ToString();
-		runePhysicalArmor.text = Stats.GetPlusPhysicalArmorByPoints(rune.physicalArmorPoints).ToString();
-		runeElementalArmor.text = Stats.GetPlusElementalArmorByPoints(rune.elementalArmorPoints).ToString();
+		runeHealth.text = System.Math.Round(Stats.GetPlusHealthByPoints(rune.healthPoints), 2).ToString();
+		runePhysicalDamage.text = System.Math.Round(Stats.GetPlusPhysicalDamageByPoints(rune.physicalDamagePoints), 2).ToString();
+		runeElementalDamage.text = System.Math.Round(Stats.GetPlusElementalDamageByPoints(rune.elementalDamagePoints), 2).ToString();
+		runeCritical.text = System.Math.Round(Stats.GetPlusCriticalByPoints(rune.criticalPoints), 2).ToString();
+		runePhysicalArmor.text = System.Math.Round(Stats.GetPlusPhysicalArmorByPoints(rune.physicalArmorPoints), 2).ToString();
+		runeElementalArmor.text = System.Math.Round(Stats.GetPlusElementalArmorByPoints(rune.elementalArmorPoints), 2).ToString();
 	}
 
 
