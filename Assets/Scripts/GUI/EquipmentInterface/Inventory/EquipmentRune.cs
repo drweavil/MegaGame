@@ -1,10 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 [System.Serializable]
 public class EquipmentRune{
 	public const int smallRune = 1, middleRune = 2, largeRune = 3;
+	static List<int> tier_1_icons = new List<int> (new int[]{1, 2, 3, 4, 5, 6});
+	static List<int> tier_2_icons = new List<int> (new int[]{7, 8, 9, 10, 11, 12});
+	static List<int> tier_3_icons = new List<int> (new int[]{13, 14, 15, 16, 17, 18});
+	static List<int> tier_4_icons = new List<int> (new int[]{19, 20, 21, 22, 23, 24});
 	public int skinID = 0;
 	public float healthPoints = 0;
 	public float complexity = 0;
@@ -16,37 +21,99 @@ public class EquipmentRune{
 
 
 	public string GetTitle(){
-		return "Rune title";
+		string titleFirstPart = "";
+		if (tier_1_icons.Contains (skinID)) {
+			titleFirstPart = LanguageController.jsonFile ["runes"] ["tiers"] ["t1"];
+		} else if (tier_2_icons.Contains (skinID)) {
+			titleFirstPart = LanguageController.jsonFile ["runes"] ["tiers"] ["t2"];
+		} else if (tier_3_icons.Contains (skinID)) {
+			titleFirstPart = LanguageController.jsonFile ["runes"] ["tiers"] ["t3"];
+		} else if (tier_4_icons.Contains (skinID)) {
+			titleFirstPart = LanguageController.jsonFile ["runes"] ["tiers"] ["t4"];
+		}
+
+		/*foreach (KeyValuePair<int, float> pair in GetOrderedStatIDs(3).ToList<KeyValuePair<int, float>>()) {
+			Debug.Log (pair.Key + " " + pair.Value);
+		}*/
+
+		return titleFirstPart + " " + LanguageController.jsonFile ["runes"] ["runeStats"] [GetOrderedStatIDs(1).ToList<KeyValuePair<int, float>>()[0].Key.ToString()];
 	}
 
 	public string GetDesctiption(){
-		return "Rune desctiption";
+		return LanguageController.jsonFile ["runes"] ["commonDescription"];
 	}
 
 	public Sprite GetIcon(){
 		return SkillPanelController.skillPanelController.GetSkillTexture ("rune_" + skinID.ToString());
 	}
 
-	public Dictionary<string, float> GetStats(){
-		Dictionary<string, float> stats = new Dictionary<string, float> ();
+	public void SetIcon(){
+		float maximumRuneComplexity = PlayerController.maximumComplexity * (EquipmentGenerator.maximumRuneComplexityPercent/100);
+		float tier1Complexity = (maximumRuneComplexity / 2)/2;
+		float tier2Complexity = maximumRuneComplexity / 2;
+		float tier3Complexity = tier2Complexity + tier1Complexity;
+		float tier4Complexity = maximumRuneComplexity;
 
-		if (healthPoints == 0) {
-			stats.Add ("health", healthPoints);
+		List<int> finalList = new List<int> ();
+		if (complexity <= tier1Complexity) {
+			finalList = tier_1_icons;
+		} else if (complexity > tier1Complexity || complexity <= tier2Complexity) {
+			finalList = tier_2_icons;
+		} else if (complexity > tier2Complexity || complexity <= tier3Complexity) {
+			finalList = tier_3_icons;
+		} else if (complexity > tier3Complexity || complexity <= tier4Complexity) {
+			finalList = tier_4_icons;
 		}
-		if (criticalPoints == 0) {
-			stats.Add ("critical", criticalPoints);
+
+		skinID = finalList [GetOrderedStatIDs (1).ToList<KeyValuePair<int, float>>()[0].Key - 1];
+
+	}
+
+	public Dictionary<int, float> GetOrderedStatIDs(int statsNumber){
+		Dictionary<int, float> stats = new Dictionary<int, float> ();
+		stats.Add (Stats.healthStatID, healthPoints);
+		stats.Add (Stats.critStatID, criticalPoints);
+		stats.Add (Stats.physicalDamageStatID, physicalDamagePoints);
+		stats.Add (Stats.elementalDamageStatID, elementalDamagePoints);
+		stats.Add (Stats.physicalArmorStatID, physicalArmorPoints);
+		stats.Add (Stats.elementalArmorStatID, elementalArmorPoints);
+
+
+		List<KeyValuePair<int, float>> euipStatsList = new List<KeyValuePair<int, float>> ();
+		euipStatsList = stats.OrderBy (x => x.Value).ToList ();
+		foreach (KeyValuePair<int, float> pair in euipStatsList) {
+			Debug.Log (pair.Key + " " + pair.Value);
 		}
-		if (physicalDamagePoints == 0) {
-			stats.Add ("physicalDamage", physicalDamagePoints);
+		euipStatsList = euipStatsList.GetRange (euipStatsList.Count - statsNumber, statsNumber).ToList();
+		stats = euipStatsList.ToDictionary(l=> l.Key, l=>l.Value);
+
+
+		foreach (KeyValuePair<int, float> pair in stats) {
+			Debug.Log (pair.Key + " " + pair.Value);
 		}
-		if (elementalDamagePoints == 0) {
-			stats.Add ("elementalDamage", elementalDamagePoints);
+		return stats;
+	}
+
+	public Dictionary<int, float> GetStats(){
+		Dictionary<int, float> stats = new Dictionary<int, float> ();
+
+		if (healthPoints != 0) {
+			stats.Add (Stats.healthStatID, healthPoints);
 		}
-		if (physicalArmorPoints == 0) {
-			stats.Add ("physicalArmor", physicalArmorPoints);
+		if (criticalPoints != 0) {
+			stats.Add (Stats.critStatID, criticalPoints);
 		}
-		if (elementalArmorPoints == 0) {
-			stats.Add ("elementalArmor", elementalArmorPoints);
+		if (physicalDamagePoints != 0) {
+			stats.Add (Stats.physicalDamageStatID, physicalDamagePoints);
+		}
+		if (elementalDamagePoints != 0) {
+			stats.Add (Stats.elementalDamageStatID, elementalDamagePoints);
+		}
+		if (physicalArmorPoints != 0) {
+			stats.Add (Stats.physicalArmorStatID, physicalArmorPoints);
+		}
+		if (elementalArmorPoints != 0) {
+			stats.Add (Stats.elementalArmorStatID, elementalArmorPoints);
 		}
 
 		return stats;

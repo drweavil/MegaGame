@@ -53,7 +53,7 @@ public class ModificationsPage : MonoBehaviour {
 		if (equip.rune2Enable) {
 			rune2.SetActive (true);
 			if (equip.rune2 != null) {
-				SetRune2 (equip.rune1);
+				SetRune2 (equip.rune2);
 			} else {
 				SetRune2Empty ();
 			}

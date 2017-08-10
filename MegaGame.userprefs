@@ -1,26 +1,16 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GUI\Dialog\Pages\Modifications\ModificationsPage.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GUI\EquipmentInterface\Inventory\EquipmentRune.cs">
     <Files>
       <File FileName="Assets\Scripts\GUI\EquipmentInterface\EquipmentController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\Dialog\DialogController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackView.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\PlayerEnemyScripts\PlayerController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackItem.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\Equipment\EquipmentGenerator.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Equipment\EquipmentGenerator.cs" Line="108" Column="52" />
       <File FileName="Assets\Scripts\GUI\InterfaceSystemController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\EquipmentInterface\Equip\EquipSlotButton.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackPackButtonEquipContent.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackPanelButtons.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\EquipmentBarsController.cs" Line="1" Column="1" />
-      <File FileName="Assets\plugins\SimpleJSON.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\LanguageController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\HoldChanger.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\Effects\Effect.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Timer.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\Dialog\DialogButton.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\Dialog\EquipDialogBuffInfo.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\Dialog\SlideDialog.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\Filter\BackpackFilterButton.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\Filter\BackpackFilter.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackButtonCommonContent.cs" Line="1" Column="1" />
@@ -28,17 +18,18 @@
       <File FileName="Assets\Scripts\GUI\Dialog\DialogRectResizer.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\Dialog\Pages\PageButton.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\Dialog\EquipDialog.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\Dialog\Pages\DialogPages.cs" Line="46" Column="64" />
+      <File FileName="Assets\Scripts\GUI\Dialog\Pages\DialogPages.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\Dialog\Pages\DeconstructionPage.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\Dialog\EquipDialogInfo.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\Equipment.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackPackButton.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\EquipmentRune.cs" Line="52" Column="16" />
       <File FileName="Assets\Scripts\GUI\Dialog\Pages\HammerButton.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\Dialog\Pages\HammerButtonsSystem.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\Dialog\Pages\Modifications\ModificationsPage.cs" Line="121" Column="28" />
-      <File FileName="Assets\Scripts\GUI\Dialog\Pages\Modifications\RuneButton.cs" Line="54" Column="126" />
+      <File FileName="Assets\Scripts\GUI\Dialog\Pages\Modifications\RuneButton.cs" Line="54" Column="121" />
       <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackController.cs" Line="155" Column="2" />
+      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\EquipmentRune.cs" Line="35" Column="66" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Stats.cs" Line="11" Column="52" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

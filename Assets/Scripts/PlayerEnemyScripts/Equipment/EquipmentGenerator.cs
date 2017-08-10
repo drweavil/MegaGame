@@ -5,6 +5,7 @@ using System.Linq;
 
 public class EquipmentGenerator : MonoBehaviour {
 	public const float smallRunePercent = 10, middleRunePercent = 20, largeRunePercent = 35;
+	public const float maximumRuneComplexityPercent = largeRunePercent;
 	public static float GetWeaponDamageByComplexity(float complexity){
 		float percent = Random.Range(0.2f, 0.5f); 
 		float weaponDamage = (float)(System.Math.Round((complexity * 0.2f)* percent));
@@ -71,68 +72,44 @@ public class EquipmentGenerator : MonoBehaviour {
 
 	public static EquipmentRune GetEquipmentRune(Equipment equip, float runePercent, int statsNumber){
 		EquipmentRune rune = new EquipmentRune ();
-		Dictionary<string, float> equipStats = new Dictionary<string, float> ();
-		equipStats.Add ("health", equip.healthPoints);
-		equipStats.Add ("physDamage", equip.physicalDamagePoints);
-		equipStats.Add ("elemDamage", equip.elementalDamagePoints);
-		equipStats.Add ("critical", equip.criticalPoints);
-		equipStats.Add ("physArmor", equip.physicalArmorPoints);
-		equipStats.Add ("elemArmor", equip.elementalArmorPoints);
+		Dictionary<int, float> equipStats = new Dictionary<int, float> ();
+		equipStats.Add (Stats.healthStatID, equip.healthPoints);
+		equipStats.Add (Stats.physicalDamageStatID, equip.physicalDamagePoints);
+		equipStats.Add (Stats.elementalDamageStatID, equip.elementalDamagePoints);
+		equipStats.Add (Stats.critStatID, equip.criticalPoints);
+		equipStats.Add (Stats.physicalArmorStatID, equip.physicalArmorPoints);
+		equipStats.Add (Stats.elementalArmorStatID, equip.elementalArmorPoints);
 
-		List<KeyValuePair<string, float>> euipStatsList = new List<KeyValuePair<string, float>> ();
-		euipStatsList = equipStats.OrderBy (x => x.Value).ToList ();//.ToDictionary(t => t.Key, t => t.Value);
+		List<KeyValuePair<int, float>> euipStatsList = new List<KeyValuePair<int, float>> ();
+		euipStatsList = equipStats.OrderBy (x => x.Value).ToList ();
 
 		euipStatsList = euipStatsList.GetRange (euipStatsList.Count - statsNumber, statsNumber).ToList();
 		equipStats = euipStatsList.ToDictionary(l=> l.Key, l=>l.Value);
 
-		if (equipStats.ContainsKey ("health")) {
+		if (equipStats.ContainsKey (Stats.healthStatID)) {
 			rune.healthPoints = equip.healthPoints * (runePercent / 100);
 		}
-		if (equipStats.ContainsKey ("physDamage")) {
+		if (equipStats.ContainsKey (Stats.physicalDamageStatID)) {
 			rune.physicalDamagePoints = equip.physicalDamagePoints * (runePercent / 100);
 		}
-		if (equipStats.ContainsKey ("elemDamage")) {
+		if (equipStats.ContainsKey (Stats.elementalDamageStatID)) {
 			rune.elementalDamagePoints = equip.elementalDamagePoints * (runePercent / 100);
 		}
-		if (equipStats.ContainsKey ("critical")) {
+		if (equipStats.ContainsKey (Stats.critStatID)) {
 			rune.criticalPoints = equip.criticalPoints * (runePercent / 100);
 		}
-		if (equipStats.ContainsKey ("physArmor")) {
+		if (equipStats.ContainsKey (Stats.physicalArmorStatID)) {
 			rune.physicalArmorPoints = equip.physicalArmorPoints * (runePercent / 100);
 		}
-		if (equipStats.ContainsKey ("elemArmor")) {
+		if (equipStats.ContainsKey (Stats.elementalArmorStatID)) {
 			rune.elementalArmorPoints = equip.elementalArmorPoints * (runePercent / 100);
 		}
-
-		rune.skinID = GetRuneSkinByComplexyty (equip.complexity);
-		rune.complexity = equip.complexity;
+			
+		rune.complexity = equip.complexity * (runePercent/100);
+		rune.SetIcon ();
 		return rune;
 	}
-
-
-	public static int GetRuneSkinByComplexyty(float complexity){
-		List<int> tier_1 = new List<int> (new int[]{1, 2, 3, 4, 5, 6});
-		List<int> tier_2 = new List<int> (new int[]{7, 8, 9, 10, 11, 12});
-		List<int> tier_3 = new List<int> (new int[]{13, 14, 15, 16, 17, 18});
-		List<int> tier_4 = new List<int> (new int[]{19, 20, 21, 22, 23, 24});
-
-		float tier1Complexity = (PlayerController.maximumComplexity / 2)/2;
-		float tier2Complexity = PlayerController.maximumComplexity / 2;
-		float tier3Complexity = tier2Complexity + tier1Complexity;
-		float tier4Complexity = PlayerController.maximumComplexity;
-
-		List<int> finalList = new List<int> ();
-		if (complexity <= tier1Complexity) {
-			finalList = tier_1;
-		} else if (complexity > tier1Complexity || complexity <= tier2Complexity) {
-			finalList = tier_2;
-		} else if (complexity > tier2Complexity || complexity <= tier3Complexity) {
-			finalList = tier_3;
-		} else if (complexity > tier3Complexity || complexity <= tier4Complexity) {
-			finalList = tier_4;
-		}
-		return finalList[Random.Range (0, 6)];
-	}
+		
 
 	public static EquipmentRune GetEquipmentRuneByComplexity(float complexity, float runePercent){
 		Equipment equip = GetEquipment (complexity, Equipment.fireWeapon);

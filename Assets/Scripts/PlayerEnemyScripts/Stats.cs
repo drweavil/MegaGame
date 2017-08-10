@@ -7,6 +7,8 @@ using System;
 public class Stats : MonoBehaviour {
 	public const int physicalDamageType = 0, hybridDamageType = 1, elementalDamageType = 2; 
 	public const int meleeSpec = 0, fireSpec=1, elementalSpec = 2;
+	public const int healthStatID = 1, critStatID = 2, physicalDamageStatID = 3, elementalDamageStatID = 4,
+	physicalArmorStatID = 5, elementalArmorStatID = 6;
 	public int specId = 0;
 
 	public float health;

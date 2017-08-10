@@ -21,37 +21,37 @@ public class RuneButton : MonoBehaviour {
 	public void SetRune(EquipmentRune rune){
 		runeIcon.sprite = rune.GetIcon ();
 
-		Dictionary <string, float> stats = rune.GetStats ();
+		Dictionary <int, float> stats = rune.GetStats ();
 		DeactivateStats ();
 
-		if (stats.ContainsKey ("health")) {
+		if (stats.ContainsKey (Stats.healthStatID)) {
 			runeHealth.SetActive (true);
-			runeHealthText.text = System.Math.Round (Stats.GetPlusHealthByPoints(stats["health"]), 0).ToString();
+			runeHealthText.text = System.Math.Round (Stats.GetPlusHealthByPoints(stats[Stats.healthStatID]), 0).ToString();
 		}
 
-		if (stats.ContainsKey ("critical")) {
+		if (stats.ContainsKey (Stats.critStatID)) {
 			runeCritical.SetActive (true);
-			runeCriticalText.text = System.Math.Round (Stats.GetPlusCriticalByPoints(stats["critical"]), 2).ToString();
+			runeCriticalText.text = System.Math.Round (Stats.GetPlusCriticalByPoints(stats[Stats.critStatID]), 2).ToString();
 		}
 
-		if (stats.ContainsKey ("physicalDamage")) {
+		if (stats.ContainsKey (Stats.physicalDamageStatID)) {
 			runePhysicalDamage.SetActive (true);
-			runePhysicalDamageText.text = System.Math.Round (Stats.GetPlusPhysicalDamageByPoints(stats["physicalDamage"]), 2).ToString();
+			runePhysicalDamageText.text = System.Math.Round (Stats.GetPlusPhysicalDamageByPoints(stats[Stats.physicalDamageStatID]), 2).ToString();
 		}
 
-		if (stats.ContainsKey ("elementalDamage")) {
+		if (stats.ContainsKey (Stats.elementalDamageStatID)) {
 			runeElementalDamage.SetActive (true);
-			runeElementalDamageText.text = System.Math.Round (Stats.GetPlusElementalDamageByPoints(stats["elementalDamage"]), 2).ToString();
+			runeElementalDamageText.text = System.Math.Round (Stats.GetPlusElementalDamageByPoints(stats[Stats.elementalDamageStatID]), 2).ToString();
 		}
 
-		if (stats.ContainsKey ("physicalArmor")) {
+		if (stats.ContainsKey (Stats.physicalArmorStatID)) {
 			runePhysicalArmor.SetActive (true);
-			runePhysicalArmorText.text = System.Math.Round (Stats.GetPlusPhysicalArmorByPoints(stats["physicalArmor"]), 2).ToString();
+			runePhysicalArmorText.text = System.Math.Round (Stats.GetPlusPhysicalArmorByPoints(stats[Stats.physicalArmorStatID]), 2).ToString();
 		}
 
-		if (stats.ContainsKey ("elementalArmor")) {
+		if (stats.ContainsKey (Stats.elementalArmorStatID)) {
 			runeElementalArmor.SetActive (true);
-			runeElementalArmorText.text = System.Math.Round (Stats.GetPlusElementalArmorByPoints(stats["elementalArmor"]), 2).ToString();
+			runeElementalArmorText.text = System.Math.Round (Stats.GetPlusElementalArmorByPoints(stats[Stats.elementalArmorStatID]), 2).ToString();
 		}
 	}
 
