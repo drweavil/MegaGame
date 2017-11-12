@@ -4,42 +4,30 @@ using System.Collections.Generic;
 
 public class MapZoneGenerator : MonoBehaviour {
 
-	static int  height = 100;
-	static int  width = 100;
+	static int height;// = 10;
+	static int width;// = 10;
 	int pointCount =0;
 	Hashtable colors = new Hashtable ();
-	List<int[]> points = new List<int[]>();
-	public MapZoneChunk[,] map = new MapZoneChunk[height+2, width+2];
+	List<int[]> points;// = new List<int[]>();
+	public MapZoneChunk[,] map;/// = new MapZoneChunk[height+2, width+2];
 	// Use this for initialization
 	void Start () {
-		for (int i = 0; i < height+2; i++) {
+		/*for (int i = 0; i < height+2; i++) {
 			for (int j = 0; j < width+2; j++) {
 				map[i, j] = new MapZoneChunk();
 				map [i, j].zoneChunkId = 0;
 			}
-		}
+		}*/
 		
 	
 	}
 
+
+
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyDown(KeyCode.E)) {
-			RefreshArray ();
-
-			for(int i = 0; i < 100; i++){
-				points.Add(GetRandomPoint ());
-			}
-
-			List<int[]> invalidPoints = points.FindAll (p => map [p [0], p [1]].zoneChunkId == -1);
-			foreach(int[] point in invalidPoints){
-				int invalidPointIndex = points.FindIndex (p => p[0] == point[0] && p[1] == point[1]);
-				points.RemoveAt (invalidPointIndex);
-			}
-			Debug.Log ("p/" + points.Count);
-			GenerateZonesByPoints (points);
-			MapZoneComplexityGenerator mapZoneGenerator = new MapZoneComplexityGenerator ();
-			map = mapZoneGenerator.SetComplexity (map);
+			GenMap (10, 10, 10);
 
 			SetColors ();
 			for (int i = 0; i < height+2; i++) {
@@ -81,6 +69,8 @@ public class MapZoneGenerator : MonoBehaviour {
 	//****************************************************************
 
 	void RefreshArray(){
+		map = new MapZoneChunk[height+2, width+2];
+		int levelID = 1;
 		for (int i = 0; i < height+2; i++) {
 			for (int j = 0; j < width+2; j++) {
 				if(j == 0 || j == (width+1) || i == 0 || i == (height+1)){
@@ -89,6 +79,8 @@ public class MapZoneGenerator : MonoBehaviour {
 				}else{
 					map [i, j] = new MapZoneChunk();
 					map [i, j].zoneChunkId = 0;
+					map [i, j].levelID = levelID;
+					levelID += 1;
 				}
 			}
 		}
@@ -112,8 +104,29 @@ public class MapZoneGenerator : MonoBehaviour {
 		return coord;
 	}
 
-	void GenMap(){
-		
+	public MapZoneChunk[,] GenMap(int pointsCount, int setHeight, int setWidth){
+		points = new List<int[]>();
+
+		height = setHeight;
+		width = setWidth;
+
+		RefreshArray ();
+
+		for(int i = 0; i < 10; i++){
+			points.Add(GetRandomPoint ());
+		}
+
+		List<int[]> invalidPoints = points.FindAll (p => map [p [0], p [1]].zoneChunkId == -1);
+		foreach(int[] point in invalidPoints){
+			int invalidPointIndex = points.FindIndex (p => p[0] == point[0] && p[1] == point[1]);
+			points.RemoveAt (invalidPointIndex);
+		}
+		Debug.Log ("p/" + points.Count);
+		GenerateZonesByPoints (points);
+		MapZoneComplexityGenerator mapZoneGenerator = new MapZoneComplexityGenerator ();
+		map = mapZoneGenerator.SetComplexity (map);
+		return map;
+
 	}
 
 

@@ -8,6 +8,7 @@ public class MapZoneChunk{
 	public int zoneChunkType;
 	public bool isKeyPoint = false;
 	public int complexity = -1;
+	public int levelID = 0;
 	//public int[] zoneChunkStatsLevel = new int[2];
 
 	public void SetData(MapZoneChunkWithGenerationInfo zoneChunk){

@@ -7,6 +7,7 @@ using System.Reflection;
 public class Buff{
 	public int buffID = -1;
 	public bool isUnremovable = false;
+	public bool isInfinityBuff = false;
 	public float buffTime = 0;
 	public float originBuffTime = 0;
 	public float buffPercent = 0;

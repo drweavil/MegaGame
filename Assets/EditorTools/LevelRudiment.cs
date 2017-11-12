@@ -21,9 +21,15 @@ public class LevelRudiment{
 	public int setsCount = 0;
 	public List<ObjectInfo> objects = new List<ObjectInfo>();
 
-	public void AddBlock(SerializableVector3 coords, List<SerializableVector2> uvs, bool isRandom = false, int rndPercent = 50){
+	public int levelWidth;
+	public int levelHeight;
+
+	public int enemiesFixCount = 0;
+	public int enemiesRandomCount = 0;
+
+	public void AddBlock(SerializableVector3 coords, int id, bool isRandom = false, int rndPercent = 50){
 		Block block = new Block ();
-		block.SetData (coords, uvs);
+		block.SetData (coords, id);
 		block.objId = objIdsCount;
 		if (isRandom) {
 			block.rnd = rndPercent;
@@ -41,9 +47,9 @@ public class LevelRudiment{
 		objIdsCount = objIdsCount + 1;
 	}
 
-	public void AddDecorBlock(List<SerializableVector3> coords, List<SerializableVector2> uvs, ObjectInfo obj, bool isRandom = false, int rndPercent = 50){
+	public void AddDecorBlock(List<SerializableVector3> coords, int id, ObjectInfo obj, bool isRandom = false, int rndPercent = 50){
 		DecorBlock block = new DecorBlock ();
-		block.SetData (coords, uvs);
+		block.SetData (coords, id	);
 		block.objId = objIdsCount;
 		if (isRandom) {
 			block.rnd = rndPercent;
@@ -134,6 +140,12 @@ public class LevelRudiment{
 				randomInteractiveObjects.RemoveAt (randomInteractiveObjectIndex);
 			}
 		}
+	}
+
+
+	public void SetEnemiesCount(){
+		enemiesFixCount = fixInteractiveObjects.FindAll (o => o.type == "enemyH").Count;
+		enemiesRandomCount = randomInteractiveObjects.FindAll (o => o.type == "enemyH").Count;
 	}
 
 

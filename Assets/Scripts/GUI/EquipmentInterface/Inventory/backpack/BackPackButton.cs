@@ -80,6 +80,13 @@ public class BackPackButton : MonoBehaviour {
 			EquipDialog.equipDialogStatic.OpenCommonDialog (item, consumable.GetTitle(), consumable.GetDescription(), true, consumable.GetCommonDescription());
 			DialogController.DeactivateButtons ();
 			DialogController.dialogController.backpackAreaDeleteItemButton.SetActive (true);
+		} else if (item.itemContent [0].GetType () == typeof(SkillActivator)) {
+			SkillActivator skillActivator = item.itemContent [0] as SkillActivator;
+			EquipDialog.equipDialogStatic.OpenSkillDialog (skillActivator.skillID, item);
+			DialogController.DeactivateButtons ();
+			if (!PlayerController.skillStates [skillActivator.skillID].skillActive) {
+				DialogController.dialogController.skillActivationButton.SetActive (true);
+			}
 		}
 	}
 
@@ -142,8 +149,14 @@ public class BackPackButton : MonoBehaviour {
 		} else if (item.itemContent [0].GetType () == typeof(Consumable)) {
 			Consumable consumable = (Consumable)item.itemContent [0];
 			commonContent.gameObject.SetActive (true);
-			buttonIcon.sprite = SkillPanelController.skillPanelController.GetSkillTexture (consumable.GetConsumableIconName() + consumable.consumableSubType.ToString());
+			buttonIcon.sprite = SkillPanelController.skillPanelController.GetSkillTexture (consumable.GetConsumableIconName () + consumable.consumableSubType.ToString ());
 			commonContent.SetInfo (item, consumable.GetTitle ());
+		} else if (item.itemContent [0].GetType () == typeof(SkillActivator)) {
+			SkillActivator skillActivator = (SkillActivator)item.itemContent [0];
+			SkillSettings settings = SkillSettingsSet.GetSettings (skillActivator.skillID);
+			commonContent.gameObject.SetActive (true);
+			buttonIcon.sprite = SkillPanelController.skillPanelController.GetSkillTexture ("skill-" + settings.skillID);
+			commonContent.SetInfo(item, settings.GetTitle());
 		}
 	}
 

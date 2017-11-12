@@ -71,6 +71,9 @@ public class ReskinController : MonoBehaviour {
 	public int meleeWeaponSkinID = 0;
 	public int fireWeaponSkinID = 0;
 	public int elementalWeaponSkinID = 0;
+
+
+	public CharacterAPI characterApi;
 	// Use this for initialization
 	void Awake () {
 		/************************Initialize renderers*************************************/
@@ -206,7 +209,11 @@ public class ReskinController : MonoBehaviour {
 		headSprite = armorSprites.Find (s => s.name == "head");
 		//	helmSprite = armorSprites.Find (s => s.name == "hairWF");
 		//}else{
-		helmSprite = armorSprites.Find (s => s.name == "head_" + id.ToString());
+		Sprite headSpr = armorSprites.Find (s => s.name == "head_" + id.ToString());
+		helmSprite = headSpr;
+		if (characterApi.stats.isPlayerStats) {
+			characterApi.healthBar.playerAvatar.sprite = headSpr;
+		}
 		//}
 	}
 

@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\plugins\SimpleJSON.cs" />
      <None Include="Assets\codeandweb.com\Editor\SettingsTexturePackerImporter.txt" />
+     <None Include="Assets\Resources\Textures\TileSets\IDUVS\idUVsSet_1.txt" />
      <None Include="Assets\Tiled2Unity\Prefabs\_ReadMe.txt" />
      <None Include="Assets\Tiled2Unity\Shaders\shaTiledMap.shader" />
      <None Include="Assets\Tiled2Unity\Tiled2Unity.export.txt" />

@@ -11,18 +11,23 @@ public class StreamHitbox : MonoBehaviour {
 	public Vector3 currentNullSpellPosition;
 	//public float crit;
 	public bool readyToTrigger = false;
+	public bool withExitAction = false;
 	public int selectingLayer;
 	public SpellHitbox.ObjectsAction action;
+	public SpellHitbox.ObjectsAction exitAction;
 	public Transform centerTransform;
+	public SphereCollider collider;
 
 
 	void OnTriggerEnter(Collider col){
 		if (readyToTrigger) {
+			
 			if (objects.FindIndex (o => o == col.gameObject) == -1 &&
 			   ignoreColliders.FindIndex (o => o == col.gameObject) == -1 &&
 			   col.gameObject.tag == "Character" &&
 				col.gameObject.layer == selectingLayer
 			) {
+				
 				objects.Add (col.gameObject);
 				CharacterAPI enemyTarget = col.gameObject.GetComponent<CharacterAPI> ();
 				if(action != null){
@@ -46,6 +51,23 @@ public class StreamHitbox : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	void OnTriggerExit(Collider col){
+		if (readyToTrigger) {
+			if (withExitAction) {
+				if (objects.FindIndex (o => o == col.gameObject) != -1 &&
+				   ignoreColliders.FindIndex (o => o == col.gameObject) == -1 &&
+				   col.gameObject.tag == "Character" &&
+				   col.gameObject.layer == selectingLayer) {
+					objects.Remove (col.gameObject);
+					CharacterAPI enemyTarget = col.gameObject.GetComponent<CharacterAPI> ();
+					if (action != null) {
+						exitAction (enemyTarget);
+					}
+				}
+			}
+		}	
 	}
 
 	public void Flip(){

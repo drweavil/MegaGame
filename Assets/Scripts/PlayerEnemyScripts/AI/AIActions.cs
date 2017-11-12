@@ -24,6 +24,7 @@ public class AIActions : MonoBehaviour {
 		actions.Add (RangeTargetMovement());
 		actions.Add (MovementToRangeTarget ());
 		actions.Add (ReselectRangeTarget());
+		actions.Add (RemoveRangeTarget());
 		actions.Add (Patrol());
 		return actions;
 	}
@@ -416,6 +417,7 @@ public class AIActions : MonoBehaviour {
 	static IEnumerator SelectRangeTargetAction(CharacterAPI newCharacterAPI, AIAction action, AIAction.AfterCallback callback){
 		//GameObject targetObject = new GameObject ();
 		//targetObject.tag = "RangeTarget";
+		PlayerController.playerCharacterAPI.movementController.rangeTargets.Add(newCharacterAPI);
 		action.currentParams.rangeDistance = Random.Range (action.currentParams.minimumRangeDistance, action.currentParams.maximumRangeDistance);
 		action.currentParams.rangeTargetSelected = true;
 		if (newCharacterAPI.transform.position.x < PlayerController.playerCharacterAPI.transform.position.x) {
@@ -450,6 +452,8 @@ public class AIActions : MonoBehaviour {
 	}
 	static IEnumerator RemoveRangeTargetAction(CharacterAPI newCharacterAPI, AIAction action, AIAction.AfterCallback callback){
 		action.currentParams.rangeTargetSelected = false;
+		PlayerController.playerCharacterAPI.movementController.rangeTargets.Remove (newCharacterAPI);
+		//Debug.Log ("asd");
 		if (callback != null) {
 			callback ();
 		}
@@ -473,6 +477,7 @@ public class AIActions : MonoBehaviour {
 		return action;
 	}
 	static IEnumerator ReselectRangeTargetAction(CharacterAPI newCharacterAPI, AIAction action, AIAction.AfterCallback callback){
+		
 		if ((action.currentParams.restAgainstLeftWall || !action.currentParams.leftPrecipice) &&
 			(action.currentParams.restAgainstRightWall || !action.currentParams.rightPrecipice)
 		) {
@@ -700,6 +705,7 @@ public class AIActions : MonoBehaviour {
 	}
 	static IEnumerator SelectTargetAction(CharacterAPI newCharacterAPI, AIAction action, AIAction.AfterCallback callback){
 		newCharacterAPI.aiController.SelectTarget();
+		action.currentParams.targetAPI.stats.inAggro = true;
 		if (callback != null) {
 			callback ();
 		}

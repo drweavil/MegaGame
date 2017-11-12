@@ -14,9 +14,9 @@ public class SkillPanelController : MonoBehaviour {
 	public static SkillPanelController skillPanelController;
 	public List<Sprite> skillSprites;
 
-	List<SkillButtonSetting> meleeSet = new List<SkillButtonSetting> ();
-	List<SkillButtonSetting> fireSet = new List<SkillButtonSetting> ();
-	List<SkillButtonSetting> elementalSet = new List<SkillButtonSetting> ();
+	public List<SkillButtonSetting> meleeSet = new List<SkillButtonSetting> ();
+	public List<SkillButtonSetting> fireSet = new List<SkillButtonSetting> ();
+	public List<SkillButtonSetting> elementalSet = new List<SkillButtonSetting> ();
 
 
 

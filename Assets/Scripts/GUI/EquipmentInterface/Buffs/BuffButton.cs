@@ -39,7 +39,16 @@ public class BuffButton : MonoBehaviour {
 		button.SetActive (true);
 		buffID = buff.buffID;
 		buffIcon.sprite = SkillPanelController.skillPanelController.GetSkillTexture ("burst_" + buff.buffID);
-		SetTime (buff.buffTime, buff.buffTime);
+		if (buff.isInfinityBuff) {
+			InfiniteTime ();
+		} else {
+			SetTime (buff.buffTime, buff.buffTime);
+		}
+	}
+
+	public void InfiniteTime(){
+		buffTimeText.text = "";
+		buffProcessImage.fillAmount = 0;
 	}
 
 	public void SetTime(float currentTime, float maximumTime){

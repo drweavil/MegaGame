@@ -86,11 +86,19 @@ public class AIController : MonoBehaviour {
 			currentPosition, 
 			directionToTarget,
 			out hitWithTarget,
-			10f, 
+			8f/*10*/, 
 			(1 << LayerMask.NameToLayer ("Player")) | (1 << LayerMask.NameToLayer ("Ground")));
-		if (hitWithTarget.collider != null) {
-			if (hitWithTarget.collider.gameObject.layer == LayerMask.NameToLayer ("Player")) {
-				controllerParams.targetInLine = true;
+		if (PlayerController.playerCharacterAPI.stats.canTargeted) {
+			if (hitWithTarget.collider != null) {
+				if (hitWithTarget.collider.gameObject.layer == LayerMask.NameToLayer ("Player")) {
+					controllerParams.targetInLine = true;
+				} else {
+					if (controllerParams.distanceToPlayer <= 0.5f) {
+						controllerParams.targetInLine = true;
+					} else {
+						controllerParams.targetInLine = false;
+					}
+				}
 			} else {
 				if (controllerParams.distanceToPlayer <= 0.5f) {
 					controllerParams.targetInLine = true;
@@ -99,12 +107,11 @@ public class AIController : MonoBehaviour {
 				}
 			}
 		} else {
-			if (controllerParams.distanceToPlayer <= 0.5f) {
-				controllerParams.targetInLine = true;
-			} else {
-				controllerParams.targetInLine = false;
-			}
+			controllerParams.targetInLine = false;
 		}
+
+		//Debug.Log (controllerParams.characterAPI);
+
 	}
 
 	public void SetActionsByEnemyID(int id){

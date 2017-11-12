@@ -43,8 +43,14 @@ public class DialogPages : MonoBehaviour {
 		EquipDialog.equipDialogStatic.DeactiveAllWindows();
 		EquipDialog.equipDialogStatic.modificationsPage.gameObject.SetActive (true);
 		EquipDialog.equipDialogStatic.modificationsPage.FindRunes ();
+		EquipDialog.equipDialogStatic.modificationsPage.RecomputePages ();
 		EquipDialog.equipDialogStatic.modificationsPage.DrawRunes ();
+		EquipDialog.equipDialogStatic.modificationsPage.DeactivateRuneFilterButtons ();
+		EquipDialog.equipDialogStatic.modificationsPage.DeactivateAreas ();
+		EquipDialog.equipDialogStatic.modificationsPage.NullBackpackItemsIDs ();
 		EquipDialog.equipDialogStatic.modificationsPage.SetRunesByEquip (DialogController.dialogController.currentEquipmentInDialog);
+		EquipDialog.equipDialogStatic.modificationsPage.ReDeactivateRuneButtons ();
+		DialogController.DeactivateButtons ();
 	}
 
 	public void ActivateDeconstructionPage(){

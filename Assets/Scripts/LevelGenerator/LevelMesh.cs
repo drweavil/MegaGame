@@ -27,6 +27,8 @@ public class LevelMesh : MonoBehaviour {
 
 	private LevelMeshDataSerializable serializableData = new LevelMeshDataSerializable();
 
+	public Dictionary<int, Vector2> uvIDs;
+
 
 	public void Awake(){
 		mesh = GetComponent<MeshFilter> ().mesh;
@@ -313,6 +315,7 @@ public class LevelMesh : MonoBehaviour {
 		newTriangles.Clear ();
 		colTriangles.Clear ();
 		squareCount = 0;*/
+		//squareVerticesEndValue += data.coords.Count * 4;
 		squareVerticesEndValue += data.squareVerticesSerializeble.Count;
 		CoroutineAddDataProcess process = new CoroutineAddDataProcess ();
 		StartCoroutine (process.CoroutineAddData (data, coord, this));
@@ -367,6 +370,9 @@ public class LevelMesh : MonoBehaviour {
 	public class LevelMeshDataSerializable {
 		public List<SerializableVector3> squareVerticesSerializeble  = new List<SerializableVector3>();
 		public List<SerializableVector2> squareUVSerializeble  = new List<SerializableVector2>();
+		//public List<float> coords = new List<int>();
+		public List<int> uvIDs = new List<int> ();
+		//public List<float> colliderVertices = new List<int> ();
 		public List<SerializableVector3> colliderVerticesSerializeble  = new List<SerializableVector3>();	
 	}
 

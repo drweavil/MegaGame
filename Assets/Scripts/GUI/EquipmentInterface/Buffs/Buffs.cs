@@ -10,6 +10,9 @@ public class Buffs : MonoBehaviour {
 	criticalBuff = 4, 
 	physicalArmorBuff = 5, 
 	elementalArmorBuff = 6;
+	public static List<int> meleeBuffs = new List<int>(new int[]{9}); 
+	public static List<int> fireBuffs = new List<int>(new int[]{7}); 
+	public static List<int> elementalBuffs = new List<int>(new int[]{8}); 
 
 	public delegate void BuffAction();
 
@@ -181,4 +184,29 @@ public class Buffs : MonoBehaviour {
 		});
 		return actions;
 	}
+
+	static Buff Buff_7(){
+		Buff buff = new Buff ();
+		buff.buffID = 7;
+		buff.isInfinityBuff = true;
+		buff.canDeactivate = false;
+		return buff;
+	}
+
+	static Buff Buff_8(){
+		Buff buff = new Buff ();
+		buff.buffID = 8;
+		buff.isInfinityBuff = true;
+		buff.canDeactivate = false;
+		return buff;
+	}
+
+	static Buff Buff_9(){
+		Buff buff = new Buff ();
+		buff.buffID = 9;
+		buff.isInfinityBuff = true;
+		buff.canDeactivate = false;
+		return buff;
+	}
+
 }

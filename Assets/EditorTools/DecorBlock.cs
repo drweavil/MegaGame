@@ -6,14 +6,15 @@ using System.Collections.Generic;
 public class DecorBlock {
 	public int rnd;
 	public List<SerializableVector3> blockCoords = new List<SerializableVector3>();
-	public List<SerializableVector2> squareUV = new List<SerializableVector2>();
+	//public List<SerializableVector2> squareUV = new List<SerializableVector2>();
 	public int objId;
+	public int uvsID;
 
-	public void SetData(List<SerializableVector3> getBlockCoords, List<SerializableVector2> uv){
+	public void SetData(List<SerializableVector3> getBlockCoords, int id){
 		blockCoords = getBlockCoords;/*new SerializableVector3 (getBlockCoords.x, getBlockCoords.y, getBlockCoords.z);
 		foreach (Vector2 coord in uv) {
 			squareUV.Add (new SerializableVector2(coord.x, coord.y));
 		}*/
-		squareUV = uv;
+		uvsID = id;
 	}
 }

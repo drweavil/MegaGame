@@ -19,6 +19,10 @@ public class EquipmentController : MonoBehaviour {
 	public Text physicalDamage;
 	public Text elementalDamage;
 
+	public Text meleeWeaponDamage;
+	public Text fireWeaponDamage;
+	public Text elementalWeaponDamage;
+
 	public Text gold;
 	public Text donatGold;
 	public Text lifes;
@@ -106,6 +110,10 @@ public class EquipmentController : MonoBehaviour {
 		SetCritical (PlayerController.playerCharacterAPI.stats.critical);
 		SetPhysicalDamage (PlayerController.playerCharacterAPI.stats.physicalDamage);
 		SetElementalDamage (PlayerController.playerCharacterAPI.stats.elementalDamage);
+
+		meleeWeaponDamage.text = System.Math.Round (PlayerController.playerCharacterAPI.stats.weaponDamage, 2).ToString();
+		fireWeaponDamage.text = System.Math.Round (PlayerController.playerCharacterAPI.stats.fireWeaponDamage, 2).ToString();
+		elementalWeaponDamage.text = System.Math.Round (PlayerController.playerCharacterAPI.stats.elementalWeaponDamage, 2).ToString();
 	}
 
 	public void SetResources(){

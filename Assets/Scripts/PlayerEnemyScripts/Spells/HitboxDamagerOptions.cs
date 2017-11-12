@@ -11,6 +11,7 @@ public class HitboxDamagerOptions {
 	public bool withStun = false;
 	public float stunTime = 0;
 	public float efficienty = 100f;
+	public int skillID = -1;
 
 	public SpellHitbox.ObjectsAction action;
 }

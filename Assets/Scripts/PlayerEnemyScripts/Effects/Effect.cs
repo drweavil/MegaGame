@@ -2,9 +2,9 @@
 using System.Collections;
 
 public class Effect : MonoBehaviour {
-	Timer effectTimer = new Timer();
-	Timer durationTimer = new Timer();
-	bool hasTimer = false;
+	public Timer effectTimer = new Timer();
+	public Timer durationTimer = new Timer();
+	public bool hasTimer = false;
 	public string path;
 	//GameObject effect;
 	public ParticleSystem particleSystem;
@@ -88,18 +88,26 @@ public class Effect : MonoBehaviour {
 			}
 		}
 		particleSystem.Play ();
-		//Debug.Log (particleSystem.isPlaying);
 		//particleSystem.loop = true;
 		//ParticleSystem.EmissionModule emission = particleSystem.emission;
 		//emission.enabled = true;
 
 	}
 
-	public void StopEffect(){
+	public void StopEffect(bool urgently = false){
 		particleSystem.Stop ();
 		hasTimer = true;
 		durationTimer.SetTimer (0);
-		effectTimer.SetTimer(particleSystem.startLifetime);
+		if (urgently) {
+			effectTimer.SetTimer (0);
+		} else {
+			effectTimer.SetTimer (particleSystem.startLifetime);
+		}
+	}
+
+	public void NewDuration(float time){
+		durationTimer.SetTimer (time);
+		effectTimer.SetTimer(time + particleSystem.startLifetime);
 	}
 
 	public void SetNullPositionCoords(Vector3 coords){

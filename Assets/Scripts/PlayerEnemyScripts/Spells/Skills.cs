@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 
 public class Skills : MonoBehaviour {
 	public Animator anim;
@@ -23,6 +24,7 @@ public class Skills : MonoBehaviour {
 
 	private Effect shieldEffect;
 	public Effect iceStunEffect;
+	public Effect chainsEffect;
 
 	public Dictionary<int, SkillSettings> settingsSet = new Dictionary<int, SkillSettings>();
 	private Dictionary<string, object> tempSkillParams = new Dictionary<string, object>();
@@ -54,7 +56,31 @@ public class Skills : MonoBehaviour {
 		return efficiency + (efficiency * (stats.magicEnergy/100f));
 	}
 
-	public Stats.NumberParams SkillDamage(float percent, int damageType, float efficiency = 100f, int spec = 0){
+	public Stats.NumberParams SkillDamageBySkillId(int skillID, int damageType = -1, bool withCrit = true){
+		SkillSettings settings = SkillSettingsSet.GetSettings (skillID);
+		float efficiency = 100f;
+		if (stats.isPlayerStats) {
+			efficiency = PlayerController.skillStates [skillID].skillEfficiency;
+		}
+		int finalDamageType = settings.specID;
+		if (damageType != -1) {
+			finalDamageType = damageType;
+		}
+
+		Stats.NumberParams numberParams = new Stats.NumberParams ();
+		if (settings.specID == Stats.elementalSpec) {
+			numberParams = SkillDamage (settings.damagePercent, finalDamageType, MagicEfficiency(efficiency), settings.specID, withCrit);
+		} else {
+			numberParams = SkillDamage (settings.damagePercent, finalDamageType, efficiency, settings.specID, withCrit);
+		}
+
+		if (stats.isPlayerStats) {
+			numberParams.number = numberParams.number + numberParams.number * (settings.GetPlusDamagePercent ()/100f); 
+		}
+		return numberParams;
+	}
+
+	public Stats.NumberParams SkillDamage(float percent, int damageType, float efficiency = 100f, int spec = 0, bool withCrit = true){
 		float damage = 0;
 		float wd = 0;//(float)stats.weaponDamage;
 		if (spec == Stats.meleeSpec) {
@@ -79,8 +105,13 @@ public class Skills : MonoBehaviour {
 		if (damage == 0) {
 			damage = 1;
 		}
-		Stats.NumberParams finalDamage = TryCriticalDamage (damage);
+		Stats.NumberParams finalDamage = new Stats.NumberParams ();
+		finalDamage.number = damage;
+		if (withCrit) {
+			finalDamage = TryCriticalDamage (damage);
+		}
 		finalDamage.number = finalDamage.number + (finalDamage.number * ap)/(1 - ap);
+
 		return finalDamage;
 	}
 		
@@ -111,6 +142,17 @@ public class Skills : MonoBehaviour {
 		methodInfo.Invoke (this, new object[]{true});
 	}
 
+	void SetShotDirectionVector(Vector3 vector){
+		if (stats.isPlayerStats) {
+			shotDirectionVector = AimLineController.aimLineController.joystickVector;
+		} else {
+			if (transform.localScale.x < 0) {
+				vector = new Vector3 (vector.x * -1, vector.y, vector.z);
+			} 
+			shotDirectionVector = vector;
+		}
+	}
+
 	public void FastPunch (bool isSecondPart = false){
 		currentAction = "FastPunch";
 		if (isSecondPart) {
@@ -124,7 +166,7 @@ public class Skills : MonoBehaviour {
 			RaycastHit hit;
 			Physics.Raycast (transform.position, new Vector3(transform.localScale.x, 0, 0), out hit, skillSettings.distance, target);
 			if (hit.collider != null) {
-				Stats.NumberParams damage = SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType);
+				Stats.NumberParams damage = SkillDamageBySkillId (skillSettings.skillID);//SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType);
 				//Debug.Log (damage);
 				CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI>();
 				targetCharacterAPI.stats.MakeDamage(damage, Stats.physicalDamageType,  true);
@@ -163,7 +205,7 @@ public class Skills : MonoBehaviour {
 			RaycastHit hit;
 			Physics.Raycast (transform.position, new Vector3(transform.localScale.x, 0, 0), out hit, skillSettings.distance, target);
 			if (hit.collider != null) {
-				Stats.NumberParams damage = SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType);
+				Stats.NumberParams damage = SkillDamageBySkillId (skillSettings.skillID);//SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType);
 				//Debug.Log (damage);
 				CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI>();
 				targetCharacterAPI.stats.MakeDamage(damage, Stats.physicalDamageType,  true);
@@ -189,9 +231,9 @@ public class Skills : MonoBehaviour {
 		}
 	}
 
-	public void SlowPunch(bool isSecondPart = false){
+	public void SlowPunch(){
 		currentAction = "SlowPunch";
-		if (isSecondPart) {
+		/*if (isSecondPart) {
 			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.slowPunch);
 			int target;
 			if (stats.isPlayerStats) {
@@ -202,8 +244,7 @@ public class Skills : MonoBehaviour {
 			RaycastHit hit;
 			Physics.Raycast (transform.position, new Vector3(transform.localScale.x, 0, 0), out hit, skillSettings.distance, target);
 			if (hit.collider != null) {
-				Stats.NumberParams damage = SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType);
-				//Debug.Log (damage);
+				Stats.NumberParams damage = SkillDamageBySkillId (skillSettings.skillID);
 				CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI>();
 				targetCharacterAPI.stats.MakeDamage(damage, Stats.physicalDamageType,  true);
 				stats.AddMeleeEnergyPoints (skillSettings.resourceAdd, true);
@@ -220,12 +261,46 @@ public class Skills : MonoBehaviour {
 				effect.StartEffect (effectOptions);
 			}
 		} else {
-			if (IsAction ()) {
-				anim.Play ("actionSlowPunch");
-			} else {
-				anim.Play ("slowPunch");	
-			}
+			anim.Play ("teleportStrike");
+		}*/
+		SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.slowPunch);
+
+		GameObject targetFinderObject = ObjectsPool.PullObject ("Prefabs/SkillPrefabs/targetFinder");
+		SpellHitbox targetFinder = targetFinderObject.GetComponent<SpellHitbox> ();
+		targetFinder.path = "Prefabs/SkillPrefabs/targetFinder";
+		((SphereCollider)targetFinder.collider).radius = skillSettings.distance;
+		if (stats.isPlayerStats) {
+			targetFinder.selectingLayer = LayerMask.NameToLayer ("Enemy");
+		} else {
+			targetFinder.selectingLayer = LayerMask.NameToLayer ("Player");
 		}
+		targetFinderObject.transform.parent = nullSkillPosition.transform;
+		targetFinderObject.transform.localPosition = targetFinder.nullSpellPosition;
+
+		List<CharacterAPI> potentialTargets = new List<CharacterAPI> ();
+
+		SpellHitbox.ObjectsAction action = (CharacterAPI enemyAPI) => {
+			potentialTargets.Add(enemyAPI);
+		};
+
+		StartCoroutine(targetFinder.MakeObjectsAction (action));
+		CharacterAPI target;
+		StartCoroutine (StartProcess.StartActionAfterFewFrames (5, () => {
+			List<CharacterAPI> sortedFoundTargets = potentialTargets.OrderBy (t => Vector3.Distance (characterAPI.transform.position, t.transform.position)).ToList ();
+			if(sortedFoundTargets.Count != 0){
+				target =  sortedFoundTargets[0];
+				characterAPI.transform.position = new Vector3(target.transform.position.x, target.transform.position.y + 0.5f, target.transform.position.z);
+				anim.Play ("teleportStrike");
+				StartCoroutine (WaitAnimationAction ("teleportStrike", 1));
+				target.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID), Stats.physicalDamageType,  true);
+				stats.AddMeleeEnergyPoints (skillSettings.resourceAdd, true);
+			}
+			ObjectsPool.PushObject(targetFinder.path, targetFinderObject);
+		}));
+
+
+
+
 	}
 
 
@@ -274,7 +349,7 @@ public class Skills : MonoBehaviour {
 
 
 			SpellHitbox.ObjectsAction spellHitboxAction = (CharacterAPI targetAPI) => {
-				targetAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.physicalDamageType), Stats.physicalDamageType, true);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID), Stats.physicalDamageType, true);
 			};
 
 			StartCoroutine(spellHitbox.MakeObjectsAction(spellHitboxAction));
@@ -321,12 +396,13 @@ public class Skills : MonoBehaviour {
 			} else {
 				spellHitbox.selectingLayer = LayerMask.NameToLayer ("Player");
 			}
-			HitboxDamagerOptions damagerOptions = new HitboxDamagerOptions();
+			HitboxDamagerOptions damagerOptions = new HitboxDamagerOptions ();
 			damagerOptions.hitBox = hitBox;
 			damagerOptions.spellHitbox = spellHitbox;
 			damagerOptions.damagePercent = skillSettings.damagePercent;
 			damagerOptions.damageType = Stats.physicalDamageType;
 			damagerOptions.path = "Prefabs/SkillPrefabs/CirclePunchHitbox";
+			damagerOptions.skillID = skillSettings.skillID;
 			StartCoroutine(waitFewFramesAndMakeDamage (damagerOptions));
 			break;
 		case 2:
@@ -351,6 +427,7 @@ public class Skills : MonoBehaviour {
 			damagerOptions2.damagePercent = skillSettings2.damagePercent;
 			damagerOptions2.damageType = Stats.physicalDamageType;
 			damagerOptions2.path = "Prefabs/SkillPrefabs/CirclePunchHitbox";
+			damagerOptions2.skillID = skillSettings2.skillID;
 			StartCoroutine(waitFewFramesAndMakeDamage (damagerOptions2));
 			break;
 
@@ -429,7 +506,7 @@ public class Skills : MonoBehaviour {
 
 
 			SpellHitbox.ObjectsAction spellHitboxAction = (CharacterAPI targetAPI) => {
-				targetAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.physicalDamageType), Stats.physicalDamageType, true);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID), Stats.physicalDamageType, true);
 			};
 			StartCoroutine(spellHitbox.MakeObjectsAction(spellHitboxAction));
 		} else {
@@ -513,8 +590,8 @@ public class Skills : MonoBehaviour {
 
 
 			SpellHitbox.ObjectsAction spellHitboxAction = (CharacterAPI targetAPI) => {
-				targetAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.physicalDamageType), Stats.physicalDamageType, true);
-				targetAPI.stats.GetMovementSlowly(skillSettings.slowTime, skillSettings.slowSpeed);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID), Stats.physicalDamageType, true);
+				targetAPI.stats.GetMovementSlowly(skillSettings.slowTime, skillSettings.GetSpeed(stats.isPlayerStats));
 			};
 			StartCoroutine(spellHitbox.MakeObjectsAction(spellHitboxAction));
 
@@ -552,9 +629,9 @@ public class Skills : MonoBehaviour {
 		}
 			
 		streamHitbox.action = (CharacterAPI targetAPI) => {
-			targetAPI.stats.MakeDamage (characterAPI.skills.SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType, 100f), Stats.physicalDamageType, true);
-			targetAPI.stats.FullStun(skillSettings.stunTime);
-			targetAPI.stats.GetMovementSlowly(skillSettings.slowTime, skillSettings.slowSpeed);
+			targetAPI.stats.MakeDamage (characterAPI.skills.SkillDamageBySkillId (skillSettings.skillID), Stats.physicalDamageType, true);
+			targetAPI.stats.FullStun(skillSettings.stunTime, true, true);
+			targetAPI.stats.GetMovementSlowly(skillSettings.slowTime, skillSettings.GetSpeed(stats.isPlayerStats));
 		};
 
 		streamHitbox.readyToTrigger = true;
@@ -637,9 +714,9 @@ public class Skills : MonoBehaviour {
 				thunderClapHitbox.spellHitbox.selectingLayer = LayerMask.NameToLayer ("Player");
 			}
 			thunderClapHitbox.action = (targetAPI) => {
-				targetAPI.stats.GetMovementSlowly (skillSettings.slowTime, skillSettings.slowSpeed);
-				targetAPI.stats.FullStun (skillSettings.stunTime, false);
-				targetAPI.stats.MakeDamage (characterAPI.skills.SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType, 100), Stats.physicalDamageType, true);
+				targetAPI.stats.GetMovementSlowly (skillSettings.slowTime, skillSettings.GetSpeed(stats.isPlayerStats));
+				targetAPI.stats.FullStun (skillSettings.stunTime, false, true);
+				targetAPI.stats.MakeDamage (characterAPI.skills.SkillDamageBySkillId (skillSettings.skillID), Stats.physicalDamageType, true);
 			};
 
 
@@ -694,7 +771,7 @@ public class Skills : MonoBehaviour {
 			}
 
 			streamHitbox.action = (CharacterAPI targetAPI) => {
-				targetAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.physicalDamageType), Stats.physicalDamageType, true);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID), Stats.physicalDamageType, true);
 				StartCoroutine(targetAPI.movementController.MovementToObjectWithTimer(blackHoleExist, streamHitbox.centerTransform, new Vector2(5, 5f)));
 				//StartCoroutine(targetAPI.stats.Silence(2f));
 			};
@@ -755,9 +832,9 @@ public class Skills : MonoBehaviour {
 				spellHitbox.selectingLayer = LayerMask.NameToLayer ("Player");
 			}
 
-			stats.RestoreHealth(SkillDamage(skillSettings.restorePercent, Stats.physicalDamageType));
+			stats.RestoreHealth(SkillDamageBySkillId (skillSettings.skillID));
 			SpellHitbox.ObjectsAction spellHitboxAction = (CharacterAPI targetAPI) => {
-				Stats.NumberParams damage = SkillDamage(skillSettings.damagePercent, Stats.physicalDamageType);
+				Stats.NumberParams damage = SkillDamageBySkillId (skillSettings.skillID);
 				targetAPI.stats.MakeDamage(damage, Stats.physicalDamageType, true);
 
 				if(IsCritical()){
@@ -769,7 +846,6 @@ public class Skills : MonoBehaviour {
 		} else {
 			//Debug.Log ("lol");
 			if (IsAction ()) {
-				Debug.Log ("lol");
 				anim.Play ("actionSiphonLife", 1);
 				StartCoroutine (WaitAnimationAction ("actionSiphonLife", 1));
 			} else {
@@ -804,9 +880,10 @@ public class Skills : MonoBehaviour {
 			}
 
 			SpellHitbox.ObjectsAction spellHitboxAction = (CharacterAPI targetAPI) => {
-				targetAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.physicalDamageType), Stats.physicalDamageType, true);
-				targetAPI.stats.GetMovementSlowly(skillSettings.slowTime, skillSettings.slowSpeed);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID), Stats.physicalDamageType, true);
+				targetAPI.stats.GetMovementSlowly(skillSettings.slowTime, skillSettings.GetSpeed(stats.isPlayerStats));
 				//targetAPI
+				//if(targetAPI.skills.chainsEffect == null){
 				GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Melee/chains");
 				Effect effect = effectObject.GetComponent<Effect> ();
 				effect.path = "Prefabs/Particles/Melee/chains";
@@ -821,8 +898,23 @@ public class Skills : MonoBehaviour {
 				effectOptions.isLocalPosition = true;
 				effectOptions.transformPosition = effectPosition;
 				effectOptions.isRandomDuration = false;
-				effectOptions.duration = 5f;
-				effect.StartEffect (effectOptions);
+				effectOptions.duration = targetAPI.stats.GetSlowSpeedDiminishingTime(skillSettings.slowTime);
+
+
+
+				if(targetAPI.skills.chainsEffect == null){
+					targetAPI.skills.chainsEffect = effect;
+					effect.StartEffect (effectOptions);
+				}else{
+					if(targetAPI.skills.chainsEffect.durationTimer.TimeIsOver()){
+						targetAPI.skills.chainsEffect = effect;
+						effect.StartEffect (effectOptions);	
+					}else{
+						ObjectsPool.PushObject(effect.path, effectObject);
+						targetAPI.skills.chainsEffect.NewDuration(targetAPI.stats.GetSlowSpeedDiminishingTime(skillSettings.slowTime));
+					}
+				}
+
 			};
 
 			StartCoroutine(spellHitbox.MakeObjectsAction(spellHitboxAction));
@@ -855,12 +947,12 @@ public class Skills : MonoBehaviour {
 			RaycastHit hit;
 			Physics.Raycast (transform.position, new Vector3(transform.localScale.x, 0, 0), out hit, skillSettings.distance, target);
 			if (hit.collider != null) {
-				Stats.NumberParams damage = SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType);
+				Stats.NumberParams damage = SkillDamageBySkillId (skillSettings.skillID);
 				//Debug.Log (damage);
 				CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI>();
 				targetCharacterAPI.stats.MakeDamage(damage, Stats.physicalDamageType,  true);
 
-				targetCharacterAPI.stats.FullStun (skillSettings.stunTime);
+				targetCharacterAPI.stats.FullStun (skillSettings.stunTime, true, true);
 			}
 		} else {
 			if (IsAction ()) {
@@ -886,10 +978,6 @@ public class Skills : MonoBehaviour {
 		if (isSecondPart) {
 			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.fastShot);
 			RaycastHit hit;
-			float scaleDirectionX = 1;
-			if (transform.localScale.x < 0) {
-				scaleDirectionX = -1;
-			}
 
 			int target;
 			if (stats.isPlayerStats) {
@@ -899,7 +987,7 @@ public class Skills : MonoBehaviour {
 			}
 			Physics.Raycast (
 				transform.position, 
-				new Vector3(scaleDirectionX, shotDirectionVector.y, shotDirectionVector.z),
+				shotDirectionVector,
 				out hit, 
 				skillSettings.distance, 
 				target /*Enemy*/
@@ -909,8 +997,8 @@ public class Skills : MonoBehaviour {
 				if (hit.collider.gameObject.layer != LayerMask.NameToLayer ("Ground")) {
 					//Debug.Log (damage);
 					CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI> ();
-					targetCharacterAPI.stats.MakeDamage (SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType), Stats.physicalDamageType, true);
-					targetCharacterAPI.stats.MakeDamage (SkillDamage (skillSettings.damagePercent, Stats.elementalDamageType), Stats.elementalDamageType, true);
+					targetCharacterAPI.stats.MakeDamage (SkillDamageBySkillId (skillSettings.skillID,Stats.physicalDamageType), Stats.physicalDamageType, true);
+					targetCharacterAPI.stats.MakeDamage (SkillDamageBySkillId (skillSettings.skillID, Stats.elementalDamageType), Stats.elementalDamageType, true);
 					stats.RemoveFireEnergyPoints (skillSettings.resourceRemove, true);
 
 					GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Fire/ExplosiveBullet");
@@ -926,19 +1014,19 @@ public class Skills : MonoBehaviour {
 				}
 			}
 		} else {
-			if (characterAPI.movementController.movement.y < 0.8f && characterAPI.movementController.movement.y > -0.8f) {
+			if (characterAPI.movementController.movement.y < 0.6f && characterAPI.movementController.movement.y > -0.6f) {
 				anim.Play ("fastShot90", 2);
-				shotDirectionVector = new Vector3 (1f, 0, 0);
+				SetShotDirectionVector(new Vector3 (1f, 0, 0));
 				StartCoroutine (WaitAnimationAction ("fastShot90", 2));
 			} else {
-				if (characterAPI.movementController.movement.y > 0.8f) {
+				if (characterAPI.movementController.movement.y > 0.6f) {
 					anim.Play ("fastShot135", 2);
-					shotDirectionVector = new Vector3 (1f, 1f, 0);
+					SetShotDirectionVector(new Vector3 (1f, 1f, 0));
 					StartCoroutine (WaitAnimationAction ("fastShot135", 2));
 				} else {
-					if (characterAPI.movementController.movement.y < -0.8f) {
+					if (characterAPI.movementController.movement.y < -0.6f) {
 						anim.Play ("fastShot45", 2);
-						shotDirectionVector = new Vector3 (1f, -1f, 0);
+						SetShotDirectionVector(new Vector3 (1f, -1f, 0));
 						StartCoroutine (WaitAnimationAction ("fastShot45", 2));
 					}
 				}
@@ -952,10 +1040,6 @@ public class Skills : MonoBehaviour {
 		if (isSecondPart) {
 			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.middleShot);
 			RaycastHit hit;
-			float scaleDirectionX = 1;
-			if (transform.localScale.x < 0) {
-				scaleDirectionX = -1;
-			}
 
 			int target;
 			if (stats.isPlayerStats) {
@@ -965,7 +1049,7 @@ public class Skills : MonoBehaviour {
 			}
 			Physics.Raycast (
 				transform.position, 
-				new Vector3(scaleDirectionX, shotDirectionVector.y, shotDirectionVector.z),
+				shotDirectionVector,
 				out hit, 
 				skillSettings.distance, 
 				target /*Enemy*/
@@ -975,8 +1059,8 @@ public class Skills : MonoBehaviour {
 				if (hit.collider.gameObject.layer != LayerMask.NameToLayer ("Ground")) {
 					//Debug.Log (damage);
 					CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI> ();
-					targetCharacterAPI.stats.MakeDamage (SkillDamage (skillSettings.damagePercent, Stats.elementalDamageType), Stats.elementalDamageType, true);
-					targetCharacterAPI.stats.MakeDamage (SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType), Stats.physicalDamageType, true);
+					targetCharacterAPI.stats.MakeDamage (SkillDamageBySkillId (skillSettings.skillID, Stats.elementalDamageType), Stats.elementalDamageType, true);
+					targetCharacterAPI.stats.MakeDamage (SkillDamageBySkillId (skillSettings.skillID, Stats.physicalDamageType), Stats.physicalDamageType, true);
 					stats.RemoveFireEnergyPoints (skillSettings.resourceRemove, true);
 
 					GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Fire/ExplosiveBullet");
@@ -992,19 +1076,19 @@ public class Skills : MonoBehaviour {
 				}
 			}
 		} else {
-			if (characterAPI.movementController.movement.y < 0.8f && characterAPI.movementController.movement.y > -0.8f) {
+			if (characterAPI.movementController.movement.y < 0.6f && characterAPI.movementController.movement.y > -0.6f) {
 				anim.Play ("middleShot90", 2);
-				shotDirectionVector = new Vector3 (1f, 0, 0);
+				SetShotDirectionVector(new Vector3 (1f, 0, 0));
 				StartCoroutine (WaitAnimationAction ("middleShot90", 2));
 			} else {
-				if (characterAPI.movementController.movement.y > 0.8f) {
+				if (characterAPI.movementController.movement.y > 0.6f) {
 					anim.Play ("middleShot135", 2);
-					shotDirectionVector = new Vector3 (1f, 1f, 0);
+					SetShotDirectionVector(new Vector3 (1f, 1f, 0));
 					StartCoroutine (WaitAnimationAction ("middleShot135", 2));
 				} else {
-					if (characterAPI.movementController.movement.y < -0.8f) {
+					if (characterAPI.movementController.movement.y < -0.6f) {
 						anim.Play ("middleShot45", 2);
-						shotDirectionVector = new Vector3 (1f, -1f, 0);
+						SetShotDirectionVector(new Vector3 (1f, -1f, 0));
 						StartCoroutine (WaitAnimationAction ("middleShot45", 2));
 					}
 				}
@@ -1018,10 +1102,6 @@ public class Skills : MonoBehaviour {
 		if (isSecondPart) {
 			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.slowShot);
 			RaycastHit hit;
-			float scaleDirectionX = 1;
-			if (transform.localScale.x < 0) {
-				scaleDirectionX = -1;
-			}
 
 			int target;
 			if (stats.isPlayerStats) {
@@ -1031,7 +1111,7 @@ public class Skills : MonoBehaviour {
 			}
 			Physics.Raycast (
 				transform.position, 
-				new Vector3(scaleDirectionX, shotDirectionVector.y, shotDirectionVector.z),
+				shotDirectionVector,
 				out hit, 
 				skillSettings.distance, 
 				target /*Enemy*/
@@ -1042,8 +1122,8 @@ public class Skills : MonoBehaviour {
 					//float damage = SkillDamage (skillSettings.damagePercent, Stats.hybridDamageType);
 					//Debug.Log (damage);
 					CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI> ();
-					targetCharacterAPI.stats.MakeDamage (SkillDamage (skillSettings.damagePercent, Stats.elementalDamageType), Stats.elementalDamageType, true);
-					targetCharacterAPI.stats.MakeDamage (SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType), Stats.physicalDamageType, true);
+					targetCharacterAPI.stats.MakeDamage (SkillDamageBySkillId (skillSettings.skillID, Stats.elementalDamageType), Stats.elementalDamageType, true);
+					targetCharacterAPI.stats.MakeDamage (SkillDamageBySkillId (skillSettings.skillID, Stats.physicalDamageType), Stats.physicalDamageType, true);
 					stats.RemoveFireEnergyPoints (skillSettings.resourceRemove, true);
 
 					GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Fire/ExplosiveBullet");
@@ -1059,19 +1139,19 @@ public class Skills : MonoBehaviour {
 				}
 			}
 		} else {
-			if (characterAPI.movementController.movement.y < 0.8f && characterAPI.movementController.movement.y > -0.8f) {
+			if (characterAPI.movementController.movement.y < 0.6f && characterAPI.movementController.movement.y > -0.6f) {
 				anim.Play ("snipe90", 2);
-				shotDirectionVector = new Vector3 (1f, 0, 0);
+				SetShotDirectionVector(new Vector3 (1f, 0, 0));
 				StartCoroutine (WaitAnimationAction ("snipe90", 2));
 			} else {
-				if (characterAPI.movementController.movement.y > 0.8f) {
+				if (characterAPI.movementController.movement.y > 0.6f) {
 					anim.Play ("snipe135", 2);
-					shotDirectionVector = new Vector3 (1f, 1f, 0);
+					SetShotDirectionVector(new Vector3 (1f, 1f, 0));
 					StartCoroutine (WaitAnimationAction ("snipe135", 2));
 				} else {
-					if (characterAPI.movementController.movement.y < -0.8f) {
+					if (characterAPI.movementController.movement.y < -0.6f) {
 						anim.Play ("snipe45", 2);
-						shotDirectionVector = new Vector3 (1f, -1f, 0);
+						SetShotDirectionVector(new Vector3 (1f, -1f, 0));
 						StartCoroutine (WaitAnimationAction ("snipe45", 2));
 					}
 				}
@@ -1131,8 +1211,8 @@ public class Skills : MonoBehaviour {
 			spellHitbox.path = "Prefabs/SkillPrefabs/GrenadeHitbox";
 
 			SpellHitbox.ObjectsAction spellHitboxAction = (CharacterAPI targetAPI) => {
-				targetAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.physicalDamageType), Stats.physicalDamageType, true);
-				targetAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.elementalDamageType), Stats.elementalDamageType, true);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID, Stats.physicalDamageType), Stats.physicalDamageType, true);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID, Stats.elementalDamageType), Stats.elementalDamageType, true);
 			};
 
 			StartCoroutine(spellHitbox.MakeObjectsAction(spellHitboxAction));
@@ -1182,9 +1262,9 @@ public class Skills : MonoBehaviour {
 			spellHitbox.path = "Prefabs/SkillPrefabs/GrenadeHitbox";
 
 			SpellHitbox.ObjectsAction spellHitboxAction = (CharacterAPI targetAPI) => {
-				targetAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.physicalDamageType), Stats.physicalDamageType, true);
-				targetAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.elementalDamageType), Stats.elementalDamageType, true);
-				targetAPI.stats.FullStun(skillSettings.stunTime);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID, Stats.physicalDamageType), Stats.physicalDamageType, true);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID, Stats.elementalDamageType), Stats.elementalDamageType, true);
+				targetAPI.stats.FullStun(skillSettings.stunTime, true, true);
 			};
 
 			StartCoroutine(spellHitbox.MakeObjectsAction(spellHitboxAction));
@@ -1238,8 +1318,8 @@ public class Skills : MonoBehaviour {
 			spellHitbox.path = "Prefabs/SkillPrefabs/GrenadeHitbox";
 
 			SpellHitbox.ObjectsAction spellHitboxAction = (CharacterAPI targetAPI) => {
-				targetAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.physicalDamageType), Stats.physicalDamageType, true);
-				targetAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.elementalDamageType), Stats.elementalDamageType, true);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID, Stats.physicalDamageType), Stats.physicalDamageType, true);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID, Stats.elementalDamageType), Stats.elementalDamageType, true);
 			};
 
 			StartCoroutine(spellHitbox.MakeObjectsAction(spellHitboxAction));
@@ -1273,8 +1353,8 @@ public class Skills : MonoBehaviour {
 			stats.Cauterization (skillSettings.resourceAdd);
 			List<Collider> waveIgnoreColliders = new List<Collider> ();
 			SpellHitbox.ObjectsAction action = (CharacterAPI targetAPI) => {
-				targetAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.elementalDamageType), Stats.elementalDamageType, true);
-				targetAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.physicalDamageType), Stats.physicalDamageType, true);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID, Stats.elementalDamageType), Stats.elementalDamageType, true);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID, Stats.physicalDamageType), Stats.physicalDamageType, true);
 				waveIgnoreColliders.Add(targetAPI.boxCollider);
 				waveIgnoreColliders.Add(targetAPI.sphereCollider);
 			};
@@ -1293,9 +1373,9 @@ public class Skills : MonoBehaviour {
 			stats.Cauterization (skillSettings.resourceAdd);
 			List<Collider> waveIgnoreColliders = new List<Collider> ();
 			SpellHitbox.ObjectsAction action = (CharacterAPI targetAPI) => {
-				targetAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.elementalDamageType), Stats.elementalDamageType, true);
-				targetAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.physicalDamageType), Stats.physicalDamageType, true);
-				targetAPI.stats.GetMovementSlowly(skillSettings.slowTime, skillSettings.slowSpeed);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID, Stats.elementalDamageType), Stats.elementalDamageType, true);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID, Stats.physicalDamageType), Stats.physicalDamageType, true);
+				targetAPI.stats.GetMovementSlowly(skillSettings.slowTime, skillSettings.GetSpeed(stats.isPlayerStats));
 				waveIgnoreColliders.Add(targetAPI.boxCollider);
 				waveIgnoreColliders.Add(targetAPI.sphereCollider);
 			};
@@ -1465,6 +1545,7 @@ public class Skills : MonoBehaviour {
 			damagerOptions.damagePercent = skillSettings.damagePercent;
 			damagerOptions.damageType = Stats.hybridDamageType;
 			damagerOptions.path = "Prefabs/SkillPrefabs/rocketCircleHitbox";
+			damagerOptions.skillID = skillSettings.skillID;
 
 			Timer bangTimer = new Timer ();
 			bangTimer.SetTimer (0.6f);
@@ -1551,6 +1632,7 @@ public class Skills : MonoBehaviour {
 			damagerOptions2.damagePercent = skillSettings2.damagePercent;
 			damagerOptions2.damageType = Stats.hybridDamageType;
 			damagerOptions2.path = "Prefabs/SkillPrefabs/rocketCircleHitbox";
+			damagerOptions2.skillID = skillSettings2.skillID;
 			Timer bangTimer2 = new Timer ();
 			bangTimer2.SetTimer (0.6f);
 			StartCoroutine(bangTimer2.ActionAfterTimer (() => {
@@ -1614,7 +1696,7 @@ public class Skills : MonoBehaviour {
 
 			streamHitbox.action = (CharacterAPI targetAPI) => {
 				//targetAPI.stats.MakeDamage(SkillDamage(0.8589743f, Stats.physicalDamageType), Stats.physicalDamageType, true);
-				targetAPI.stats.GetMovementSlowly(slowMovementTime, skillSettings.slowSpeed);
+				targetAPI.stats.GetMovementSlowly(slowMovementTime, skillSettings.GetSpeed(stats.isPlayerStats), false);
 				Timer slowMovementTimer = new Timer(); 
 				slowMovementTimer.SetTimer(slowMovementTime);
 				StartCoroutine(slowMovementTimer.ActionAfterTimer(() => {
@@ -1688,15 +1770,15 @@ public class Skills : MonoBehaviour {
 			hitBox.SetActive (false);
 
 			SpellHitbox.ObjectsAction spellHitboxAction = (CharacterAPI targetAPI) => {
-				targetAPI.stats.MakeDamage(SkillDamage(0.8589743f, Stats.physicalDamageType), Stats.physicalDamageType, true);
-				targetAPI.stats.MakeDamage(SkillDamage(0.8589743f, Stats.elementalDamageType), Stats.elementalDamageType, true);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID, Stats.physicalDamageType), Stats.physicalDamageType, true);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID, Stats.elementalDamageType), Stats.elementalDamageType, true);
 				int randomVectorValue = Random.Range (100, 150);
 				if(characterAPI.transform.position.x < targetAPI.transform.position.x){
-					targetAPI.stats.FullStun (skillSettings.stunTime, false);
+					targetAPI.stats.FullStun (skillSettings.stunTime, false, true);
 					targetAPI.movementController.NullSpeedWhenGround ();
 					targetAPI.movementController.AddForceWithoutAnimation (new Vector3 (randomVectorValue, 250, 0));
 				}else{
-					targetAPI.stats.FullStun (skillSettings.stunTime, false);
+					targetAPI.stats.FullStun (skillSettings.stunTime, false, true);
 					targetAPI.movementController.NullSpeedWhenGround ();
 					targetAPI.movementController.AddForceWithoutAnimation (new Vector3 (randomVectorValue * -1, 250, 0));
 				}
@@ -1727,10 +1809,6 @@ public class Skills : MonoBehaviour {
 			stats.AddFireEnergyPoints(skillSettings.resourceAdd, true);
 			stats.Cauterization (skillSettings.resourceAdd);
 			RaycastHit hit;
-			float scaleDirectionX = 1;
-			if (transform.localScale.x < 0) {
-				scaleDirectionX = -1;
-			}
 
 			int target;
 			if (stats.isPlayerStats) {
@@ -1740,7 +1818,7 @@ public class Skills : MonoBehaviour {
 			}
 			Physics.Raycast (
 				transform.position, 
-				new Vector3(scaleDirectionX, shotDirectionVector.y, shotDirectionVector.z),
+				shotDirectionVector,
 				out hit, 
 				skillSettings.distance, 
 				target /*Enemy*/
@@ -1752,9 +1830,9 @@ public class Skills : MonoBehaviour {
 					//Debug.Log (damage);
 
 					CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI> ();
-					targetCharacterAPI.stats.MakeDamage (SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType), Stats.physicalDamageType, true);
-					targetCharacterAPI.stats.MakeDamage (SkillDamage (skillSettings.damagePercent, Stats.elementalDamageType), Stats.elementalDamageType, true);
-					targetCharacterAPI.stats.FullStun (skillSettings.stunTime);
+					targetCharacterAPI.stats.MakeDamage (SkillDamageBySkillId (skillSettings.skillID, Stats.physicalDamageType), Stats.physicalDamageType, true);
+					targetCharacterAPI.stats.MakeDamage (SkillDamageBySkillId (skillSettings.skillID, Stats.elementalDamageType), Stats.elementalDamageType, true);
+					targetCharacterAPI.stats.FullStun (skillSettings.stunTime, true, true);
 
 					GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Fire/ExplosiveBullet");
 					Effect effect = effectObject.GetComponent<Effect> ();
@@ -1769,19 +1847,19 @@ public class Skills : MonoBehaviour {
 				}
 			}
 		} else {
-			if (characterAPI.movementController.movement.y < 0.8f && characterAPI.movementController.movement.y > -0.8f) {
+			if (characterAPI.movementController.movement.y < 0.6f && characterAPI.movementController.movement.y > -0.6f) {
 				anim.Play ("snipe90", 2);
-				shotDirectionVector = new Vector3 (1f, 0, 0);
+				SetShotDirectionVector(new Vector3 (1f, 0, 0));
 				StartCoroutine (WaitAnimationAction ("snipe90", 2));
 			} else {
-				if (characterAPI.movementController.movement.y > 0.8f) {
+				if (characterAPI.movementController.movement.y > 0.6f) {
 					anim.Play ("snipe135", 2);
-					shotDirectionVector = new Vector3 (1f, 1f, 0);
+					SetShotDirectionVector(new Vector3 (1f, 1f, 0));
 					StartCoroutine (WaitAnimationAction ("snipe135", 2));
 				} else {
-					if (characterAPI.movementController.movement.y < -0.8f) {
+					if (characterAPI.movementController.movement.y < -0.6f) {
 						anim.Play ("snipe45", 2);
-						shotDirectionVector = new Vector3 (1f, -1f, 0);
+						SetShotDirectionVector(new Vector3 (1f, -1f, 0));
 						StartCoroutine (WaitAnimationAction ("snipe45", 2));
 					}
 				}
@@ -1824,10 +1902,10 @@ public class Skills : MonoBehaviour {
 				thunderClapHitbox.spellHitbox.selectingLayer = LayerMask.NameToLayer ("Player");
 			}
 			thunderClapHitbox.action = (targetAPI) => {
-				targetAPI.stats.GetMovementSlowly (skillSettings.slowTime, skillSettings.slowSpeed);
-				targetAPI.stats.FullStun (skillSettings.stunTime, false);
-				targetAPI.stats.MakeDamage (characterAPI.skills.SkillDamage (skillSettings.damagePercent, Stats.physicalDamageType, 100), Stats.physicalDamageType, true);
-				targetAPI.stats.MakeDamage (characterAPI.skills.SkillDamage (skillSettings.damagePercent, Stats.elementalDamageType, 100), Stats.elementalDamageType, true);
+				targetAPI.stats.GetMovementSlowly (skillSettings.slowTime, skillSettings.GetSpeed(stats.isPlayerStats));
+				targetAPI.stats.FullStun (skillSettings.stunTime, false, true);
+				targetAPI.stats.MakeDamage (characterAPI.skills.SkillDamageBySkillId (skillSettings.skillID, Stats.physicalDamageType), Stats.physicalDamageType, true);
+				targetAPI.stats.MakeDamage (characterAPI.skills.SkillDamageBySkillId (skillSettings.skillID, Stats.elementalDamageType), Stats.elementalDamageType, true);
 			};
 
 
@@ -1857,27 +1935,22 @@ public class Skills : MonoBehaviour {
 		if (isSecondPart) {
 			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.fastCast);
 			RaycastHit hit;
-			float scaleDirectionX = 1;
-			if (transform.localScale.x < 0) {
-				scaleDirectionX = -1;
-			}
-
-
 
 			GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Elemental/fireball");
 			Effect effect = effectObject.GetComponent<Effect> ();
 			SpellBall spellBall = effectObject.GetComponent<SpellBall> ();
 			spellBall.characterAPI = characterAPI;
-			spellBall.direction = new Vector3 (scaleDirectionX, shotDirectionVector.y, shotDirectionVector.z);
+			spellBall.direction = shotDirectionVector;
 			spellBall.speed = 0.15f;
 			spellBall.time = 2f;
 			spellBall.currentTime = 0;
 			spellBall.ready = true;
 			spellBall.path = "Prefabs/Particles/Elemental/fireball";
+			spellBall.ignoreColliders.Clear ();
 			spellBall.ignoreColliders.Add (characterAPI.boxCollider);
 			spellBall.ignoreColliders.Add (characterAPI.sphereCollider);
 			spellBall.action = (enemyTarget) => {
-				enemyTarget.stats.MakeDamage (SkillDamage (skillSettings.damagePercent, Stats.elementalDamageType, MagicEfficiency(100)), Stats.elementalDamageType, true);
+				enemyTarget.stats.MakeDamage (SkillDamageBySkillId (skillSettings.skillID), Stats.elementalDamageType, true);
 				characterAPI.stats.AddMagicEnergyPoints (skillSettings.resourceAdd, true);
 			};
 			if (stats.isPlayerStats) {
@@ -1891,19 +1964,19 @@ public class Skills : MonoBehaviour {
 			effectOptions.transformPosition = armsPosition.position;
 			effect.StartEffect (effectOptions);
 		} else {
-			if (characterAPI.movementController.movement.y < 0.8f && characterAPI.movementController.movement.y > -0.8f) {
+			if (characterAPI.movementController.movement.y < 0.6f && characterAPI.movementController.movement.y > -0.6f) {
 				anim.Play ("fastCast90", 3);
-				shotDirectionVector = new Vector3 (1f, 0, 0);
+				SetShotDirectionVector(new Vector3 (1f, 0, 0));
 				StartCoroutine (WaitAnimationAction ("fastCast90", 3));
 			} else {
-				if (characterAPI.movementController.movement.y > 0.8f) {
+				if (characterAPI.movementController.movement.y > 0.6f) {
 					anim.Play ("fastCast135", 3);
-					shotDirectionVector = new Vector3 (1f, 1f, 0);
+					SetShotDirectionVector(new Vector3 (1f, 1f, 0));
 					StartCoroutine (WaitAnimationAction ("fastCast135", 3));
 				} else {
-					if (characterAPI.movementController.movement.y < -0.8f) {
+					if (characterAPI.movementController.movement.y < -0.6f) {
 						anim.Play ("fastCast45", 3);
-						shotDirectionVector = new Vector3 (1f, -1f, 0);
+						SetShotDirectionVector(new Vector3 (1f, -1f, 0));
 						StartCoroutine (WaitAnimationAction ("fastCast45", 3));
 					}
 				}
@@ -1918,27 +1991,23 @@ public class Skills : MonoBehaviour {
 		if (isSecondPart) {
 			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.middleCast);
 			RaycastHit hit;
-			float scaleDirectionX = 1;
-			if (transform.localScale.x < 0) {
-				scaleDirectionX = -1;
-			}
-
 
 
 			GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Elemental/frostball");
 			Effect effect = effectObject.GetComponent<Effect> ();
 			SpellBall spellBall = effectObject.GetComponent<SpellBall> ();
 			spellBall.characterAPI = characterAPI;
-			spellBall.direction = new Vector3 (scaleDirectionX, shotDirectionVector.y, shotDirectionVector.z);
+			spellBall.direction = shotDirectionVector;
 			spellBall.speed = 0.15f;
 			spellBall.time = 2f;
 			spellBall.currentTime = 0;
 			spellBall.ready = true;
 			spellBall.path = "Prefabs/Particles/Elemental/frostball";
+			spellBall.ignoreColliders.Clear ();
 			spellBall.ignoreColliders.Add (characterAPI.boxCollider);
 			spellBall.ignoreColliders.Add (characterAPI.sphereCollider);
 			spellBall.action = (enemyTarget) => {
-				enemyTarget.stats.MakeDamage (SkillDamage (skillSettings.damagePercent, Stats.elementalDamageType, MagicEfficiency(100)), Stats.elementalDamageType, true);
+				enemyTarget.stats.MakeDamage (SkillDamageBySkillId (skillSettings.skillID), Stats.elementalDamageType, true);
 				characterAPI.stats.AddMagicEnergyPoints (skillSettings.resourceAdd, true);
 			};
 
@@ -1953,19 +2022,19 @@ public class Skills : MonoBehaviour {
 			effectOptions.transformPosition = armsPosition.position;
 			effect.StartEffect (effectOptions);
 		} else {
-			if (characterAPI.movementController.movement.y < 0.8f && characterAPI.movementController.movement.y > -0.8f) {
+			if (characterAPI.movementController.movement.y < 0.6f && characterAPI.movementController.movement.y > -0.6f) {
 				anim.Play ("fastCast90", 3);
-				shotDirectionVector = new Vector3 (1f, 0, 0);
+				SetShotDirectionVector(new Vector3 (1f, 0, 0));
 				StartCoroutine (WaitAnimationAction ("fastCast90", 3));
 			} else {
-				if (characterAPI.movementController.movement.y > 0.8f) {
+				if (characterAPI.movementController.movement.y > 0.6f) {
 					anim.Play ("fastCast135", 3);
-					shotDirectionVector = new Vector3 (1f, 1f, 0);
+					SetShotDirectionVector(new Vector3 (1f, 1f, 0));
 					StartCoroutine (WaitAnimationAction ("fastCast135", 3));
 				} else {
-					if (characterAPI.movementController.movement.y < -0.8f) {
+					if (characterAPI.movementController.movement.y < -0.6f) {
 						anim.Play ("fastCast45", 3);
-						shotDirectionVector = new Vector3 (1f, -1f, 0);
+						SetShotDirectionVector(new Vector3 (1f, -1f, 0));
 						StartCoroutine (WaitAnimationAction ("fastCast45", 3));
 					}
 				}
@@ -1980,10 +2049,7 @@ public class Skills : MonoBehaviour {
 		if (isSecondPart) {
 			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.slowCast);
 			RaycastHit hit;
-			float scaleDirectionX = 1;
-			if (transform.localScale.x < 0) {
-				scaleDirectionX = -1;
-			}
+
 
 
 
@@ -1991,43 +2057,82 @@ public class Skills : MonoBehaviour {
 			Effect effect = effectObject.GetComponent<Effect> ();
 			SpellBall spellBall = effectObject.GetComponent<SpellBall> ();
 			spellBall.characterAPI = characterAPI;
-			spellBall.direction = new Vector3 (scaleDirectionX, shotDirectionVector.y, shotDirectionVector.z);
-			spellBall.speed = 0.15f;
-			spellBall.time = 2f;
+			spellBall.direction = shotDirectionVector;
+			spellBall.speed = 0.09f;
+			spellBall.time = 7f;
 			spellBall.currentTime = 0;
 			spellBall.ready = true;
 			spellBall.path = "Prefabs/Particles/Elemental/lightingball";
+			spellBall.ignoreColliders.Clear ();
 			spellBall.ignoreColliders.Add (characterAPI.boxCollider);
 			spellBall.ignoreColliders.Add (characterAPI.sphereCollider);
 			spellBall.action = (enemyTarget) => {
-				enemyTarget.stats.MakeDamage (SkillDamage (skillSettings.damagePercent, Stats.elementalDamageType, MagicEfficiency(100)), Stats.elementalDamageType, true);
+				enemyTarget.stats.MakeDamage (SkillDamageBySkillId (skillSettings.skillID), Stats.elementalDamageType, true);
 				characterAPI.stats.AddMagicEnergyPoints (skillSettings.resourceAdd, true);
 			};
+			spellBall.withTarget = true;
+			spellBall.target = null;
 
 			if (stats.isPlayerStats) {
 				spellBall.selectingLayer = LayerMask.NameToLayer ("Enemy");
 			} else {
 				spellBall.selectingLayer = LayerMask.NameToLayer ("Player");
 			}
+
+
+
+
+			GameObject targetFinderObject = ObjectsPool.PullObject ("Prefabs/SkillPrefabs/targetFinder");
+			SpellHitbox targetFinder = targetFinderObject.GetComponent<SpellHitbox> ();
+			targetFinder.path = "Prefabs/SkillPrefabs/targetFinder";
+			((SphereCollider)targetFinder.collider).radius = skillSettings.distance;
+			if (stats.isPlayerStats) {
+				targetFinder.selectingLayer = LayerMask.NameToLayer ("Enemy");
+			} else {
+				targetFinder.selectingLayer = LayerMask.NameToLayer ("Player");
+			}
+			targetFinderObject.transform.parent = nullSkillPosition.transform;
+			targetFinderObject.transform.localPosition = targetFinder.nullSpellPosition;
+
+			List<Transform> potentialTargets = new List<Transform> ();
+
+			SpellHitbox.ObjectsAction action = (CharacterAPI enemyAPI) => {
+				potentialTargets.Add(enemyAPI.transform);
+			};
+
+			StartCoroutine(targetFinder.MakeObjectsAction (action));
+
+			StartCoroutine (StartProcess.StartActionAfterFewFrames (5, () => {
+				List<Transform> sortedFoundTargets = potentialTargets.OrderBy (t => Vector3.Distance (characterAPI.transform.position, t.position)).ToList ();
+				if(sortedFoundTargets.Count != 0){
+					spellBall.target =  sortedFoundTargets[0];
+				}
+				ObjectsPool.PushObject(targetFinder.path, targetFinderObject);
+			}));
+
+
+
+
+
 			effect.path = "Prefabs/Particles/Elemental/lightingball";
 			EffectOptions effectOptions = new EffectOptions ();
 			effectOptions.loop = true;
 			effectOptions.transformPosition = armsPosition.position;
 			effect.StartEffect (effectOptions);
 		} else {
-			if (characterAPI.movementController.movement.y < 0.8f && characterAPI.movementController.movement.y > -0.8f) {
+			if (characterAPI.movementController.movement.y < 0.6f && characterAPI.movementController.movement.y > -0.6f) {
 				anim.Play ("fastCast90", 3);
-				shotDirectionVector = new Vector3 (1f, 0, 0);
+				SetShotDirectionVector(new Vector3 (1f, 0, 0));
 				StartCoroutine (WaitAnimationAction ("fastCast90", 3));
 			} else {
-				if (characterAPI.movementController.movement.y > 0.8f) {
+				if (characterAPI.movementController.movement.y > 0.6f) {
 					anim.Play ("fastCast135", 3);
-					shotDirectionVector = new Vector3 (1f, 1f, 0);
+					SetShotDirectionVector(new Vector3 (1f, 1f, 0));
 					StartCoroutine (WaitAnimationAction ("fastCast135", 3));
 				} else {
-					if (characterAPI.movementController.movement.y < -0.8f) {
+					if (characterAPI.movementController.movement.y < -0.6f) {
 						anim.Play ("fastCast45", 3);
-						shotDirectionVector = new Vector3 (1f, -1f, 0);
+						SetShotDirectionVector(new Vector3 (1f, -1f, 0));
 						StartCoroutine (WaitAnimationAction ("fastCast45", 3));
 					}
 				}
@@ -2044,10 +2149,7 @@ public class Skills : MonoBehaviour {
 		if (isSecondPart) {
 			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.chainLavaBurst);
 			RaycastHit hit;
-			float scaleDirectionX = 1;
-			if (transform.localScale.x < 0) {
-				scaleDirectionX = -1;
-			}
+
 			int target;
 			if (stats.isPlayerStats) {
 				target = (1 << LayerMask.NameToLayer("Enemy")) | (1 << LayerMask.NameToLayer("Ground"));
@@ -2056,7 +2158,7 @@ public class Skills : MonoBehaviour {
 			}
 			Physics.Raycast (
 				transform.position, 
-				new Vector3(scaleDirectionX, shotDirectionVector.y, shotDirectionVector.z),
+				shotDirectionVector,
 				out hit, 
 				skillSettings.distance, 
 				target /*Enemy*/
@@ -2064,7 +2166,7 @@ public class Skills : MonoBehaviour {
 			//Physics.Raycast (new Vec);
 			if (hit.collider != null) {
 				if (hit.collider.gameObject.layer != LayerMask.NameToLayer ("Ground")) {
-					Stats.NumberParams damage = SkillDamage (skillSettings.damagePercent, Stats.hybridDamageType, MagicEfficiency(100));
+					Stats.NumberParams damage = SkillDamageBySkillId (skillSettings.skillID);
 					//Debug.Log (damage);
 					CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI> ();
 					//targetCharacterAPI.stats.MakeDamage (damage, Stats.hybridDamageType, true);
@@ -2079,22 +2181,22 @@ public class Skills : MonoBehaviour {
 			}
 			stats.RemoveMagicEnergyPoints (skillSettings.resourceRemove, true);
 		} else {
-			if (characterAPI.movementController.movement.y < 0.8f && characterAPI.movementController.movement.y > -0.8f) {
+			if (characterAPI.movementController.movement.y < 0.6f && characterAPI.movementController.movement.y > -0.6f) {
 				anim.Play ("chainLavaBurst90", 3);
-				shotDirectionVector = new Vector3 (1f, 0, 0);
+				SetShotDirectionVector(new Vector3 (1f, 0, 0));
 				StartCoroutine (WaitAnimationAction ("chainLavaBurst90", 3));
 				StartCoroutine (StunWhileAnimation ("chainLavaBurst90", 3));
 			} else {
-				if (characterAPI.movementController.movement.y > 0.8f) {
+				if (characterAPI.movementController.movement.y > 0.6f) {
 					anim.Play ("chainLavaBurst135", 3);
 					//Debug.Log ("asdf");
-					shotDirectionVector = new Vector3 (1f, 1f, 0);
+					SetShotDirectionVector(new Vector3 (1f, 1f, 0));
 					StartCoroutine (WaitAnimationAction ("chainLavaBurst135", 3));
 					StartCoroutine (StunWhileAnimation ("chainLavaBurst135", 3));
 				} else {
-					if (characterAPI.movementController.movement.y < -0.8f) {
+					if (characterAPI.movementController.movement.y < -0.6f) {
 						anim.Play ("chainLavaBurst45", 3);
-						shotDirectionVector = new Vector3 (1f, -1f, 0);
+						SetShotDirectionVector(new Vector3 (1f, -1f, 0));
 						StartCoroutine (WaitAnimationAction ("chainLavaBurst45", 3));
 						StartCoroutine (StunWhileAnimation ("chainLavaBurst45", 3));
 					}
@@ -2118,6 +2220,11 @@ public class Skills : MonoBehaviour {
 		GameObject hitBox = ObjectsPool.PullObject ("Prefabs/SkillPrefabs/lavaBurstHitbox");
 		//hitBox.transform.parent = nullSkillPosition.transform;
 		SpellHitbox spellHitbox = hitBox.GetComponent<SpellHitbox> ();
+		if (stats.isPlayerStats) {
+			spellHitbox.selectingLayer = LayerMask.NameToLayer ("Enemy");
+		} else {
+			spellHitbox.selectingLayer = LayerMask.NameToLayer ("Player");
+		}
 		//hitBox.transform.parent = targetAPI.skills.nullEffectPosition.transform;
 		hitBox.transform.position =  targetAPI.transform.position + spellHitbox.nullSpellPosition;
 		hitBox.transform.localScale = spellHitbox.nullSpellScale;
@@ -2131,6 +2238,8 @@ public class Skills : MonoBehaviour {
 		damagerOptions.damageType = Stats.elementalDamageType;
 		damagerOptions.path = "Prefabs/SkillPrefabs/lavaBurstHitbox";
 		damagerOptions.efficienty = percentAndDamage;
+		damagerOptions.skillID = SkillSettingsSet.SkillID.chainLavaBurst;
+		//damagerOptions.skillID = skillSettings.skillID;
 
 		StartCoroutine(waitFewFramesAndMakeDamage (damagerOptions));
 		StartCoroutine (waitSkillEndAndClearColliders ());
@@ -2194,28 +2303,49 @@ public class Skills : MonoBehaviour {
 		currentAction = "PhysicalShield";
 		if (isSecondPart) {
 			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.physicalShield);
-			stats.AddShieldPoints (SkillDamage(skillSettings.restorePercent, Stats.physicalDamageType, MagicEfficiency(100)), Stats.physicalDamageType);
-			if (stats.shieldTimer.TimeIsOver()) {
-				GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Elemental/physicalShield");
-				Effect effect = effectObject.GetComponent<Effect> ();
-				effect.path = "Prefabs/Particles/Elemental/physicalShield";
-				EffectOptions effectOptions = new EffectOptions ();
-				effect.transform.parent = nullEffectPosition.transform;
-				effectOptions.transformPosition = effect.nullPositionCoords;
-				effectOptions.isRandomDuration = false;
-				//effectOptions.duration = 1f;
-				effectOptions.loop = true;
-				effect.StartEffect (effectOptions);
-				stats.shieldTimer.SetTimer (skillSettings.existingTime);
-				Timer.TimerAction timerAction = () => {
-					stats.RemoveShieldPoints (stats.physicalShield, Stats.physicalDamageType);
-					ObjectsPool.PushObject ("Prefabs/Particles/Elemental/physicalShield", effectObject);
-				};
+			stats.AddShieldPoints (SkillDamageBySkillId (skillSettings.skillID), Stats.physicalDamageType);
 
-				StartCoroutine(stats.shieldTimer.ActionAfterTimer(timerAction));
-			}else{
-				stats.shieldTimer.SetTimer(skillSettings.existingTime);
+			GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Elemental/physicalShield");
+			Effect effect = effectObject.GetComponent<Effect> ();
+			effect.path = "Prefabs/Particles/Elemental/physicalShield";
+			EffectOptions effectOptions = new EffectOptions ();
+			effect.transform.parent = nullEffectPosition.transform;
+			effectOptions.transformPosition = effect.nullPositionCoords;
+			effectOptions.isRandomDuration = false;
+			effectOptions.duration = skillSettings.existingTime;
+			//effectOptions.loop = true;
+			//effect.StartEffect (effectOptions);
+			stats.shieldTimer.SetTimer (skillSettings.existingTime);
+
+			if (shieldEffect == null) {
+				shieldEffect = effect;
 			}
+
+			Timer.TimerAction timerAction = () => {
+				stats.RemoveShieldPoints (stats.physicalShield, Stats.physicalDamageType);
+				if(shieldEffect.gameObject.activeInHierarchy){
+					ObjectsPool.PushObject ("Prefabs/Particles/Elemental/physicalShield", effectObject);
+				}
+			};
+
+			StartCoroutine(stats.shieldTimer.ActionAfterTimer(timerAction));
+
+			if (shieldEffect.path == effect.path) {
+				if (shieldEffect.durationTimer.TimeIsOver ()) {
+					shieldEffect = effect;
+					effect.StartEffect (effectOptions);
+				} else {
+					ObjectsPool.PushObject (effect.path, effectObject);
+					shieldEffect.NewDuration(skillSettings.existingTime);
+				}
+			} else {
+				if (!shieldEffect.durationTimer.TimeIsOver ()) {
+					shieldEffect.StopEffect (true);
+				}
+				shieldEffect = effect;
+				effect.StartEffect (effectOptions);
+			}
+			
 		} else {
 			anim.Play ("castShield", 3);
 			StartCoroutine (WaitAnimationAction("castShield", 3));
@@ -2226,27 +2356,51 @@ public class Skills : MonoBehaviour {
 		currentAction = "ElementalShield";
 		if (isSecondPart) {
 			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.elementalShield);
-			stats.AddShieldPoints (SkillDamage(skillSettings.restorePercent, Stats.elementalDamageType, MagicEfficiency(100)), Stats.elementalDamageType);
-			if (stats.shieldTimer.TimeIsOver()) {
-				GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Elemental/elementalShield");
-				Effect effect = effectObject.GetComponent<Effect> ();
-				effect.path = "Prefabs/Particles/Elemental/elementalShield";
-				EffectOptions effectOptions = new EffectOptions ();
-				effect.transform.parent = nullEffectPosition.transform;
-				effectOptions.transformPosition = effect.nullPositionCoords;
-				effectOptions.isRandomDuration = false;
-				//effectOptions.duration = 1f;
-				effectOptions.loop = true;
-				effect.StartEffect (effectOptions);
-				stats.shieldTimer.SetTimer (skillSettings.existingTime);
-				Timer.TimerAction timerAction = () => {
-					stats.RemoveShieldPoints (stats.elementalShield, Stats.elementalDamageType);
-					ObjectsPool.PushObject ("Prefabs/Particles/Elemental/elementalShield", effectObject);
-				};
+			stats.AddShieldPoints (SkillDamageBySkillId (skillSettings.skillID), Stats.elementalDamageType);
 
-				StartCoroutine(stats.shieldTimer.ActionAfterTimer(timerAction));
-			}else{
-				stats.shieldTimer.SetTimer(skillSettings.existingTime);
+			GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Elemental/elementalShield");
+			Effect effect = effectObject.GetComponent<Effect> ();
+			effect.path = "Prefabs/Particles/Elemental/elementalShield";
+			EffectOptions effectOptions = new EffectOptions ();
+			effect.transform.parent = nullEffectPosition.transform;
+			effectOptions.transformPosition = effect.nullPositionCoords;
+			effectOptions.isRandomDuration = false;
+			effectOptions.duration = skillSettings.existingTime;
+			//effectOptions.loop = true;
+			//effect.StartEffect (effectOptions);
+			stats.shieldTimer.SetTimer (skillSettings.existingTime);
+
+			if (shieldEffect == null) {
+				shieldEffect = effect;
+			}
+
+			Timer.TimerAction timerAction = () => {
+				stats.RemoveShieldPoints (stats.elementalShield, Stats.elementalDamageType);
+				if(shieldEffect.gameObject.activeInHierarchy){
+					ObjectsPool.PushObject ("Prefabs/Particles/Elemental/elementalShield", effectObject);
+				}
+			};
+
+			StartCoroutine(stats.shieldTimer.ActionAfterTimer(timerAction));
+
+
+
+			if (shieldEffect.path == effect.path) {
+				
+				if (shieldEffect.effectTimer.TimeIsOver ()) {
+					shieldEffect = effect;
+					effect.StartEffect (effectOptions);
+
+				} else {
+					ObjectsPool.PushObject (effect.path, effectObject);
+					shieldEffect.NewDuration(skillSettings.existingTime);
+				}
+			} else {
+				if (!shieldEffect.durationTimer.TimeIsOver ()) {
+					shieldEffect.StopEffect (true);
+				}
+				shieldEffect = effect;
+				effect.StartEffect (effectOptions);
 			}
 		} else {
 			anim.Play ("castShield", 3);
@@ -2259,28 +2413,50 @@ public class Skills : MonoBehaviour {
 		currentAction = "HybridShield";
 		if (isSecondPart) {
 			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.hybridShield);
-			stats.AddShieldPoints ((SkillDamage(skillSettings.restorePercent, Stats.elementalDamageType, MagicEfficiency(100))), Stats.hybridDamageType);
-			stats.AddShieldPoints ((SkillDamage(skillSettings.restorePercent, Stats.physicalDamageType, MagicEfficiency(100))), Stats.hybridDamageType);
-			if (stats.shieldTimer.TimeIsOver()) {
-				GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Elemental/hybridShield");
-				Effect effect = effectObject.GetComponent<Effect> ();
-				effect.path = "Prefabs/Particles/Elemental/hybridShield";
-				EffectOptions effectOptions = new EffectOptions ();
-				effect.transform.parent = nullEffectPosition.transform;
-				effectOptions.transformPosition = effect.nullPositionCoords;
-				effectOptions.isRandomDuration = false;
-				//effectOptions.duration = 1f;
-				effectOptions.loop = true;
-				effect.StartEffect (effectOptions);
-				stats.shieldTimer.SetTimer (skillSettings.existingTime);
-				Timer.TimerAction timerAction = () => {
-					stats.RemoveShieldPoints (stats.hybridShield, Stats.hybridDamageType);
-					ObjectsPool.PushObject ("Prefabs/Particles/Elemental/hybridShield", effectObject);
-				};
+			stats.AddShieldPoints (SkillDamageBySkillId (skillSettings.skillID, Stats.elementalDamageType), Stats.hybridDamageType);
+			stats.AddShieldPoints (SkillDamageBySkillId (skillSettings.skillID, Stats.physicalDamageType), Stats.hybridDamageType);
 
-				StartCoroutine(stats.shieldTimer.ActionAfterTimer(timerAction));
-			}else{
-				stats.shieldTimer.SetTimer(skillSettings.existingTime);
+			GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Elemental/hybridShield");
+			Effect effect = effectObject.GetComponent<Effect> ();
+			effect.path = "Prefabs/Particles/Elemental/hybridShield";
+			EffectOptions effectOptions = new EffectOptions ();
+			effect.transform.parent = nullEffectPosition.transform;
+			effectOptions.transformPosition = effect.nullPositionCoords;
+			effectOptions.isRandomDuration = false;
+			effectOptions.duration = skillSettings.existingTime;
+			//effectOptions.loop = true;
+
+			if (shieldEffect == null) {
+				shieldEffect = effect;
+			}
+
+			stats.shieldTimer.SetTimer (skillSettings.existingTime);
+			Timer.TimerAction timerAction = () => {
+				stats.RemoveShieldPoints (stats.hybridShield, Stats.hybridDamageType);
+				if(shieldEffect.gameObject.activeInHierarchy){
+					ObjectsPool.PushObject ("Prefabs/Particles/Elemental/hybridShield", effectObject);
+				}
+			};
+
+			StartCoroutine(stats.shieldTimer.ActionAfterTimer(timerAction));
+
+
+
+			if (shieldEffect.path == effect.path) {
+				if (shieldEffect.durationTimer.TimeIsOver ()) {
+					shieldEffect = effect;
+					effect.StartEffect (effectOptions);
+				} else {
+					ObjectsPool.PushObject (effect.path, effectObject);
+					shieldEffect.NewDuration(skillSettings.existingTime);
+				}
+			} else {
+				
+				if (!shieldEffect.durationTimer.TimeIsOver ()) {
+					shieldEffect.StopEffect (true);
+				}
+				shieldEffect = effect;
+				effect.StartEffect (effectOptions);
 			}
 		} else {
 			anim.Play ("castShield", 3);
@@ -2323,7 +2499,7 @@ public class Skills : MonoBehaviour {
 
 			SpellHitbox.ObjectsAction spellHitboxAction = (CharacterAPI targetAPI) => {
 				//targetAPI.stats.MakeDamage(SkillDamage(2.3717949f, Stats.elementalDamageType), Stats.elementalDamageType, true);
-				StartCoroutine(targetAPI.stats.DealDot(SkillDamage(skillSettings.damagePercent, Stats.elementalDamageType, MagicEfficiency(100)), Stats.elementalDamageType, 12, 12));
+				StartCoroutine(targetAPI.stats.DealDot(SkillDamageBySkillId (skillSettings.skillID, Stats.elementalDamageType), Stats.elementalDamageType, 12, 12));
 			};
 
 			StartCoroutine(spellHitbox.MakeObjectsAction(spellHitboxAction));
@@ -2373,11 +2549,11 @@ public class Skills : MonoBehaviour {
 
 
 			streamHitbox.action = (CharacterAPI targetAPI) => {
-				targetAPI.stats.GetMovementSlowly(slowTime, 0.3f);
-				targetAPI.stats.MakeDamage(SkillDamage (skillSettings.damagePercent, Stats.elementalDamageType, MagicEfficiency(100)), Stats.elementalDamageType, true);
+				targetAPI.stats.GetMovementSlowly(slowTime, skillSettings.GetSpeed(stats.isPlayerStats), false);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID, Stats.elementalDamageType), Stats.elementalDamageType, true);
 				float random = Random.Range(0, 100.01f);
 				if(random <= skillSettings.stunChance){
-					targetAPI.stats.IceStun(skillSettings.stunTime);
+					targetAPI.stats.IceStun(skillSettings.stunTime, true);
 				}
 				Timer slowMovementTimer = new Timer(); 
 				slowMovementTimer.SetTimer(slowTime);
@@ -2451,7 +2627,7 @@ public class Skills : MonoBehaviour {
 
 
 			SpellHitbox.ObjectsAction spellHitboxAction = (CharacterAPI targetAPI) => {
-				targetAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.physicalDamageType, MagicEfficiency(100)), Stats.physicalDamageType, true);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID, Stats.physicalDamageType), Stats.physicalDamageType, true);
 			};
 
 			StartCoroutine(spellHitbox.MakeObjectsAction(spellHitboxAction));
@@ -2475,10 +2651,6 @@ public class Skills : MonoBehaviour {
 		if (isSecondPart) {
 			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.fireWall);
 			RaycastHit hit;
-			float scaleDirectionX = 1;
-			if (transform.localScale.x < 0) {
-				scaleDirectionX = -1;
-			}
 
 			int target;
 			if (stats.isPlayerStats) {
@@ -2488,7 +2660,7 @@ public class Skills : MonoBehaviour {
 			}
 			Physics.Raycast (
 				transform.position, 
-				new Vector3(scaleDirectionX, shotDirectionVector.y, shotDirectionVector.z),
+				shotDirectionVector,
 				out hit, 
 				skillSettings.distance, 
 				target /*Enemy*/
@@ -2519,7 +2691,7 @@ public class Skills : MonoBehaviour {
 			}
 
 			SpellHitbox.ObjectsAction spellHitboxAction = (CharacterAPI targetAPI) => {
-				targetAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.elementalDamageType, MagicEfficiency(100)), Stats.elementalDamageType, true);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID, Stats.elementalDamageType), Stats.elementalDamageType, true);
 			};
 
 
@@ -2541,7 +2713,7 @@ public class Skills : MonoBehaviour {
 			effect.StartEffect (effectOptions);
 			stats.RemoveMagicEnergyPoints (skillSettings.resourceRemove, true);
 		} else {
-			if (characterAPI.movementController.movement.y < 0.8f && characterAPI.movementController.movement.y > -0.8f) {
+			if (characterAPI.movementController.movement.y < 0.6f && characterAPI.movementController.movement.y > -0.6f) {
 				if (IsAction ()) {
 					anim.Play ("actionElementalCone", 3);
 					StartCoroutine (WaitAnimationAction ("actionElementalCone", 3));
@@ -2549,10 +2721,10 @@ public class Skills : MonoBehaviour {
 					anim.Play ("elementalCone", 3);
 					StartCoroutine (WaitAnimationAction ("elementalCone", 3));
 				}
-				shotDirectionVector = new Vector3 (1f, 0, 0);
+				SetShotDirectionVector(new Vector3 (1f, 0, 0));
 
 			} else {
-				if (characterAPI.movementController.movement.y > 0.8f) {
+				if (characterAPI.movementController.movement.y > 0.6f) {
 					if (IsAction ()) {
 						anim.Play ("actionElementalCone135", 3);
 						StartCoroutine (WaitAnimationAction ("actionElementalCone135", 3));
@@ -2560,9 +2732,9 @@ public class Skills : MonoBehaviour {
 						anim.Play ("elementalCone135", 3);
 						StartCoroutine (WaitAnimationAction ("elementalCone135", 3));
 					}
-					shotDirectionVector = new Vector3 (1f, 1f, 0);
+					SetShotDirectionVector(new Vector3 (1f, 1f, 0));
 				} else {
-					if (characterAPI.movementController.movement.y < -0.8f) {
+					if (characterAPI.movementController.movement.y < -0.6f) {
 						if (IsAction ()) {
 							anim.Play ("actionElementalCone45", 3);
 							StartCoroutine (WaitAnimationAction ("actionElementalCone45", 3));
@@ -2570,7 +2742,7 @@ public class Skills : MonoBehaviour {
 							anim.Play ("elementalCone45", 3);
 							StartCoroutine (WaitAnimationAction ("elementalCone45", 3));
 						}
-						shotDirectionVector = new Vector3 (1f, -1f, 0);
+						SetShotDirectionVector(new Vector3 (1f, -1f, 0));
 					}
 				}
 			}
@@ -2645,8 +2817,8 @@ public class Skills : MonoBehaviour {
 
 
 			SpellHitbox.ObjectsAction spellHitboxAction = (CharacterAPI targetAPI) => {
-				targetAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.physicalDamageType, MagicEfficiency(100)), Stats.physicalDamageType, true);
-				targetAPI.stats.GetMovementSlowly(skillSettings.slowTime, skillSettings.slowSpeed);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID, Stats.physicalDamageType), Stats.physicalDamageType, true);
+				targetAPI.stats.GetMovementSlowly(skillSettings.slowTime, skillSettings.GetSpeed(stats.isPlayerStats));
 			};
 			StartCoroutine(spellHitbox.MakeObjectsAction(spellHitboxAction));
 			stats.RemoveMagicEnergyPoints (skillSettings.resourceRemove, true);
@@ -2668,10 +2840,6 @@ public class Skills : MonoBehaviour {
 		if (isSecondPart) {
 			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.earthDisruption);
 			RaycastHit hit;
-			float scaleDirectionX = 1;
-			if (transform.localScale.x < 0) {
-				scaleDirectionX = -1;
-			}
 
 			int target;
 			if (stats.isPlayerStats) {
@@ -2681,7 +2849,7 @@ public class Skills : MonoBehaviour {
 			}
 			Physics.Raycast (
 				transform.position, 
-				new Vector3(scaleDirectionX, shotDirectionVector.y, shotDirectionVector.z),
+				shotDirectionVector,
 				out hit, 
 				skillSettings.distance, 
 				target /*Enemy*/
@@ -2712,7 +2880,7 @@ public class Skills : MonoBehaviour {
 			}
 
 			SpellHitbox.ObjectsAction spellHitboxAction = (CharacterAPI targetAPI) => {
-				targetAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.elementalDamageType, MagicEfficiency(100)), Stats.elementalDamageType, true);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID), Stats.elementalDamageType, true);
 
 				int randomVectorValue = Random.Range (50, 75);
 				if(targetAPI.transform.position.x > characterAPI.transform.position.x){
@@ -2722,7 +2890,7 @@ public class Skills : MonoBehaviour {
 					targetAPI.movementController.NullSpeedWhenGround ();
 					targetAPI.movementController.AddForceWithoutAnimation (new Vector3 (randomVectorValue * -1, 250, 0));
 				}
-				targetAPI.stats.FullStun(skillSettings.stunTime, false);
+				targetAPI.stats.FullStun(skillSettings.stunTime, false, true);
 			};
 
 
@@ -2744,7 +2912,7 @@ public class Skills : MonoBehaviour {
 			effect.StartEffect (effectOptions);
 			stats.RemoveMagicEnergyPoints (skillSettings.resourceRemove, true);
 		} else {
-			if (characterAPI.movementController.movement.y < 0.8f && characterAPI.movementController.movement.y > -0.8f) {
+			if (characterAPI.movementController.movement.y < 0.6f && characterAPI.movementController.movement.y > -0.6f) {
 				if (IsAction ()) {
 					anim.Play ("actionElementalCone", 3);
 					StartCoroutine (WaitAnimationAction ("actionElementalCone", 3));
@@ -2752,10 +2920,10 @@ public class Skills : MonoBehaviour {
 					anim.Play ("elementalCone", 3);
 					StartCoroutine (WaitAnimationAction ("elementalCone", 3));
 				}
-				shotDirectionVector = new Vector3 (1f, 0, 0);
+				SetShotDirectionVector(new Vector3 (1f, 0, 0));
 
 			} else {
-				if (characterAPI.movementController.movement.y > 0.8f) {
+				if (characterAPI.movementController.movement.y > 0.6f) {
 					if (IsAction ()) {
 						anim.Play ("actionElementalCone135", 3);
 						StartCoroutine (WaitAnimationAction ("actionElementalCone135", 3));
@@ -2763,9 +2931,9 @@ public class Skills : MonoBehaviour {
 						anim.Play ("elementalCone135", 3);
 						StartCoroutine (WaitAnimationAction ("elementalCone135", 3));
 					}
-					shotDirectionVector = new Vector3 (1f, 1f, 0);
+					SetShotDirectionVector(new Vector3 (1f, 1f, 0));
 				} else {
-					if (characterAPI.movementController.movement.y < -0.8f) {
+					if (characterAPI.movementController.movement.y < -0.6f) {
 						if (IsAction ()) {
 							anim.Play ("actionElementalCone45", 3);
 							StartCoroutine (WaitAnimationAction ("actionElementalCone45", 3));
@@ -2773,7 +2941,7 @@ public class Skills : MonoBehaviour {
 							anim.Play ("elementalCone45", 3);
 							StartCoroutine (WaitAnimationAction ("elementalCone45", 3));
 						}
-						shotDirectionVector = new Vector3 (1f, -1f, 0);
+						SetShotDirectionVector(new Vector3 (1f, -1f, 0));
 					}
 				}
 			}
@@ -2787,10 +2955,7 @@ public class Skills : MonoBehaviour {
 		if (isSecondPart) {
 			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.iceWall);
 			RaycastHit hit;
-			float scaleDirectionX = 1;
-			if (transform.localScale.x < 0) {
-				scaleDirectionX = -1;
-			}
+
 
 			int target;
 			if (stats.isPlayerStats) {
@@ -2800,7 +2965,7 @@ public class Skills : MonoBehaviour {
 			}
 			Physics.Raycast (
 				transform.position, 
-				new Vector3(scaleDirectionX, shotDirectionVector.y, shotDirectionVector.z),
+				shotDirectionVector,
 				out hit, 
 				skillSettings.distance, 
 				target /*Enemy*/
@@ -2831,8 +2996,8 @@ public class Skills : MonoBehaviour {
 			}
 
 			SpellHitbox.ObjectsAction spellHitboxAction = (CharacterAPI targetAPI) => {
-				targetAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.elementalDamageType, MagicEfficiency(100)), Stats.elementalDamageType, true);
-				targetAPI.stats.GetMovementSlowly(skillSettings.slowTime, skillSettings.slowSpeed);
+				targetAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID), Stats.elementalDamageType, true);
+				targetAPI.stats.GetMovementSlowly(skillSettings.slowTime, skillSettings.GetSpeed(stats.isPlayerStats));
 			};
 
 
@@ -2854,7 +3019,7 @@ public class Skills : MonoBehaviour {
 			effect.StartEffect (effectOptions);
 			stats.RemoveMagicEnergyPoints (skillSettings.resourceRemove, true);
 		} else {
-			if (characterAPI.movementController.movement.y < 0.8f && characterAPI.movementController.movement.y > -0.8f) {
+			if (characterAPI.movementController.movement.y < 0.6f && characterAPI.movementController.movement.y > -0.6f) {
 				if (IsAction ()) {
 					anim.Play ("actionElementalCone", 3);
 					StartCoroutine (WaitAnimationAction ("actionElementalCone", 3));
@@ -2862,10 +3027,10 @@ public class Skills : MonoBehaviour {
 					anim.Play ("elementalCone", 3);
 					StartCoroutine (WaitAnimationAction ("elementalCone", 3));
 				}
-				shotDirectionVector = new Vector3 (1f, 0, 0);
+				SetShotDirectionVector(new Vector3 (1f, 0, 0));
 
 			} else {
-				if (characterAPI.movementController.movement.y > 0.8f) {
+				if (characterAPI.movementController.movement.y > 0.6f) {
 					if (IsAction ()) {
 						anim.Play ("actionElementalCone135", 3);
 						StartCoroutine (WaitAnimationAction ("actionElementalCone135", 3));
@@ -2873,9 +3038,9 @@ public class Skills : MonoBehaviour {
 						anim.Play ("elementalCone135", 3);
 						StartCoroutine (WaitAnimationAction ("elementalCone135", 3));
 					}
-					shotDirectionVector = new Vector3 (1f, 1f, 0);
+					SetShotDirectionVector(new Vector3 (1f, 1f, 0));
 				} else {
-					if (characterAPI.movementController.movement.y < -0.8f) {
+					if (characterAPI.movementController.movement.y < -0.6f) {
 						if (IsAction ()) {
 							anim.Play ("actionElementalCone45", 3);
 							StartCoroutine (WaitAnimationAction ("actionElementalCone45", 3));
@@ -2883,7 +3048,7 @@ public class Skills : MonoBehaviour {
 							anim.Play ("elementalCone45", 3);
 							StartCoroutine (WaitAnimationAction ("elementalCone45", 3));
 						}
-						shotDirectionVector = new Vector3 (1f, -1f, 0);
+						SetShotDirectionVector(new Vector3 (1f, -1f, 0));
 					}
 				}
 			}
@@ -2897,10 +3062,7 @@ public class Skills : MonoBehaviour {
 		if (isSecondPart) {
 			SkillSettings skillSettings = GetSkillSetting (SkillSettingsSet.SkillID.iceStun);
 			RaycastHit hit;
-			float scaleDirectionX = 1;
-			if (transform.localScale.x < 0) {
-				scaleDirectionX = -1;
-			}
+
 
 			int target;
 			if (stats.isPlayerStats) {
@@ -2910,7 +3072,7 @@ public class Skills : MonoBehaviour {
 			}
 			Physics.Raycast (
 				transform.position, 
-				new Vector3(scaleDirectionX, shotDirectionVector.y, shotDirectionVector.z),
+				shotDirectionVector,
 				out hit, 
 				skillSettings.distance, 
 				target /*Enemy*/
@@ -2919,13 +3081,13 @@ public class Skills : MonoBehaviour {
 			if (hit.collider != null) {
 				if (hit.collider.gameObject.layer != LayerMask.NameToLayer ("Ground")) {
 					CharacterAPI targetCharacterAPI = hit.collider.gameObject.GetComponent<CharacterAPI> ();
-					targetCharacterAPI.stats.MakeDamage(SkillDamage(skillSettings.damagePercent, Stats.elementalDamageType, MagicEfficiency(100)), Stats.elementalDamageType, true);
+					targetCharacterAPI.stats.MakeDamage(SkillDamageBySkillId (skillSettings.skillID), Stats.elementalDamageType, true);
 					targetCharacterAPI.stats.IceStun(skillSettings.stunTime);
 				} 
 			} 
 			stats.RemoveMagicEnergyPoints (skillSettings.resourceRemove, true);
 		} else {
-			if (characterAPI.movementController.movement.y < 0.8f && characterAPI.movementController.movement.y > -0.8f) {
+			if (characterAPI.movementController.movement.y < 0.6f && characterAPI.movementController.movement.y > -0.6f) {
 				if (IsAction ()) {
 					anim.Play ("actionElementalCone", 3);
 					StartCoroutine (WaitAnimationAction ("actionElementalCone", 3));
@@ -2933,10 +3095,10 @@ public class Skills : MonoBehaviour {
 					anim.Play ("elementalCone", 3);
 					StartCoroutine (WaitAnimationAction ("elementalCone", 3));
 				}
-				shotDirectionVector = new Vector3 (1f, 0, 0);
+				SetShotDirectionVector(new Vector3 (1f, 0, 0));
 
 			} else {
-				if (characterAPI.movementController.movement.y > 0.8f) {
+				if (characterAPI.movementController.movement.y > 0.6f) {
 					if (IsAction ()) {
 						anim.Play ("actionElementalCone135", 3);
 						StartCoroutine (WaitAnimationAction ("actionElementalCone135", 3));
@@ -2944,9 +3106,9 @@ public class Skills : MonoBehaviour {
 						anim.Play ("elementalCone135", 3);
 						StartCoroutine (WaitAnimationAction ("elementalCone135", 3));
 					}
-					shotDirectionVector = new Vector3 (1f, 1f, 0);
+					SetShotDirectionVector(new Vector3 (1f, 1f, 0));
 				} else {
-					if (characterAPI.movementController.movement.y < -0.8f) {
+					if (characterAPI.movementController.movement.y < -0.6f) {
 						if (IsAction ()) {
 							anim.Play ("actionElementalCone45", 3);
 							StartCoroutine (WaitAnimationAction ("actionElementalCone45", 3));
@@ -2954,13 +3116,194 @@ public class Skills : MonoBehaviour {
 							anim.Play ("elementalCone45", 3);
 							StartCoroutine (WaitAnimationAction ("elementalCone45", 3));
 						}
-						shotDirectionVector = new Vector3 (1f, -1f, 0);
+						SetShotDirectionVector(new Vector3 (1f, -1f, 0));
 					}
 				}
 			}
 
 		}
 	}
+
+
+	public void HealthInjection1(){
+		currentAction = "HealthInjection1";
+
+		SkillSettings skillSettings0 = GetSkillSetting (SkillSettingsSet.SkillID.circlePunch);
+		//stats.RemoveMeleeEnergyPoints (skillSettings0.resourceRemove, true);
+
+		GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/healthRestoreEffect");
+		Effect effect = effectObject.GetComponent<Effect> ();
+		effect.path = "Prefabs/Particles/healthRestoreEffect";
+		EffectOptions effectOptions = new EffectOptions ();
+		effect.transform.parent = nullEffectPosition.transform;
+		effectOptions.transformPosition = effect.nullPositionCoords;
+		effectOptions.isRandomDuration = false;
+		effectOptions.duration = 1f;
+		effect.StartEffect (effectOptions);
+
+		float plusHealth = stats.maximumHealth * 0.10f;
+
+		if ((PlayerController.currentHealthInjectionPool - plusHealth) < 0) {
+			plusHealth = plusHealth + (PlayerController.currentHealthInjectionPool - plusHealth);
+			//Debug.Log (plusHealth);
+		}
+		if ((plusHealth + stats.health) > stats.maximumHealth) {
+			plusHealth = plusHealth - (plusHealth + stats.health - stats.maximumHealth);
+		}
+
+		PlayerController.currentHealthInjectionPool -= plusHealth;
+
+		Stats.NumberParams plusHealthNumber = new Stats.NumberParams ();
+		plusHealthNumber.number = plusHealth;
+		stats.RestoreHealth(plusHealthNumber);
+	}
+
+	public void HealthInjection2(){
+		currentAction = "HealthInjection2";
+
+		SkillSettings skillSettings0 = GetSkillSetting (SkillSettingsSet.SkillID.circlePunch);
+		//stats.RemoveMeleeEnergyPoints (skillSettings0.resourceRemove, true);
+
+		GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/healthRestoreEffect");
+		Effect effect = effectObject.GetComponent<Effect> ();
+		effect.path = "Prefabs/Particles/healthRestoreEffect";
+		EffectOptions effectOptions = new EffectOptions ();
+		effect.transform.parent = nullEffectPosition.transform;
+		effectOptions.transformPosition = effect.nullPositionCoords;
+		effectOptions.isRandomDuration = false;
+		effectOptions.duration = 1f;
+		effect.StartEffect (effectOptions);
+
+		float plusHealth = stats.maximumHealth * 0.25f;
+
+		if ((PlayerController.currentHealthInjectionPool - plusHealth) < 0) {
+			plusHealth = plusHealth + (PlayerController.currentHealthInjectionPool - plusHealth);
+		}
+		if ((plusHealth + stats.health) > stats.maximumHealth) {
+			plusHealth = plusHealth - (plusHealth + stats.health - stats.maximumHealth);
+		}
+
+		PlayerController.currentHealthInjectionPool -= plusHealth;
+
+		Stats.NumberParams plusHealthNumber = new Stats.NumberParams ();
+		plusHealthNumber.number = plusHealth;
+		stats.RestoreHealth(plusHealthNumber);
+	}
+
+	public void HealthInjection3(){
+		currentAction = "HealthInjection3";
+
+		SkillSettings skillSettings0 = GetSkillSetting (SkillSettingsSet.SkillID.circlePunch);
+		//stats.RemoveMeleeEnergyPoints (skillSettings0.resourceRemove, true);
+
+		GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/healthRestoreEffect");
+		Effect effect = effectObject.GetComponent<Effect> ();
+		effect.path = "Prefabs/Particles/healthRestoreEffect";
+		EffectOptions effectOptions = new EffectOptions ();
+		effect.transform.parent = nullEffectPosition.transform;
+		effectOptions.transformPosition = effect.nullPositionCoords;
+		effectOptions.isRandomDuration = false;
+		effectOptions.duration = 1f;
+		effect.StartEffect (effectOptions);
+
+		float plusHealth = stats.maximumHealth * 0.50f;
+
+		if ((PlayerController.currentHealthInjectionPool - plusHealth) < 0) {
+			plusHealth = plusHealth + (PlayerController.currentHealthInjectionPool - plusHealth);
+		}
+		if ((plusHealth + stats.health) > stats.maximumHealth) {
+			plusHealth = plusHealth - (plusHealth + stats.health - stats.maximumHealth);
+		}
+
+		PlayerController.currentHealthInjectionPool -= plusHealth;
+
+		Stats.NumberParams plusHealthNumber = new Stats.NumberParams ();
+		plusHealthNumber.number = plusHealth;
+		stats.RestoreHealth(plusHealthNumber);
+	}
+
+
+	public void SpeedRun(){
+		SkillSettings settings = SkillSettingsSet.GetSettings (SkillSettingsSet.SkillID.speedRun);
+		stats.GetMovementFaster (settings.slowTime, settings.slowSpeed);
+
+		StartCoroutine (SpeedRunEffect(settings.slowTime));
+	}
+
+	IEnumerator SpeedRunEffect(float time){
+		Timer spawnTimer = new Timer ();
+		spawnTimer.SetTimer (time);
+		while (!spawnTimer.TimeIsOver()) {
+			GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/speedRunEffect");
+			Effect effect = effectObject.GetComponent<Effect> ();
+			effect.path = "Prefabs/Particles/speedRunEffect";
+			EffectOptions effectOptions = new EffectOptions ();
+			//effect.transform.parent = nullEffectPosition.transform;
+			effectOptions.transformPosition = effect.nullPositionCoords + nullEffectPosition.transform.position;
+			effectOptions.isRandomDuration = false;
+			effectOptions.duration = 0.5f;
+			effect.StartEffect (effectOptions);
+			yield return null;
+		}
+
+		yield break;
+	}
+
+
+	public void Antiroot(){
+		SkillSettings skillSettings0 = GetSkillSetting (SkillSettingsSet.SkillID.antiroot);
+		//stats.RemoveMeleeEnergyPoints (skillSettings0.resourceRemove, true);
+
+		GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/antirootEffect");
+		Effect effect = effectObject.GetComponent<Effect> ();
+		effect.path = "Prefabs/Particles/antirootEffect";
+		EffectOptions effectOptions = new EffectOptions ();
+		effect.transform.parent = nullEffectPosition.transform;
+		effectOptions.transformPosition = effect.nullPositionCoords;
+		effectOptions.isRandomDuration = false;
+		effectOptions.duration = 1f;
+		effect.StartEffect (effectOptions);
+
+		stats.Antiroot ();
+
+	}
+
+
+	public void Vanish(){
+		SkillSettings skillSettings = SkillSettingsSet.GetSettings (SkillSettingsSet.SkillID.vanish);
+		Timer vanishTimer = new Timer ();
+		vanishTimer.SetTimer (skillSettings.existingTime);
+		anim.SetBool ("inVanish", true);
+		anim.Play ("vanish", 4);
+		stats.canTargeted = false;
+		stats.inAggro = false;
+		StartCoroutine(vanishTimer.ActionAfterTimer (() => {
+			anim.SetBool ("inVanish", false);
+			stats.canTargeted = true;
+		}));
+	}
+
+
+	public void EmergencyCooling(){
+		GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Fire/steam");
+		Effect effect = effectObject.GetComponent<Effect> ();
+		effect.path = "Prefabs/Particles/Fire/steam";
+		EffectOptions effectOptions = new EffectOptions ();
+		effect.transform.parent = nullEffectPosition.transform;
+		effectOptions.transformPosition = effect.nullPositionCoords;
+		effectObject.transform.localRotation = Quaternion.Euler(effect.nullRotationCoords);
+		effectOptions.isRandomDuration = false;
+		effectOptions.duration = 1f;
+		effect.StartEffect (effectOptions);
+
+
+		if (stats.fireEnergy > 100) {
+			stats.RemoveFireEnergyPoints (stats.fireEnergy - 100);
+		}
+	}
+
+
+
 
 
 
@@ -2998,27 +3341,40 @@ public class Skills : MonoBehaviour {
 	IEnumerator waitFewFramesAndMakeDamage(HitboxDamagerOptions damagerOptions){
 		skillProcessCount = skillProcessCount + 1;
 		int zero = 0;
+
 		while (zero < 4) {
 			if (damagerOptions.spellHitbox.objects.Count == 0) {
 				zero += 1;
+				//Debug.Log ("lol");
 				yield return null;
 			} else {
+				//Debug.Log ("lol");
 				foreach (Collider col in ignoreColliders) {
 					damagerOptions.spellHitbox.ignoreColliders.Add (col);
 				}
 
 				foreach (GameObject obj in damagerOptions.spellHitbox.GetObjectsWithoutIgnoredColliders()) {
 					//Debug.Log ("Lol");
+
 					CharacterAPI enemyCharacterAPI = obj.GetComponent<CharacterAPI> ();
 					if (damagerOptions.damageType == Stats.hybridDamageType) {
-						enemyCharacterAPI.stats.MakeDamage (SkillDamage (damagerOptions.damagePercent, Stats.physicalDamageType, damagerOptions.efficienty), Stats.physicalDamageType, true);
-						enemyCharacterAPI.stats.MakeDamage (SkillDamage (damagerOptions.damagePercent, Stats.elementalDamageType, damagerOptions.efficienty), Stats.elementalDamageType, true);
+						Stats.NumberParams physDamage = SkillDamageBySkillId (damagerOptions.skillID);
+						physDamage.number = physDamage.number * (damagerOptions.efficienty / 100f); 
+
+						Stats.NumberParams elemDamage = SkillDamageBySkillId (damagerOptions.skillID);
+						elemDamage.number = elemDamage.number * (damagerOptions.efficienty / 100f); 
+
+						enemyCharacterAPI.stats.MakeDamage (physDamage , Stats.physicalDamageType, true);
+						enemyCharacterAPI.stats.MakeDamage (elemDamage, Stats.elementalDamageType, true);
 					} else {
-						enemyCharacterAPI.stats.MakeDamage (SkillDamage (damagerOptions.damagePercent, damagerOptions.damageType, damagerOptions.efficienty), damagerOptions.damageType, true);
+						Stats.NumberParams damage = SkillDamageBySkillId (damagerOptions.skillID, damagerOptions.damageType);
+						damage.number = damage.number * (damagerOptions.efficienty / 100f); 
+
+						enemyCharacterAPI.stats.MakeDamage (damage, damagerOptions.damageType, true);
 					}
 
 					if (damagerOptions.withStun) {
-						enemyCharacterAPI.stats.FullStun (damagerOptions.stunTime);
+						enemyCharacterAPI.stats.FullStun (damagerOptions.stunTime, true, true);
 					}
 					if (damagerOptions.action != null) {
 						damagerOptions.action (enemyCharacterAPI);

@@ -30,14 +30,21 @@ public class PlayerController : MonoBehaviour {
 	public static Equipment fireWeapon;
 	public static Equipment elementalWeapon;
 
-	public static int currentHealthInjectionPool = 327;
+	public static float currentHealthInjectionPool = 2000f;
 	public static int lifes = 12;
 	public static int gold = 288522;
 	public static int donatGold = 234; 
 
+	public static float currentExpValue = 50;
+	public static float nextTalentExpValue = 100f;
+	public static int talentsAvailableNumber = 50;
+
 	public static List<BackpackItem> backPackItems = new List<BackpackItem> ();
 	public static float currentWeight = 0;
 	public static float maximumWeight = 100f; 
+
+	public static Dictionary<int, CurrentSkillState> skillStates = new Dictionary<int, CurrentSkillState> ();
+
 
 
 	public DialogRectResizer testResizer;
@@ -63,7 +70,9 @@ public class PlayerController : MonoBehaviour {
 				BackpackController.AddBackpackItem(BackpackItemParamsController.GetNewBackpackItem(EquipmentGenerator.GetTestRandomEquipment(600, (int)Random.Range(0, 9))), false);
 			}
 
-			BackpackController.AddBackpackItem (BackpackItemParamsController.GetNewBackpackItem (EquipmentGenerator.GetEquipmentRuneByComplexity (Random.Range (1, maximumComplexity), EquipmentGenerator.smallRunePercent)), false);
+			for(int i = 0; i < 8; i++){
+				BackpackController.AddBackpackItem (BackpackItemParamsController.GetNewBackpackItem (EquipmentGenerator.GetEquipmentRuneByComplexity (Random.Range (1, maximumComplexity), EquipmentGenerator.smallRunePercent)), false);
+			}
 			BackpackController.AddBackpackItem(BackpackItemParamsController.GetNewBackpackItem(EquipmentGenerator.GetRandomBuff()), false);
 			InventorySkill testSkill = new InventorySkill();
 			testSkill.skillID = 1;
@@ -76,6 +85,23 @@ public class PlayerController : MonoBehaviour {
 			BackpackController.AddBackpackItem (BackpackItemParamsController.GetNewBackpackItem (EquipmentGenerator.GetHammer(1)), false);
 			BackpackController.AddBackpackItem (BackpackItemParamsController.GetNewBackpackItem (EquipmentGenerator.GetHammer(2)), false);
 			BackpackController.AddBackpackItem (BackpackItemParamsController.GetNewBackpackItem (EquipmentGenerator.GetHammer(3)), false);
+		
+		
+
+
+			for(int i = 0; i < 8; i++){
+				SkillActivator act = new SkillActivator();
+				act.skillID = i;
+				BackpackController.AddBackpackItem (BackpackItemParamsController.GetNewBackpackItem (act), false);
+			}
+
+
+
+
+
+
+			skillStates = SkillSettingsSet.GetAllSkillStates();
+		
 		}));
 		StartCoroutine (StartProcess.StartActionAfterFewFrames (12, () => {
 			
@@ -83,6 +109,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Update(){
+		//Debug.Log (playerCharacterAPI.stats.controlDiminishingParam);
 		if (Input.GetKeyDown (KeyCode.Q)) {
 			//Debug.Log ("lol");
 			/*Tools.RenameFiles("C://megaGameWorkDirectory/icons/smot/finger/", "C://megaGameWorkDirectory/icons/smot/renamed/finger/", "finger_");
@@ -152,17 +179,50 @@ public class PlayerController : MonoBehaviour {
 
 		}
 		if (Input.GetKeyDown (KeyCode.B)) {
-			testResizer.SetFullSize ();
+			//BattleInterfaceController.battleInterfaceController.aimLine.transform.position = Camera.main.WorldToScreenPoint(BattleInterfaceController.battleInterfaceController.playerAimLineStart.position);
+			BuffsView.AddBuff(Buffs.GetBuff(7));
 		}
 		if (Input.GetKeyDown (KeyCode.N)) {
-			testResizer.SetWeightPriceSize ();
+			//BattleInterfaceController.battleInterfaceController.aimLine.transform.position = Camera.main.WorldToScreenPoint(BattleInterfaceController.battleInterfaceController.playerAimLineStart.position);
+			BuffsView.RemoveBuff(Buffs.GetBuff(7));
 		}
+		if (Input.GetKeyDown (KeyCode.M)) {
+			//BattleInterfaceController.battleInterfaceController.aimLine.transform.position = Camera.main.WorldToScreenPoint(BattleInterfaceController.battleInterfaceController.playerAimLineStart.position);
+			//Debug.Log(BuffsView.buffsView.currentBuffs.Count);
+			LevelController.levelController.SetTileAtlas(1);
+		}
+	}
+
+	public void SpawnEnemy(){
+		GameObject enemy = ObjectsPool.PullObject ("InteractiveObjects/enemyH");
+		Stats enemyStats = enemy.GetComponent<Stats> ();
+		enemyStats.isDeath = false;
+		enemyStats.RestoreMaximumHealth ();
+		enemy.transform.position = playerCharacterAPI.transform.position;
 	}
 
 	public static int GetBackpackItemID(){
 		int value = maximumBackpackID;
 		maximumBackpackID = maximumBackpackID + 1;
 		return value;
+	}
+
+	public static void AddTalentExp(float plus){
+		currentExpValue += plus;
+		while(currentExpValue >= nextTalentExpValue){
+			currentExpValue = currentExpValue - nextTalentExpValue;
+			talentsAvailableNumber += 1;
+			nextTalentExpValue = GetNextTalentExp ();
+		}
+
+		if (TalentsInterface.talentsInterface.gameObject.activeInHierarchy) {
+			TalentsInterface.talentsInterface.DrawTalentBarInfo ();
+		}
+	}
+
+
+	public static float GetNextTalentExp(){
+		return nextTalentExpValue + nextTalentExpValue * 0.1f;
 	}
 
 	public static Equipment GetEquipmentBySlotID(int id){

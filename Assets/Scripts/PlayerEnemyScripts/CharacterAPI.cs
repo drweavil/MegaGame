@@ -19,5 +19,13 @@ public class CharacterAPI : MonoBehaviour {
 	public void SetEnemyType(int complexity, int typeId){
 		aiController.SetActionsByEnemyID (typeId);
 		stats.SetStatsByComplexity (complexity, typeId);
+
+		StartCoroutine(StartProcess.StartActionAfterFewFrames(5, ()=>{
+			if(BattleInterfaceController.battleInterfaceController.battleInterface.activeInHierarchy){
+				if(this.gameObject.activeInHierarchy){
+					healthBar.SetEnemyAvatar();
+				}
+			}
+		}));
 	}
 }

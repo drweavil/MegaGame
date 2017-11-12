@@ -21,6 +21,11 @@ public class SpellBall : MonoBehaviour {
 	public SpellHitbox.ObjectsAction action;
 	public int selectingLayer;
 
+	public Transform target;
+	public bool withTarget = false;
+	public List<Transform> potentialTargets = new List<Transform> ();
+	public bool potentialTargetChange = false;
+
 
 
 
@@ -37,10 +42,22 @@ public class SpellBall : MonoBehaviour {
 			ObjectsPool.PushObject (path, this.gameObject);	
 		}
 
+		float finalSpeed = speed;
+		if (withTarget) {
+			if (target != null) {
+
+
+				direction = target.position - transform.position;
+				direction.Normalize ();
+			} else {
+				finalSpeed = 0;
+			}
+		}
+
 		transform.position = new Vector3 (
-			transform.position.x + direction.x * speed,
-			transform.position.y + direction.y * speed,
-			transform.position.z + direction.z * speed
+			transform.position.x + direction.x * finalSpeed,
+			transform.position.y + direction.y * finalSpeed,
+			transform.position.z + direction.z * finalSpeed
 		);
 	}
 	

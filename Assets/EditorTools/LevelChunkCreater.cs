@@ -35,7 +35,8 @@ public class LevelChunkCreater : MonoBehaviour {
 						newBlock.height = 1f;
 						newBlock.isDecor = false;
 						newBlock.isRandom = false;
-						newBlock.uvs = data.fixBlocks [blockIndex].squareUV;
+						//newBlock.uvs = data.fixBlocks [blockIndex].squareUV;
+						//newBlock.uvsId = 
 						newFullSet.blocks.Add (newBlock);
 						data.fixBlocks.RemoveAt (blockIndex);
 					}
@@ -49,7 +50,7 @@ public class LevelChunkCreater : MonoBehaviour {
 						newBlock.isDecor = false;
 						newBlock.isRandom = true;
 						newBlock.randomValue = data.randomBlocks [randomBlockIndex].rnd;
-						newBlock.uvs = data.randomBlocks [randomBlockIndex].squareUV;
+						//newBlock.uvs = data.randomBlocks [randomBlockIndex].squareUV;
 						newFullSet.blocks.Add (newBlock);
 						data.randomBlocks.RemoveAt (randomBlockIndex);
 					}
@@ -65,7 +66,7 @@ public class LevelChunkCreater : MonoBehaviour {
 						newBlock.height = Mathf.Abs(data.fixDecorBlocks [blockIndex].blockCoords[0].y  - data.fixDecorBlocks [blockIndex].blockCoords[3].y);
 						newBlock.isDecor = true;
 						newBlock.isRandom = false;
-						newBlock.uvs = data.fixDecorBlocks [blockIndex].squareUV;
+						//newBlock.uvs = data.fixDecorBlocks [blockIndex].squareUV;
 						newFullSet.blocks.Add (newBlock);
 						data.fixDecorBlocks.RemoveAt (blockIndex);
 					}
@@ -79,7 +80,7 @@ public class LevelChunkCreater : MonoBehaviour {
 						newBlock.isDecor = true;
 						newBlock.isRandom = true;
 						newBlock.randomValue = data.randomDecorBlocks [randomBlockIndex].rnd;
-						newBlock.uvs = data.randomDecorBlocks [randomBlockIndex].squareUV;
+						//newBlock.uvs = data.randomDecorBlocks [randomBlockIndex].squareUV;
 						newFullSet.blocks.Add (newBlock);
 						data.randomDecorBlocks.RemoveAt (randomBlockIndex);
 					}
@@ -120,7 +121,7 @@ public class LevelChunkCreater : MonoBehaviour {
 			newBlock.isDecor = false;
 			newBlock.isRandom = true;
 			newBlock.randomValue = block.rnd;
-			newBlock.uvs = block.squareUV;
+			//newBlock.uvs = block.squareUV;
 			chunk.GetComponent<LevelChunk> ().randomlevelBlocks.Add (newBlock);
 		}
 
@@ -132,7 +133,7 @@ public class LevelChunkCreater : MonoBehaviour {
 			newBlock.isDecor = true;
 			newBlock.isRandom = true;
 			newBlock.randomValue = block.rnd;
-			newBlock.uvs = block.squareUV;
+			//newBlock.uvs = block.squareUV;
 			chunk.GetComponent<LevelChunk> ().randomlevelBlocks.Add (newBlock);
 		}
 
@@ -154,9 +155,9 @@ public class LevelChunkCreater : MonoBehaviour {
 			if(fixBlocks[fixBlocks.Count-1].squareVerticesSerializeble.Count >= 11000){
 				fixBlocks.Add (new LevelMesh.LevelMeshDataSerializable ());
 			}
-			foreach (SerializableVector2 coord in block.squareUV) {
+			/*foreach (SerializableVector2 coord in block.squareUV) {
 				fixBlocks[fixBlocks.Count-1].squareUVSerializeble.Add (coord);
-			}
+			}*/
 			fixBlocks[fixBlocks.Count-1].squareVerticesSerializeble.Add (block.blockCoords);
 			fixBlocks[fixBlocks.Count-1].squareVerticesSerializeble.Add (new SerializableVector3(block.blockCoords.x+1, block.blockCoords.y, block.blockCoords.z));
 			fixBlocks[fixBlocks.Count-1].squareVerticesSerializeble.Add (new SerializableVector3(block.blockCoords.x+1, block.blockCoords.y-1, block.blockCoords.z));
@@ -179,9 +180,9 @@ public class LevelChunkCreater : MonoBehaviour {
 				fixDecorBlocks[fixDecorBlocks.Count-1].squareVerticesSerializeble.Add (coord);
 			}
 
-			foreach(SerializableVector2 coord in block.squareUV){
+			/*foreach(SerializableVector2 coord in block.squareUV){
 				fixDecorBlocks[fixDecorBlocks.Count-1].squareUVSerializeble.Add (coord);
-			}
+			}*/
 		}
 		chunk.GetComponent<LevelChunk> ().levelDecorBlocks = fixDecorBlocks;
 
@@ -232,5 +233,92 @@ public class LevelChunkCreater : MonoBehaviour {
 
 		SaveLoadManager.SetLevelChunkFilesInfo ();
 	}
+
+
+
+	public void CreateChunk(string textureName, string type, string number){
+		string path = "C:/MegaGameLevels/"+ textureName + "/" + type.ToString() + "/" + number.ToString() + ".level";
+		GameObject chunk = Instantiate ((GameObject)Resources.Load ("LevelChunkMesh"));
+		BinaryFormatter bf = new BinaryFormatter ();
+		FileStream file = File.Open (path, FileMode.Open);
+		LevelRudiment data = (LevelRudiment)bf.Deserialize (file);
+		//Level data = SaveLoadManager.Load (Application.dataPath.ToString () + "/Resources/Levels/levels_2/" + name.ToString () + ".level");
+		//List<Block> blocks = data.fixBlocks;
+		//List<DecorBlock> decorBlocks = data.fixDecorBlocks;
+		//List<InteractiveObject> interactiveObjects = data.fixInteractiveObjects;
+
+		//List<FullSet> sets = new List<FullSet> ();
+
+
+
+
+
+
+
+
+
+		List<LevelMesh.LevelMeshDataSerializable> fixBlocks = new List<LevelMesh.LevelMeshDataSerializable>();
+		fixBlocks.Add (new LevelMesh.LevelMeshDataSerializable ());
+		foreach(Block block in data.fixBlocks){
+			if(fixBlocks[fixBlocks.Count-1].squareVerticesSerializeble.Count >= 11000){
+				fixBlocks.Add (new LevelMesh.LevelMeshDataSerializable ());
+			}
+			/*foreach (SerializableVector2 coord in block.squareUV) {
+				fixBlocks[fixBlocks.Count-1].squareUVSerializeble.Add (coord);
+			}
+			fixBlocks[fixBlocks.Count-1].squareVerticesSerializeble.Add (block.blockCoords);
+			fixBlocks[fixBlocks.Count-1].squareVerticesSerializeble.Add (new SerializableVector3(block.blockCoords.x+1, block.blockCoords.y, block.blockCoords.z));
+			fixBlocks[fixBlocks.Count-1].squareVerticesSerializeble.Add (new SerializableVector3(block.blockCoords.x+1, block.blockCoords.y-1, block.blockCoords.z));
+			fixBlocks[fixBlocks.Count-1].squareVerticesSerializeble.Add (new SerializableVector3(block.blockCoords.x, block.blockCoords.y-1, block.blockCoords.z));
+			*/
+			foreach (SerializableVector3 coord in LevelMesh.GetColliderCoords(block.blockCoords)) {
+				fixBlocks[fixBlocks.Count-1].colliderVerticesSerializeble.Add (coord);
+			}
+
+		}
+		chunk.GetComponent<LevelChunk> ().levelBlocks = fixBlocks;
+
+		List<LevelMesh.LevelMeshDataSerializable> fixDecorBlocks = new List<LevelMesh.LevelMeshDataSerializable>();
+		fixDecorBlocks.Add (new LevelMesh.LevelMeshDataSerializable ());
+		foreach(DecorBlock block in data.fixDecorBlocks){
+			if(fixDecorBlocks[fixDecorBlocks.Count-1].squareVerticesSerializeble.Count >= 11000){
+				fixDecorBlocks.Add (new LevelMesh.LevelMeshDataSerializable ());
+			}
+			foreach(SerializableVector3 coord in block.blockCoords){
+				fixDecorBlocks[fixDecorBlocks.Count-1].squareVerticesSerializeble.Add (coord);
+			}
+
+			/*foreach(SerializableVector2 coord in block.squareUV){
+				fixDecorBlocks[fixDecorBlocks.Count-1].squareUVSerializeble.Add (coord);
+			}*/
+		}
+		chunk.GetComponent<LevelChunk> ().levelDecorBlocks = fixDecorBlocks;
+
+
+		foreach(InteractiveObject obj in data.fixInteractiveObjects){
+			InteractiveObjectRandomPart newObj = new InteractiveObjectRandomPart ();
+			newObj.coord = obj.objCoord;
+			newObj.randomValue = obj.rnd;
+			newObj.type = obj.type;
+			if (obj.type == "portal") {
+				chunk.GetComponent<LevelChunk> ().portals.Add (newObj);
+			} else {
+				chunk.GetComponent<LevelChunk> ().fixObjects.Add (newObj);
+			}
+		}
+		/********************************************************************************/
+
+		//chunk.GetComponent<LevelChunk> ().SetData (data);
+		string directory = "Assets/Resources/LevelChunkPrefabs/" + textureName + "/" + type.ToString();
+		if (Directory.Exists (directory)) {
+			GameObject prefab = PrefabUtility.CreatePrefab (directory +"/" + number.ToString () + ".prefab", chunk);
+		} else {
+			Directory.CreateDirectory (directory);
+			GameObject prefab = PrefabUtility.CreatePrefab (directory +"/" + number.ToString () + ".prefab", chunk);
+		}
+		Debug.Log (chunk.GetComponent<LevelChunk>().fixObjects.Count);
+	}
+
+
 }
 #endif

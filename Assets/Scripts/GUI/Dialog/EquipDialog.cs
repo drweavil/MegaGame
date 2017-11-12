@@ -11,9 +11,14 @@ public class EquipDialog : MonoBehaviour {
 	public EquipDialogRuneInfo runeInfo;
 	public EquipDialogInventorySkillInfo inventorySkillInfo;
 	public CommonDialogInfo commonDialogInfo;
+	public SkillDialogInfo skillDialogInfo;
 
 	public ModificationsPage modificationsPage;
 	public DeconstructionPage deconstructionPage;
+
+	public SkillTalentDialog skillTalentDialog;
+
+	public GameObject dialogPagesPanel;
 
 	void Awake(){
 		equipDialogStatic = this;
@@ -26,6 +31,7 @@ public class EquipDialog : MonoBehaviour {
 		DialogController.dialogController.currentDialog = equipDialog;
 		equipDialogInfo.equipDialogInfo.SetActive (true);
 		equipDialogInfo.SetStatsByEquip (equip, sweepingEquip, item /*true*/);
+		dialogPagesPanel.SetActive (true);
 	}
 
 	public void OpenDialogBuffInfo(int buffID, BackpackItem item){
@@ -44,6 +50,7 @@ public class EquipDialog : MonoBehaviour {
 		DialogController.dialogController.currentDialog = equipDialog;
 		equipDialogBuffInfo.equipDialogBuffInfo.SetActive (true);
 		equipDialogBuffInfo.SetProcessBuffInfo (buffID);
+		dialogPagesPanel.SetActive (false);
 	}
 
 	public void OpenSlideDialog(int minimum, int maximum, bool withPrice = false, float unitPrice = 0){
@@ -55,6 +62,7 @@ public class EquipDialog : MonoBehaviour {
 		slideDialog.SetParams (minimum, maximum, withPrice, unitPrice);
 		DialogController.DeactivateButtons ();
 		DialogController.dialogController.deleteBackpackItemFromSlideDialog.SetActive (true);
+		dialogPagesPanel.SetActive (false);
 	}
 
 	public void OpenRuneDialog (BackpackItem item){
@@ -64,6 +72,7 @@ public class EquipDialog : MonoBehaviour {
 		runeInfo.gameObject.SetActive (true);
 		runeInfo.SetInfo (item);
 		DialogController.dialogController.currentDialog = equipDialog;
+		dialogPagesPanel.SetActive (false);
 	}
 
 	public void OpenInventorySkillDialog (BackpackItem item){
@@ -73,6 +82,7 @@ public class EquipDialog : MonoBehaviour {
 		inventorySkillInfo.gameObject.SetActive (true);
 		inventorySkillInfo.SetInfo (item);
 		DialogController.dialogController.currentDialog = equipDialog;
+		dialogPagesPanel.SetActive (false);
 	}
 
 	public void OpenCommonDialog(BackpackItem item, string title, string description, bool withCommonDescription = false, string commonDescription = ""){
@@ -85,6 +95,29 @@ public class EquipDialog : MonoBehaviour {
 		commonDialogInfo.description.text = description;
 		commonDialogInfo.commonDescriptionText.text = commonDescription;
 		DialogController.dialogController.currentDialog = equipDialog;
+		dialogPagesPanel.SetActive (false);
+	}
+
+	public void OpenSkillDialog(int skillID, BackpackItem item = default(BackpackItem)){
+		equipDialog.SetActive (true);
+		DeactiveAllWindows ();
+		DialogPages.DeactivatePagesPanel ();
+		skillDialogInfo.gameObject.SetActive (true);
+		skillDialogInfo.SetInfo (skillID, item);
+		DialogController.DeactivateButtons ();
+		DialogController.dialogController.currentDialog = equipDialog;
+		dialogPagesPanel.SetActive (false);
+	}
+
+	public void OpenSkillTalentDialog(int skillID){
+		equipDialog.SetActive (true);
+		DeactiveAllWindows ();
+		DialogPages.DeactivatePagesPanel ();
+		skillTalentDialog.gameObject.SetActive (true);
+		skillTalentDialog.SetInfo (skillID);
+		DialogController.DeactivateButtons ();
+		DialogController.dialogController.currentDialog = equipDialog;
+		dialogPagesPanel.SetActive (false);
 	}
 
 	public void DeactiveAllWindows(){
@@ -94,9 +127,14 @@ public class EquipDialog : MonoBehaviour {
 		runeInfo.gameObject.SetActive (false);
 		inventorySkillInfo.gameObject.SetActive (false);
 		commonDialogInfo.gameObject.SetActive (false);
+		skillDialogInfo.gameObject.SetActive (false);
 
 		modificationsPage.gameObject.SetActive (false);
 		deconstructionPage.gameObject.SetActive (false);
+
+		skillTalentDialog.gameObject.SetActive (false);
+
+
 	}
 
 

@@ -18,6 +18,12 @@ public class RuneButton : MonoBehaviour {
 	public GameObject runeElementalArmor;
 	public Text runeElementalArmorText;
 
+	public GameObject deactivated;
+	public bool runeDeactivated = false;
+
+	public int backpackItemID;
+	public EquipmentRune buttonRune;
+
 	public void SetRune(EquipmentRune rune){
 		runeIcon.sprite = rune.GetIcon ();
 
@@ -53,6 +59,7 @@ public class RuneButton : MonoBehaviour {
 			runeElementalArmor.SetActive (true);
 			runeElementalArmorText.text = System.Math.Round (Stats.GetPlusElementalArmorByPoints(stats[Stats.elementalArmorStatID]), 2).ToString();
 		}
+		buttonRune = rune;// = (EquipmentRune)BackpackController.GetBackpackItemByID (backpackItemID).itemContent [0];
 	}
 
 	public void DeactivateStats(){
@@ -62,5 +69,52 @@ public class RuneButton : MonoBehaviour {
 		runeCritical.SetActive (false);
 		runePhysicalArmor.SetActive (false);
 		runeElementalArmor.SetActive (false);
+	}
+
+
+
+	public void PointerDownRune(){
+		ModificationsPage.modificationsPage.ReDeactivateRuneButtons ();
+		if (!runeDeactivated) {
+			ModificationsPage.modificationsPage.draggedRune.gameObject.SetActive (true);
+			ModificationsPage.modificationsPage.draggedRune.SetRune (buttonRune);
+			ModificationsPage.modificationsPage.draggedBackpackItemID = backpackItemID;
+			ModificationsPage.currentDraggedRune = buttonRune;
+			ModificationsPage.modificationsPage.draggedRune.gameObject.transform.position = Input.mousePosition;
+			foreach (LumenArea area in ModificationsPage.modificationsPage.areas) {
+				area.lumen.SetActive (true);
+			}
+
+			deactivated.SetActive (true);
+		}
+	}
+
+	public void PointerUpRune(){
+		if (!runeDeactivated) {
+			ModificationsPage.modificationsPage.draggedRune.gameObject.SetActive (false);
+			foreach (LumenArea area in ModificationsPage.modificationsPage.areas) {
+				area.lumen.SetActive (false);
+			}
+
+			foreach (LumenArea area in ModificationsPage.modificationsPage.areas) {
+				if (RectTransformUtility.RectangleContainsScreenPoint (area.area, Input.mousePosition) && !area.deactive) {
+					area.backpackItemID = backpackItemID;
+					area.areaEvent.Invoke ();
+					runeDeactivated = true;
+				}
+			}
+
+			if (!runeDeactivated) {
+				deactivated.SetActive (false);
+			}
+			ModificationsPage.modificationsPage.ReDeactivateRuneButtons ();
+		}
+
+	}
+
+	public void DragRune(){
+		if (!runeDeactivated) {
+			ModificationsPage.modificationsPage.draggedRune.gameObject.transform.position = Input.mousePosition;
+		}
 	}
 }

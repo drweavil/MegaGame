@@ -37,6 +37,11 @@ public class BackpackItemParamsController : MonoBehaviour {
 			newItem.itemContent.Add (consumable);
 			newItem.weight = consumable.GetConsumableWeight ();
 			newItem.price = consumable.GetConsumablePrice ();
+		} else if (itemContent.GetType () == typeof(SkillActivator)) {
+			SkillActivator skillActivator = itemContent as SkillActivator;
+			newItem.itemContent.Add (skillActivator);
+			newItem.weight = 1f;
+			newItem.price = EquipmentGenerator.GetPriceByComplexity (PlayerController.currentComplexity) * 200;
 		}
 
 		newItem.itemID = PlayerController.GetBackpackItemID ();//PlayerController.maximumBackpackID;

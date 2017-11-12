@@ -59,7 +59,9 @@ public class SkillButton : MonoBehaviour {
 			} else {
 				notActive.SetActive (true);
 			}
-
+			if(skillSettings.withAimLine){
+				AimLineController.aimLineController.StartAimLine (skillSettings);
+			}
 		}
 	}
 
@@ -81,6 +83,11 @@ public class SkillButton : MonoBehaviour {
 			}
 
 		}
+
+		if(skillSettings.withAimLine){
+			AimLineController.aimLineController.StopAimLine ();
+		}
+
 		active.SetActive (false);
 		notActive.SetActive (false);
 	}
@@ -89,8 +96,8 @@ public class SkillButton : MonoBehaviour {
 	bool CanPress(){
 		bool value = false;
 		if (skillID != -1) {
-			if (!(PlayerController.playerCharacterAPI.stats.withoutControl ||
-			   PlayerController.playerCharacterAPI.stats.inSilence ||
+			if (!(((PlayerController.playerCharacterAPI.stats.withoutControl ||
+				PlayerController.playerCharacterAPI.stats.inSilence) && !skillSettings.ignoreSilence) ||
 			   PlayerController.playerCharacterAPI.stats.onGlobalCooldown ||
 			   PlayerController.playerCharacterAPI.stats.SkillOnCD (skillSettings.skillID))) {
 				if (skillSettings.canUseWithoutResource) {
@@ -112,9 +119,9 @@ public class SkillButton : MonoBehaviour {
 
 
 	public void UseSkill(){
-		if (skillSettings.cooldown != 0 && !PlayerController.playerCharacterAPI.stats.SkillOnCD(skillSettings.skillID)) {
-			SkillPanelController.skillPanelController.StartCdFor (buttonID, skillSettings.cooldown);
-			PlayerController.playerCharacterAPI.stats.StartCD (skillSettings.cooldown, skillSettings.skillID);
+		if (skillSettings.GetCd() != 0 && !PlayerController.playerCharacterAPI.stats.SkillOnCD(skillSettings.skillID)) {
+			SkillPanelController.skillPanelController.StartCdFor (buttonID, skillSettings.GetCd());
+			PlayerController.playerCharacterAPI.stats.StartCD (skillSettings.GetCd(), skillSettings.skillID);
 		}
 		if (skillSettings.globalCooldown != 0 && !PlayerController.playerCharacterAPI.stats.onGlobalCooldown) {
 			SkillPanelController.skillPanelController.StartGcd (buttonID, skillSettings.globalCooldown);

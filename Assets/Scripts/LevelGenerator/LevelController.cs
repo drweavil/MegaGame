@@ -8,8 +8,10 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using S = System;
+using SimpleJSON;
 
 public class LevelController : MonoBehaviour {
+	public static LevelController levelController;
 	LevelGeneration generator;
 	public static GameObject player;
 	LevelChunkRudiment[,] level;
@@ -45,6 +47,12 @@ public class LevelController : MonoBehaviour {
 	int randomizeRandomPartThreadCounts = 0;
 
 
+	public Dictionary<int, List<Vector2>> idUVs;
+	//public Sprite tileAtlas;
+
+	void Awake(){
+		levelController = this;
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -71,6 +79,31 @@ public class LevelController : MonoBehaviour {
 	}
 
 	public void Test(){
+	}
+
+
+	public void SetTileAtlas(int tileID){
+		idUVs = new Dictionary<int, List<Vector2>> ();
+		//Debug.Log ("Textures/TileSets/IDUVS/idUVsSet_" + tileID.ToString() + ".txt");
+		TextAsset jsonAsset = (TextAsset)Resources.Load("Textures/TileSets/IDUVS/idUVsSet_" + tileID.ToString() + "");
+		//Debug.Log (jsonAsset.text);
+		string jsonString = jsonAsset.text;
+		JSONNode jsonFile = JSON.Parse(jsonString);
+		Debug.Log (jsonFile.Count);
+
+		//jsonFile.AsObject.
+
+		for(int i = 0; i < jsonFile.Count; i++) {
+			//jsonFile[i.ToString()]
+			List<Vector2> uvs = new List<Vector2>();
+			foreach(JSONNode node in jsonFile[i.ToString()].AsArray){
+				uvs.Add(new Vector2(float.Parse(node["x"]), float.Parse(node["y"])));
+			}
+			idUVs.Add(i, uvs);
+			//int.Parse(jsonFile[i.ToString()]
+		}
+
+		levelTexture = (Texture)Resources.Load ("Textures/TileSets/Set_"+ tileID.ToString()); 
 	}
 
 
@@ -153,7 +186,7 @@ public class LevelController : MonoBehaviour {
 		SetLevelChunkRudimentsInfoForMiniPortals ();
 		levelChunksData.Clear ();
 
-		SetLevelTexture ();
+		//SetLevelTexture ();
 		for (int i = 0; i < generator.height+2; i++) {
 			for (int j = 0; j < generator.width+2; j++) {
 				if (level [i, j].type != -3) {
@@ -487,9 +520,9 @@ public class LevelController : MonoBehaviour {
 		textRenderer.GetComponent<TextMesh> ().text = text.ToString ();
 	}
 
-	public void SetLevelTexture(){
+	/*public void SetLevelTexture(){
 		levelTexture = (Texture)Resources.Load ("Textures/"+levelTextureName);
-	}
+	}*/
 
 	public void GenRandomPart(List<RandomPartBlock> blocks, List<InteractiveObjectRandomPart> objects){
 		creatingRandomPartMeshesThread = new Thread (() => {newMeshesRandomPart = CreateRandomPartMeshes(blocks);});
@@ -517,9 +550,9 @@ public class LevelController : MonoBehaviour {
 			newMeshes [newMeshes.Count - 1].squareVerticesSerializeble.Add (new SerializableVector3(block.coord.x + block.width, block.coord.y, 0));
 			newMeshes [newMeshes.Count - 1].squareVerticesSerializeble.Add (new SerializableVector3(block.coord.x + block.width, block.coord.y - block.height, 0));
 			newMeshes [newMeshes.Count - 1].squareVerticesSerializeble.Add (new SerializableVector3(block.coord.x, block.coord.y - block.height, 0));
-			foreach (SerializableVector2 uv in block.uvs) {
+			/*foreach (SerializableVector2 uv in block.uvs) {
 				newMeshes [newMeshes.Count - 1].squareUVSerializeble.Add (uv);
-			}
+			}*/
 			if (!block.isDecor) {
 				foreach(SerializableVector3 colVertice in LevelMesh.GetColliderCoords(block.coord)){
 					newMeshes [newMeshes.Count - 1].colliderVerticesSerializeble.Add(colVertice);

@@ -29,6 +29,18 @@ public class BackpackFilter : MonoBehaviour {
 		currentFilter.backpackFilterButtonEvent.Invoke();
 	}
 
+	public static void RedrawFilters(){
+		int currentPage = BackpackView.backpackView.currentPage;
+		currentFilter.backpackFilterButtonEvent.Invoke();
+		if (currentPage >= BackpackView.backpackView.maximumPage) {
+			BackpackView.backpackView.currentPage = BackpackView.backpackView.maximumPage;
+		} else {
+			BackpackView.backpackView.currentPage = currentPage;
+		}
+		//BackpackView.backpackView.currentPage = 1;
+		BackpackView.backpackView.RedrawBackpack ();
+	}
+
 
 	public static void DeactivateAllButtons(){
 		foreach (BackpackFilterButton button in backpackFilter.filterButtons) {
@@ -115,7 +127,8 @@ public class BackpackFilter : MonoBehaviour {
 		currentFilterID = currentFilter.filterID;
 		filteredItems = PlayerController.backPackItems.FindAll (i => i.itemContent[0].GetType() == typeof(Buff) ||
 			i.itemContent[0].GetType() == typeof(InventorySkill) ||
-			i.itemContent[0].GetType() == typeof(Consumable)
+			i.itemContent[0].GetType() == typeof(Consumable) || 
+			i.itemContent[0].GetType() == typeof(SkillActivator)
 		);
 		BackpackView.backpackView.currentPage = 1;
 		BackpackView.backpackView.RedrawBackpack ();

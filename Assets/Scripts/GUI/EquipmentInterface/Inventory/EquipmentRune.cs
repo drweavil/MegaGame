@@ -11,6 +11,7 @@ public class EquipmentRune{
 	static List<int> tier_3_icons = new List<int> (new int[]{13, 14, 15, 16, 17, 18});
 	static List<int> tier_4_icons = new List<int> (new int[]{19, 20, 21, 22, 23, 24});
 	public int skinID = 0;
+	public int mainStat = 0;
 	public float healthPoints = 0;
 	public float complexity = 0;
 	public float criticalPoints = 0;
@@ -36,7 +37,7 @@ public class EquipmentRune{
 			Debug.Log (pair.Key + " " + pair.Value);
 		}*/
 
-		return titleFirstPart + " " + LanguageController.jsonFile ["runes"] ["runeStats"] [GetOrderedStatIDs(1).ToList<KeyValuePair<int, float>>()[0].Key.ToString()];
+		return titleFirstPart + " " + LanguageController.jsonFile ["runes"] ["runeStats"] [mainStat.ToString()];
 	}
 
 	public string GetDesctiption(){
@@ -69,6 +70,10 @@ public class EquipmentRune{
 
 	}
 
+	public void SetMainStat(){
+		mainStat = GetOrderedStatIDs (1).ToList<KeyValuePair<int, float>> () [0].Key;
+	}
+
 	public Dictionary<int, float> GetOrderedStatIDs(int statsNumber){
 		Dictionary<int, float> stats = new Dictionary<int, float> ();
 		stats.Add (Stats.healthStatID, healthPoints);
@@ -79,18 +84,12 @@ public class EquipmentRune{
 		stats.Add (Stats.elementalArmorStatID, elementalArmorPoints);
 
 
-		List<KeyValuePair<int, float>> euipStatsList = new List<KeyValuePair<int, float>> ();
-		euipStatsList = stats.OrderBy (x => x.Value).ToList ();
-		foreach (KeyValuePair<int, float> pair in euipStatsList) {
-			Debug.Log (pair.Key + " " + pair.Value);
-		}
-		euipStatsList = euipStatsList.GetRange (euipStatsList.Count - statsNumber, statsNumber).ToList();
-		stats = euipStatsList.ToDictionary(l=> l.Key, l=>l.Value);
+		List<KeyValuePair<int, float>> equipStatsList = new List<KeyValuePair<int, float>> ();
+		equipStatsList = stats.OrderBy (x => x.Value).ToList ();
+		equipStatsList.Reverse ();
+		equipStatsList = equipStatsList.GetRange (0, statsNumber).ToList();
+		stats = equipStatsList.ToDictionary(l=> l.Key, l=>l.Value);
 
-
-		foreach (KeyValuePair<int, float> pair in stats) {
-			Debug.Log (pair.Key + " " + pair.Value);
-		}
 		return stats;
 	}
 

@@ -45,7 +45,7 @@ public class HealthBar : MonoBehaviour {
 		if (BattleInterfaceController.battleInterfaceController.battleInterface.activeInHierarchy) {
 			if (this.gameObject.activeInHierarchy) {
 				if (healthBarPoolFrames == 60) {
-					Rect guiRect = new Rect ();
+					/*Rect guiRect = new Rect ();
 					guiRect.position = new Vector2 (
 						HealthBarPool.healthBarPool.commonGUIRect.position.x - HealthBarPool.healthBarPool.commonGUIRect.rect.width / 2,
 						HealthBarPool.healthBarPool.commonGUIRect.position.y - HealthBarPool.healthBarPool.commonGUIRect.rect.height / 2
@@ -56,11 +56,11 @@ public class HealthBar : MonoBehaviour {
 					Rect barRect = new Rect ();
 					barRect.position = playerHealthBar.resourcesBarRect.position;
 					barRect.width = playerHealthBar.resourcesBarRect.rect.width;
-					barRect.height = playerHealthBar.resourcesBarRect.rect.height;
+					barRect.height = playerHealthBar.resourcesBarRect.rect.height;*/
 
 					//Debug.Log (guiRect.position);
 					//Debug.Log (Camera.main.WorldToScreenPoint (objectPosition.position));
-					if (guiRect.Contains (Camera.main.WorldToScreenPoint (objectPosition.position))) {
+					if (RectTransformUtility.RectangleContainsScreenPoint(HealthBarPool.healthBarPool.commonGUIRect, Camera.main.WorldToScreenPoint (objectPosition.position))/*guiRect.Contains (Camera.main.WorldToScreenPoint (objectPosition.position))*/) {
 						if (HealthBarPool.healthBars.FindIndex (h => h == this) == -1) {
 							HealthBarPool.healthBars.Add (this);	
 							inPool = true;

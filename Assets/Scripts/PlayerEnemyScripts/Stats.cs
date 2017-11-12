@@ -6,7 +6,7 @@ using System;
 
 public class Stats : MonoBehaviour {
 	public const int physicalDamageType = 0, hybridDamageType = 1, elementalDamageType = 2; 
-	public const int meleeSpec = 0, fireSpec=1, elementalSpec = 2;
+	public const int meleeSpec = 0, fireSpec=1, elementalSpec = 2, commonSpec = 3;
 	public const int healthStatID = 1, critStatID = 2, physicalDamageStatID = 3, elementalDamageStatID = 4,
 	physicalArmorStatID = 5, elementalArmorStatID = 6;
 	public int specId = 0;
@@ -15,6 +15,7 @@ public class Stats : MonoBehaviour {
 	public float elementalShield;
 	public float physicalShield;
 	public float hybridShield;
+	public int enemyTypeID;
 
 	public float maximumHealth;
 	public float stamina = 0;
@@ -54,11 +55,11 @@ public class Stats : MonoBehaviour {
 
 
 	public int meleeEnergy;
-	public int maximumMeleeEnergy = 100;
+	public const int maximumMeleeEnergy = 100;
 	public int fireEnergy;
-	public int maximumFireEnergy = 0;
+	public const int maximumFireEnergy = 250;
 	public int magicEnergy;
-	public int maximumMagicEnergy = 100;
+	public const int maximumMagicEnergy = 100;
 
 	public bool isDeath = false;
 	public bool deathPlayed = false;
@@ -66,19 +67,22 @@ public class Stats : MonoBehaviour {
 	public bool withoutControl = false;
 	public bool inSilence = false;
 	public bool inIceStun = false;
-	public int inIceStunProcess = 0;
 	public bool inJump = false;
 	bool itIsBurn = false;
+	public bool canTargeted = true;
+	public bool inAggro = false;
 	//float burnPercent = 0;
-	float minimumSpeed;
+	float minimumSpeed = 1f;
 	public float currentSpeed = 1f;
 	public float maximumSpeed = 1f;
+	public float plusSpeed = 0;
 	public List<float> minimumSpeedValues = new List<float> ();
 
 	public bool onGlobalCooldown = false;
 	private List<int> skillsOnCD = new List<int> ();
 
-
+	public int slowSpeedDiminishingParam = 0;
+	public int controlDiminishingParam = 0;
 
 	/**********timers*******************/
 	Timer canRemoveMeleResourceTimer = new Timer();
@@ -95,8 +99,12 @@ public class Stats : MonoBehaviour {
 	Timer stunTimer = new Timer();
 	Timer silenceTimer = new Timer();
 	Timer slowMovementTimer = new Timer();
+	Timer iceStunTimer = new Timer();
 
 	public Timer shieldTimer = new Timer();
+
+	Timer slowSpeedDiminishingTimer = new Timer();
+	Timer controlDiminishingTimer = new Timer();
 	/********************************/
 
 
@@ -113,11 +121,16 @@ public class Stats : MonoBehaviour {
 	private int magicRemovePoint = 2;
 	private float magicCanRemoveTime = 5f;
 
+	float controlDiminishingTime = 15f;
+	float slowSpeedDiminishingTime = 15f;
+
 
 
 	public bool isPlayerStats = false;
 	public PlayerHealthBar playerHealthBar;
 	public CharacterAPI characterAPI;
+
+	public Transform nullPosition;
 
 
 
@@ -129,7 +142,10 @@ public class Stats : MonoBehaviour {
 	void Awake(){
 		//playerScript
 		/*SetMaximumHealth ();
-		RestoreMaximumHealth ();*/
+		StartCoroutine(StartProcess.StartActionAfterFewFrames(15, () => {
+			RestoreMaximumHealth ();	
+		}));*/
+
 		shieldTimer = new Timer ();
 		if (isPlayerStats) {
 			SetStatsByComplexity (10);
@@ -144,42 +160,51 @@ public class Stats : MonoBehaviour {
 		/*if (Input.GetKeyDown (KeyCode.U)) {
 			SetSpec (1);
 		}*/
-		if (canRestoreHealthTimer.TimeIsOver()) {
-			if(restoreHealthTimer.TimeIsOver() && health != GetMaximumHealth()){
-				Stats.NumberParams restore = new Stats.NumberParams ();
-				restore.number = GetMaximumHealth() * 0.02f;
-				RestoreHealth (restore);
-				restoreHealthTimer.SetTimer (healthRestoreTime);
-			}
+
+		if (characterAPI.movementController.leftCharacterSlot == null && characterAPI.movementController.rightCharacterSlot == null && characterAPI.movementController.rangeTargets.Count == 0) {
+			inAggro = false;
+		} else {
+			inAggro = true;
 		}
 
-		if (isPlayerStats || specId == PlayerController.melee) {
-			if (canRemoveMeleResourceTimer.TimeIsOver ()) {
-				if (meleeResourceTimer.TimeIsOver ()) {
-					RemoveMeleeEnergyPoints (meleeRemovePoint);
-					meleeResourceTimer.SetTimer (meleeRemoveTime);
+		if (!inAggro) {
+			if (canRestoreHealthTimer.TimeIsOver ()) {
+				if (restoreHealthTimer.TimeIsOver () && health != GetMaximumHealth ()) {
+					Stats.NumberParams restore = new Stats.NumberParams ();
+					restore.number = GetMaximumHealth () * 0.02f;
+					RestoreHealth (restore);
+					restoreHealthTimer.SetTimer (healthRestoreTime);
 				}
 			}
-		}
 
-		if (isPlayerStats || specId == PlayerController.fire) {
-			if (canRestoreFireResourceTimer.TimeIsOver ()) {
-				if (fireResourceTimer.TimeIsOver ()) {
-					RemoveFireEnergyPoints (fireRestorePoint);
-					fireResourceTimer.SetTimer (fireRestoreTime);
+			if (isPlayerStats || specId == PlayerController.melee) {
+				if (canRemoveMeleResourceTimer.TimeIsOver ()) {
+					if (meleeResourceTimer.TimeIsOver ()) {
+						RemoveMeleeEnergyPoints (meleeRemovePoint);
+						meleeResourceTimer.SetTimer (meleeRemoveTime);
+					}
 				}
 			}
-		}
 
-		if (isPlayerStats || specId == PlayerController.magic) {
-			if (canRemoveMagicResourceTimer.TimeIsOver ()) {
-				if (magicResourceTimer.TimeIsOver ()) {
-					RemoveMagicEnergyPoints (magicRemovePoint);
-					magicResourceTimer.SetTimer (magicRemoveTime);
+			if (isPlayerStats || specId == PlayerController.fire) {
+				if (canRestoreFireResourceTimer.TimeIsOver ()) {
+					if (fireResourceTimer.TimeIsOver ()) {
+						RemoveFireEnergyPoints (fireRestorePoint);
+						fireResourceTimer.SetTimer (fireRestoreTime);
+					}
 				}
 			}
-		}
 
+			if (isPlayerStats || specId == PlayerController.magic) {
+				if (canRemoveMagicResourceTimer.TimeIsOver ()) {
+					if (magicResourceTimer.TimeIsOver ()) {
+						RemoveMagicEnergyPoints (magicRemovePoint);
+						magicResourceTimer.SetTimer (magicRemoveTime);
+					}
+				}
+			}
+
+		}
 
 		if (isDeath && !deathPlayed) {
 			deathPlayed = true;
@@ -222,7 +247,9 @@ public class Stats : MonoBehaviour {
 	}
 
 	public void RestoreMaximumHealth(){
-		health = GetMaximumHealth();
+		NumberParams number = new NumberParams ();
+		number.number = GetMaximumHealth ();
+		RestoreHealth (number);
 		isDeath = false;
 	}
 
@@ -259,6 +286,13 @@ public class Stats : MonoBehaviour {
 			damage.number = 0;
 		}
 
+		if (specId == Stats.meleeSpec) {
+			if (damage.isCrit) {
+				damage.number = damage.number / 2;
+				damage.isCrit = false;
+			}
+		}
+
 		health -= damage.number;
 
 
@@ -283,9 +317,9 @@ public class Stats : MonoBehaviour {
 			isDeath = true;
 		}
 
-		if (withResTimer) {
+		/*if (withResTimer) {
 			canRestoreHealthTimer.SetTimer (healthCanRestoreTime);
-		}
+		}*/
 	}
 
 	public void AddShieldPoints(NumberParams shieldPoints, int shieldType){
@@ -417,13 +451,18 @@ public class Stats : MonoBehaviour {
 		//if (isPlayerStats) {
 			SetRecourceToBar ();
 		//}
-		if (withResTimer) {
+		/*if (withResTimer) {
 			canRemoveMeleResourceTimer.SetTimer (meleeCanRemoveTime);	
-		}
+		}*/
 	}
 
 	public void AddFireEnergyPoints(int points, bool withResTimer = false){
 		fireEnergy += points;
+
+		if (fireEnergy > maximumFireEnergy) {
+			fireEnergy -= fireEnergy - maximumFireEnergy;
+		}
+
 		if (fireEnergy > 100) {
 			if (!itIsBurn) {
 				itIsBurn = true;
@@ -431,12 +470,13 @@ public class Stats : MonoBehaviour {
 			}
 			//fireEnergy -= fireEnergy - maximumFireEnergy;
 		}
+			
 		//if (isPlayerStats) {
 			SetRecourceToBar ();
 		//}
-		if (withResTimer) {
+		/*if (withResTimer) {
 			canRestoreFireResourceTimer.SetTimer (fireCanRestoreTime);	
-		}
+		}*/
 	}
 
 	public void AddMagicEnergyPoints(int points, bool withResTimer = false){
@@ -447,9 +487,9 @@ public class Stats : MonoBehaviour {
 		//if (isPlayerStats) {
 			SetRecourceToBar ();
 		//}
-		if (withResTimer) {
+		/*if (withResTimer) {
 			canRemoveMagicResourceTimer.SetTimer (magicCanRemoveTime);	
-		}
+		}*/
 	}
 
 	public void RemoveMeleeEnergyPoints(int points, bool withResTimer = false){
@@ -462,9 +502,9 @@ public class Stats : MonoBehaviour {
 				SetRecourceToBar ();
 			//}
 		}
-		if (withResTimer) {
+		/*if (withResTimer) {
 			canRemoveMeleResourceTimer.SetTimer (meleeCanRemoveTime);	
-		}
+		}*/
 	}
 
 	public void RemoveFireEnergyPoints(int points, bool withResTimer = false){
@@ -480,9 +520,9 @@ public class Stats : MonoBehaviour {
 				SetRecourceToBar ();
 			//}
 		}
-		if (withResTimer) {
+		/*if (withResTimer) {
 			canRestoreFireResourceTimer.SetTimer (fireCanRestoreTime);	
-		}
+		}*/
 	}
 
 	public void RemoveMagicEnergyPoints(int points, bool withResTimer = false){
@@ -495,14 +535,14 @@ public class Stats : MonoBehaviour {
 				SetRecourceToBar ();
 			//}
 		}
-		if (withResTimer) {
+		/*if (withResTimer) {
 			canRemoveMagicResourceTimer.SetTimer (magicCanRemoveTime);	
-		}
+		}*/
 	}
 
 
 	float GetBurnPercent(){
-		return (float)(fireEnergy - 100) * 0.0005f;
+		return (float)(fireEnergy - 100) * 0.0007f;
 	}
 
 
@@ -669,11 +709,43 @@ public class Stats : MonoBehaviour {
 			characterAPI.reskinController.ChangeSpec (newSpecId);
 		}));
 
+
+
 		//Debug.Log (newSpecId);
 		StartCoroutine(StartProcess.StartActionAfterFewFrames(7, ()=>{
 			if(BattleInterfaceController.battleInterfaceController.battleInterface.activeInHierarchy){
 				if(this.gameObject.activeInHierarchy){
 					characterAPI.healthBar.ChangeToSpec (newSpecId);
+				}
+			}
+			if (isPlayerStats) {
+				foreach(int removableBuffId in Buffs.meleeBuffs){
+					//Debug.Log(removableBuffId);
+					BuffsView.RemoveBuff(Buffs.GetBuff(removableBuffId));
+				}
+				foreach(int removableBuffId in Buffs.fireBuffs){
+					BuffsView.RemoveBuff(Buffs.GetBuff(removableBuffId));
+				}
+				foreach(int removableBuffId in Buffs.elementalBuffs){
+					BuffsView.RemoveBuff(Buffs.GetBuff(removableBuffId));
+				}
+
+
+
+				if(newSpecId == Stats.meleeSpec){
+					foreach(int addBuffID in Buffs.meleeBuffs){
+						BuffsView.AddBuff(Buffs.GetBuff(addBuffID));
+					}
+				}
+				if(newSpecId == Stats.fireSpec){
+					foreach(int addBuffID in Buffs.fireBuffs){
+						BuffsView.AddBuff(Buffs.GetBuff(addBuffID));
+					}
+				}
+				if(newSpecId == Stats.elementalSpec){
+					foreach(int addBuffID in Buffs.elementalBuffs){
+						BuffsView.AddBuff(Buffs.GetBuff(addBuffID));
+					}
 				}
 			}
 		}));
@@ -703,6 +775,8 @@ public class Stats : MonoBehaviour {
 			SetSpec (enemyType.specID);
 		}
 
+		enemyTypeID = enemyID;
+
 		weaponDamage = EquipmentGenerator.GetWeaponDamageByComplexity (complexity);
 		
 	}
@@ -727,7 +801,7 @@ public class Stats : MonoBehaviour {
 			//Debug.Log ("stun");
 			//characterAPI.movementController.SetMovement(new Vector3(0, 0, 0));
 			if (withNullSpeed) {
-				characterAPI.movementController.rigidbody.velocity = new Vector3 (0, 0, 0);
+				characterAPI.movementController.rigidbody.velocity = new Vector3 (0, characterAPI.movementController.rigidbody.velocity.y, 0);
 			}
 			yield return null;
 		}
@@ -751,7 +825,26 @@ public class Stats : MonoBehaviour {
 		yield break;
 	}
 
-	public void FullStun(float stunTime, bool withNullSpeed = true){
+	public void FullStun(float stunTime, bool withNullSpeed = true, bool withDiminishingTimer = false){
+		if (isPlayerStats && withDiminishingTimer) {
+			if (controlDiminishingTimer.TimeIsOver ()) {
+				StartControlDiminishing ();
+			} else {
+				controlDiminishingParam += 1;
+				stunTime = GetControlDiminishingTime (stunTime);
+			}
+		}
+
+
+		/*if (controlDiminishingTimer.TimeIsOver ()) {
+			StartControlDiminishing ();
+		} else {
+			controlDiminishingParam += 1;
+			stunTime = GetControlDiminishingTime (stunTime);
+		}*/
+		if (!iceStunTimer.TimeIsOver ()) {
+			iceStunTimer.SetTimer (stunTime);
+		}
 		StartCoroutine (ControlStun (stunTime, true, withNullSpeed));
 		StartCoroutine (Silence (stunTime));
 	}
@@ -762,7 +855,15 @@ public class Stats : MonoBehaviour {
 	}
 
 
-	public void GetMovementSlowly(float time, float toSpeed){
+	public void GetMovementSlowly(float time, float toSpeed, bool withDiminishing = true){
+		if (isPlayerStats && withDiminishing) {
+			if (slowSpeedDiminishingTimer.TimeIsOver ()) {
+				StartSlowSpeedDiminishing ();
+			} else {
+				slowSpeedDiminishingParam += 1;
+				time = GetSlowSpeedDiminishingTime (time);
+			}
+		}
 		StartCoroutine(GetMovementSlowlyCoroutine(time, toSpeed));
 	}
 	IEnumerator GetMovementSlowlyCoroutine(float time, float toSpeed){
@@ -770,20 +871,81 @@ public class Stats : MonoBehaviour {
 		float minimumValueSpeed = minimumSpeedValues.Min (o => o);
 		slowMovementTimer.SetTimer (time);
 		minimumSpeed = minimumValueSpeed;
-		while (!slowMovementTimer.TimeIsOver ()) {
-			SetCurrentSpeed (minimumSpeed);
+		while (!slowMovementTimer.TimeIsOver () && minimumSpeedValues.Count != 0) {
+			SetCurrentSpeed (minimumSpeed + plusSpeed);
 			yield return null;
 		}
 
-		if (minimumSpeedValues.Count - 1 != 0) {
-			minimumSpeedValues.Remove (toSpeed);
-			minimumValueSpeed = minimumSpeedValues.Min (o => o);
-			minimumSpeed = minimumValueSpeed;
+		if (minimumSpeedValues.Count == 0) {
+			minimumSpeed = maximumSpeed;
 		} else {
-			minimumSpeedValues.Remove (toSpeed);
+			if (minimumSpeedValues.Count - 1 != 0) {
+				minimumSpeedValues.Remove (toSpeed);
+				minimumValueSpeed = minimumSpeedValues.Min (o => o);
+				minimumSpeed = minimumValueSpeed;
+			} else {
+				minimumSpeedValues.Remove (toSpeed);
+				minimumSpeed = maximumSpeed;
+			}
 		}
-		SetCurrentSpeed(maximumSpeed);
+		SetCurrentSpeed(minimumSpeed + plusSpeed);
 		yield break;
+	}
+
+	public void GetMovementFaster(float time, float newPlusSpeed){
+		StartCoroutine(GetMovementFasterCoroutine(time, newPlusSpeed));
+	}
+	IEnumerator GetMovementFasterCoroutine(float time, float newPlusSpeed){
+		Timer plusSpeedTimer = new Timer ();
+		plusSpeed = newPlusSpeed;
+		plusSpeedTimer.SetTimer (time);
+		SetCurrentSpeed (minimumSpeed + plusSpeed);
+		while (!plusSpeedTimer.TimeIsOver ()) {
+			SetCurrentSpeed (minimumSpeed + plusSpeed);
+			yield return null;
+		}
+		plusSpeed = 0;
+		SetCurrentSpeed (minimumSpeed + plusSpeed);
+		yield break;
+		
+	}
+
+	void StartControlDiminishing(){
+		controlDiminishingTimer.SetTimer (controlDiminishingTime);
+		StartCoroutine(controlDiminishingTimer.ActionAfterTimer (() => {
+			controlDiminishingParam = 0;
+		}));
+	}
+
+	void StartSlowSpeedDiminishing(){
+		slowSpeedDiminishingTimer.SetTimer (slowSpeedDiminishingTime);
+		StartCoroutine(slowSpeedDiminishingTimer.ActionAfterTimer (() => {
+			slowSpeedDiminishingParam = 0;
+		}));
+	}
+
+	public float GetControlDiminishingTime(float time){
+		float newTime = time;
+		for (int i = 0; i < controlDiminishingParam; i++) {
+			newTime = newTime / 2;
+		}
+		return newTime;
+	}
+
+	public float GetSlowSpeedDiminishingTime(float time){
+		float newTime = time;
+		for (int i = 0; i < slowSpeedDiminishingParam; i++) {
+			newTime = newTime / 2;
+		}
+		return newTime;
+	}
+		
+
+	public void Antiroot(){
+		minimumSpeedValues.Clear ();
+		iceStunTimer.SetTimer (0);
+		silenceTimer.SetTimer (0);
+		stunTimer.SetTimer (0);
 	}
 
 	public IEnumerator DealDot(NumberParams damage, int damageType, float dotTime, int ticksNumber){
@@ -820,50 +982,83 @@ public class Stats : MonoBehaviour {
 	}
 
 
-	public void IceStun(float time){
-		
-		GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Elemental/iceBlock");
-		Effect effect = effectObject.GetComponent<Effect> ();
-		effect.path = "Prefabs/Particles/Elemental/iceBlock";
-		EffectOptions effectOptions = new EffectOptions ();
-		effect.transform.parent = characterAPI.skills.nullEffectPosition.transform;
-		effectOptions.transformPosition = effect.nullPositionCoords;
-		effectOptions.isRandomDuration = false;
-		effectOptions.duration = time;
-		effectOptions.objectDuration = time;
+	public void IceStun(float time, bool withDiminishingTimer = false){
+		if (isPlayerStats && withDiminishingTimer) {
+			if (controlDiminishingTimer.TimeIsOver ()) {
+				StartControlDiminishing ();
+			} else {
+				controlDiminishingParam += 1;
+				time = GetControlDiminishingTime (time);
+			}
+		}
+		iceStunTimer.SetTimer (time);
+		if (!inIceStun) {
+			GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Elemental/iceBlock");
+			Effect effect = effectObject.GetComponent<Effect> ();
+			effect.path = "Prefabs/Particles/Elemental/iceBlock";
+			EffectOptions effectOptions = new EffectOptions ();
+			effect.transform.parent = characterAPI.skills.nullEffectPosition.transform;
+			effectOptions.transformPosition = effect.nullPositionCoords;
+			effectOptions.isRandomDuration = false;
+			effectOptions.duration = time;
+			effectOptions.objectDuration = time;
+			characterAPI.skills.iceStunEffect = effect;
 
+			effect.StartEffect (effectOptions);
+			StartCoroutine(IceStunCoroutine());
+		} else {
+			characterAPI.skills.iceStunEffect.NewDuration (time);
+		}
 
-		if (inIceStun) {
+		StartCoroutine (ControlStun (time));
+		StartCoroutine (Silence(time));
+
+		/*if (inIceStun) {
 			ObjectsPool.PushObject("Prefabs/Particles/Elemental/iceBlock", characterAPI.skills.iceStunEffect.gameObject);
 			characterAPI.skills.iceStunEffect = effect;
 		} else {
 			inIceStun = true;
 			characterAPI.skills.iceStunEffect = effect;
+		}*/
+
+		//effect.StartEffect (effectOptions);
+
+
+
+	}
+
+	IEnumerator IceStunCoroutine(){
+		while (!iceStunTimer.TimeIsOver ()) {
+			characterAPI.skills.anim.speed = 0f;
+			inIceStun = true;
+			yield return null;
 		}
 
-		effect.StartEffect (effectOptions);
-		StartCoroutine (ControlStun (time));
-		StartCoroutine (Silence(time));
-
-		inIceStunProcess = inIceStunProcess + 1;
-
-		Timer timer = new Timer ();
-		timer.SetTimer (time);
-		characterAPI.skills.anim.speed = 0f;
-		Timer.TimerAction action = () => {
-			if(inIceStunProcess == 1){
-				characterAPI.skills.anim.speed = 1f;
-				inIceStun = false;
-			}
-			inIceStunProcess -= 1;
-		};
-		StartCoroutine(timer.ActionAfterTimer (action));
+		characterAPI.skills.anim.speed = 1f;
+		characterAPI.skills.iceStunEffect.StopEffect (true);
+		inIceStun = false;
+		yield break;
 	}
 
 
 	IEnumerator Burn(){
 		Timer burnTimer = new Timer();
 		burnTimer.SetTimer (1f);
+
+		GameObject effectObject = ObjectsPool.PullObject ("Prefabs/Particles/Fire/burnEffect");
+		effectObject.SetActive (true);
+		Effect effect = effectObject.GetComponent<Effect> ();
+		effect.path = "Prefabs/Particles/Fire/burnEffect";
+		effect.hasTimer = false;
+		EffectOptions effectOptions = new EffectOptions ();
+		effect.transform.parent = nullPosition.transform;
+		effectOptions.transformPosition = effect.nullPositionCoords;
+		//effectOptions.isRandomDuration = false;
+		effectOptions.duration = 1f;
+		effectOptions.loop = true;
+		effect.StartEffect (effectOptions);
+
+
 		while (itIsBurn) {
 			if (burnTimer.TimeIsOver()) {
 				NumberParams burnDamage = new NumberParams ();
@@ -882,6 +1077,8 @@ public class Stats : MonoBehaviour {
 			}
 			yield return null;
 		}
+		effect.StopEffect ();
+		ObjectsPool.PushObject (effect.path, effectObject);
 		yield break;
 	}
 

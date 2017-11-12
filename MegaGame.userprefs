@@ -1,35 +1,38 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GUI\EquipmentInterface\Inventory\EquipmentRune.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\LevelGenerator\LevelChunkFilesInfo.cs">
     <Files>
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\EquipmentController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\Dialog\DialogController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackView.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GUI\LanguageController.cs" Line="36" Column="32" />
       <File FileName="Assets\Scripts\PlayerEnemyScripts\PlayerController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackItem.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\Equipment\EquipmentGenerator.cs" Line="108" Column="52" />
-      <File FileName="Assets\Scripts\GUI\InterfaceSystemController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Equip\EquipSlotButton.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\Dialog\DialogButton.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\Filter\BackpackFilterButton.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\Filter\BackpackFilter.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackButtonCommonContent.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackItemParamsController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\Dialog\DialogRectResizer.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\Dialog\Pages\PageButton.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GUI\Dialog\DialogController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\Dialog\EquipDialog.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\Dialog\Pages\DialogPages.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\Dialog\Pages\DeconstructionPage.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GUI\Dialog\EquipDialogInfo.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\Equipment.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackPackButton.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\Dialog\Pages\HammerButton.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\Dialog\Pages\HammerButtonsSystem.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GUI\Dialog\Pages\Modifications\ModificationsPage.cs" Line="121" Column="28" />
-      <File FileName="Assets\Scripts\GUI\Dialog\Pages\Modifications\RuneButton.cs" Line="54" Column="121" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackController.cs" Line="155" Column="2" />
-      <File FileName="Assets\Scripts\GUI\EquipmentInterface\Inventory\EquipmentRune.cs" Line="35" Column="66" />
-      <File FileName="Assets\Scripts\PlayerEnemyScripts\Stats.cs" Line="11" Column="52" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\PlayerHealthBar.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GUI\HealthBar\HealthBar.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GUI\BattleInterface\BattleSkillsPanel\SpecChangeButton.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\PlayerScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\CharacterAPI.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\CurrentSkillState.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GUI\Dialog\SkillTalentDialog.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Stats.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GUI\AimLineController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GUI\BattleInterface\Joystick.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\Spells\Skills.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerEnemyScripts\MovementController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GUI\BattleInterface\BattleSkillsPanel\SkillButton.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\LevelGenerator\LevelInfo\Level.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\LevelGenerator\SaveLoadManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\LevelGenerator\LevelChunkRudiment.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\LevelGenerator\LevelChunk.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\WorldMap\MapZoneGenerator.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\WorldMap\MapZoneChunk.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\LevelGenerator\LevelController.cs" Line="555" Column="7" />
+      <File FileName="Assets\EditorTools\LevelChunkCreater.cs" Line="312" Column="73" />
+      <File FileName="Assets\Scripts\LevelGenerator\LevelChunkFilesInfo.cs" Line="21" Column="22" />
+      <File FileName="Assets\EditorTools\LevelRudiment.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\LevelGenerator\LevelRandomPart\RandomPartBlock.cs" Line="18" Column="5" />
+      <File FileName="Assets\Scripts\LevelGenerator\LevelRandomPart\FullSet.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\LevelGenerator\LevelMesh.cs" Line="372" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -53,6 +53,7 @@
      <Compile Include="Assets\EditorTools\LevelRudiment.cs" />
      <Compile Include="Assets\EditorTools\ObjectInfo.cs" />
      <Compile Include="Assets\EditorTools\Set.cs" />
+     <Compile Include="Assets\Scripts\GUI\AimLineController.cs" />
      <Compile Include="Assets\Scripts\GUI\BattleInterface\BattleInterfaceController.cs" />
      <Compile Include="Assets\Scripts\GUI\BattleInterface\BattleSkillsPanel\JumpButton.cs" />
      <Compile Include="Assets\Scripts\GUI\BattleInterface\BattleSkillsPanel\SkillButton.cs" />
@@ -77,10 +78,13 @@
      <Compile Include="Assets\Scripts\GUI\Dialog\Pages\DialogPages.cs" />
      <Compile Include="Assets\Scripts\GUI\Dialog\Pages\HammerButton.cs" />
      <Compile Include="Assets\Scripts\GUI\Dialog\Pages\HammerButtonsSystem.cs" />
+     <Compile Include="Assets\Scripts\GUI\Dialog\Pages\Modifications\ModificationsFilterButton.cs" />
      <Compile Include="Assets\Scripts\GUI\Dialog\Pages\Modifications\ModificationsPage.cs" />
      <Compile Include="Assets\Scripts\GUI\Dialog\Pages\Modifications\RuneButton.cs" />
      <Compile Include="Assets\Scripts\GUI\Dialog\Pages\PageButton.cs" />
      <Compile Include="Assets\Scripts\GUI\Dialog\ScrollRectUpdater.cs" />
+     <Compile Include="Assets\Scripts\GUI\Dialog\SkillDialogInfo.cs" />
+     <Compile Include="Assets\Scripts\GUI\Dialog\SkillTalentDialog.cs" />
      <Compile Include="Assets\Scripts\GUI\Dialog\SlideDialog.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Buffs\Buff.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Buffs\BuffButton.cs" />
@@ -96,6 +100,7 @@
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\InventorySkill.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\InventorySkillInfo.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\InventorySkills.cs" />
+     <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\SkillActivator.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackPackButton.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackPackButtonEquipContent.cs" />
      <Compile Include="Assets\Scripts\GUI\EquipmentInterface\Inventory\backpack\BackpackButtonBuffContent.cs" />
@@ -114,7 +119,13 @@
      <Compile Include="Assets\Scripts\GUI\HoldChanger.cs" />
      <Compile Include="Assets\Scripts\GUI\InterfaceSystemController.cs" />
      <Compile Include="Assets\Scripts\GUI\LanguageController.cs" />
+     <Compile Include="Assets\Scripts\GUI\LumenArea.cs" />
+     <Compile Include="Assets\Scripts\GUI\SkillInterface\InterfaceSkillButton.cs" />
+     <Compile Include="Assets\Scripts\GUI\SkillInterface\SkillChanger.cs" />
+     <Compile Include="Assets\Scripts\GUI\SkillInterface\SkillInterface.cs" />
      <Compile Include="Assets\Scripts\GUI\SlideAimButton.cs" />
+     <Compile Include="Assets\Scripts\GUI\TalentsInterface\TalentButton.cs" />
+     <Compile Include="Assets\Scripts\GUI\TalentsInterface\TalentsInterface.cs" />
      <Compile Include="Assets\Scripts\GameMath.cs" />
      <Compile Include="Assets\Scripts\GameSettings.cs" />
      <Compile Include="Assets\Scripts\InteractiveObjects\MiniPortal.cs" />
@@ -151,6 +162,7 @@
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\PlayerHealthBar.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\PlayerScript.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\ReskinController.cs" />
+     <Compile Include="Assets\Scripts\PlayerEnemyScripts\Spells\CurrentSkillState.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\Spells\HitboxDamagerOptions.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\Spells\Perk.cs" />
      <Compile Include="Assets\Scripts\PlayerEnemyScripts\Spells\SkillSettings.cs" />
@@ -178,6 +190,7 @@
      <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\TiledInitialShaderProperties.cs" />
      <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\TiledMap.cs" />
      <None Include="Assets\codeandweb.com\Editor\SettingsTexturePackerImporter.txt" />
+     <None Include="Assets\Resources\Textures\TileSets\IDUVS\idUVsSet_1.txt" />
      <None Include="Assets\Tiled2Unity\Prefabs\_ReadMe.txt" />
      <None Include="Assets\Tiled2Unity\Shaders\shaTiledMap.shader" />
      <None Include="Assets\Tiled2Unity\Tiled2Unity.export.txt" />

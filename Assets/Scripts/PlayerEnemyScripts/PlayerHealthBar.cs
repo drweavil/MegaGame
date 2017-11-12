@@ -5,14 +5,27 @@ using UnityEngine.UI;
 
 public class PlayerHealthBar : MonoBehaviour {
 
-	public GameObject healthBar;
-	public GameObject resourceBar;
+	//public GameObject healthBar;
+	//public GameObject resourceBar;
 	//public GameObject player;
 	public GameObject shieldBar;
 	public GameObject rageBar;
 	public GameObject fireBar;
 	public GameObject elementalBar;
+
+
+
+	public Image healthBarImage;
+	public Image shieldBarImage;
+	public Image rageBarImage;
+	public Image fireBarImage;
+	public Image elementalBarImage;
+
+	public Image enemyAvatarImage;
+	public Image playerAvatar;
+
 	public RectTransform resourcesBarRect;
+	public Vector3 shieldBarNullPosition;
 	public GameObject damageNumber;
 	public GameObject damageNumberNullSlot;
 	private Text damageNumberText;
@@ -22,14 +35,14 @@ public class PlayerHealthBar : MonoBehaviour {
 
 	public Stats stats;
 
-	private RectTransform healthBarRect;
+	/*private RectTransform healthBarRect;
 	private RectTransform resourceBarRect;
 	private RectTransform shieldBarRect;
 
 
 	private float maximumHealthWidth;
 	private float maximumResourceWidth;
-	private float maximumShieldWidth;
+
 
 	private Vector2 healthRectPosition;
 	private Vector2 resourceRectPosition;
@@ -37,7 +50,9 @@ public class PlayerHealthBar : MonoBehaviour {
 
 	private Rect newHealthRectPosition = new Rect ();
 	private Rect newResourceRectPosition = new Rect ();
-	private Rect newShieldRectPosition = new Rect ();
+	private Rect newShieldRectPosition = new Rect ();*/
+
+	private float maximumShieldWidth;
 
 	private int frames = 0;
 
@@ -50,7 +65,7 @@ public class PlayerHealthBar : MonoBehaviour {
 	void Awake () {
 		SetBarRects ();
 		//stats = player.GetComponent<Stats> ();
-
+		//shieldBarNullPosition = shieldBarRect.localPosition;
 		damageNumberText = damageNumber.GetComponent<Text> ();
 		damageNumber.SetActive (false);
 		//damageNumberNullPosition = damageNumber.transform.position;
@@ -98,7 +113,7 @@ public class PlayerHealthBar : MonoBehaviour {
 	}
 
 	void SetBarRects(){
-		healthBarRect = healthBar.GetComponent<RectTransform> ();
+		/*healthBarRect = healthBar.GetComponent<RectTransform> ();
 		resourceBarRect = resourceBar.GetComponent<RectTransform> ();
 		shieldBarRect = shieldBar.GetComponent<RectTransform> ();
 
@@ -113,26 +128,43 @@ public class PlayerHealthBar : MonoBehaviour {
 
 		newHealthRectPosition.height = healthBarRect.rect.height;
 		newResourceRectPosition.height = resourceBarRect.rect.height;
-		newShieldRectPosition.height = shieldBarRect.rect.height;
+		newShieldRectPosition.height = shieldBarRect.rect.height;*/
+
 	}
 
-
+	public void SetEnemyAvatar(){
+		enemyAvatarImage.sprite = SkillPanelController.skillPanelController.GetSkillTexture ("enemyType_" + stats.enemyTypeID);
+	}
 
 	public void SetHealth(float currentHealthFloat){
-		int currentHealth = (int)(System.Math.Round(currentHealthFloat, 0));
+		/*int currentHealth = (int)(System.Math.Round(currentHealthFloat, 0));
 		float oneHealthWidthPoint = stats.maximumHealth / maximumHealthWidth;
 		healthBarRect.sizeDelta = new Vector2(currentHealth / oneHealthWidthPoint, healthBarRect.rect.height);
 		newHealthRectPosition.position = healthRectPosition;
 		newHealthRectPosition.width = healthBarRect.rect.width;
-		healthBarRect.localPosition = newHealthRectPosition.center;
+		healthBarRect.localPosition = newHealthRectPosition.center;*/
+		healthBarImage.fillAmount = currentHealthFloat / stats.maximumHealth;
+
 	}
 
 	public void SetResource(int currentResource){
-		float oneResourceWidthPoint = stats.GetMaximumResource() / maximumResourceWidth;
+		/*float oneResourceWidthPoint = stats.GetMaximumResource() / maximumResourceWidth;
 		resourceBarRect.sizeDelta = new Vector2(currentResource / oneResourceWidthPoint, resourceBarRect.rect.height);
 		newResourceRectPosition.position = resourceRectPosition;
 		newResourceRectPosition.width = resourceBarRect.rect.width;
-		resourceBarRect.localPosition = newResourceRectPosition.center;
+		resourceBarRect.localPosition = newResourceRectPosition.center;*/
+		if (rageBar.activeInHierarchy) {
+			rageBarImage.fillAmount = (float)currentResource / (float)stats.GetMaximumResource ();
+		}
+
+		if (fireBar.activeInHierarchy) {
+			fireBarImage.fillAmount = (float)currentResource / (float)stats.GetMaximumResource ();
+			//Debug.Log (currentResource / stats.GetMaximumResource ());
+		}
+
+		if (elementalBar.activeInHierarchy) {
+			elementalBarImage.fillAmount = (float)currentResource / (float)stats.GetMaximumResource ();
+		}
 	}
 
 	public void SetShield(float currentShield){
@@ -141,14 +173,20 @@ public class PlayerHealthBar : MonoBehaviour {
 		} else {
 			shieldBar.SetActive (false);
 		}
-		float oneShieldWidthPoint = stats.maximumHealth / maximumShieldWidth;
+		/*float oneShieldWidthPoint = stats.maximumHealth / maximumShieldWidth;
 		if(currentShield >= stats.maximumHealth){
 			currentShield = stats.maximumHealth;
-		}
-		shieldBarRect.sizeDelta = new Vector2(currentShield / oneShieldWidthPoint, shieldBarRect.rect.height);
+		}*/
+		/*shieldBarRect.sizeDelta = new Vector2(currentShield / oneShieldWidthPoint, shieldBarRect.rect.height);
 		newShieldRectPosition.position = shieldRectPosition;
 		newShieldRectPosition.width = shieldBarRect.rect.width;
-		shieldBarRect.localPosition = newShieldRectPosition.center;
+		shieldBarRect.localPosition = newShieldRectPosition.center;*/
+		float fillPercent = currentShield / stats.maximumHealth;
+		shieldBarImage.fillAmount = fillPercent;
+
+		//shieldBarRect.localPosition = new Vector3(shieldBarNullPosition.x - (shieldBarRect.rect.width - shieldBarRect.rect.width * fillPercent)*2, shieldBarNullPosition.y, shieldBarNullPosition.z);
+
+		//float currentShieldWidth = 
 	}
 
 	public void AddDamage(NumberParams damage){

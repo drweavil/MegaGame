@@ -21,6 +21,7 @@ public class SpellHitbox : MonoBehaviour {
 
 
 	void OnTriggerEnter(Collider col){
+		
 		if (objects.FindIndex (o => o == col.gameObject) == -1 && 
 			ignoreColliders.FindIndex (o => o == col.gameObject) == -1 &&
 			col.gameObject.tag == "Character" &&

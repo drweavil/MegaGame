@@ -9,11 +9,16 @@ public class Joystick : MonoBehaviour {
 	private System.Nullable<Touch> joystickTouch = null;
 	private float maxJoystickdistance = 30.0f;
 	public GameObject joystickCenter;
+	public static Joystick joystick;
 
 	// Use this for initialization
 	void Start () {
 		gameObject.transform.localPosition = new Vector3 (0, 0, 0);//joystickCenter.transform.position;
 	
+	}
+
+	void Awake(){
+		joystick = this;
 	}
 	
 	// Update is called once per frame

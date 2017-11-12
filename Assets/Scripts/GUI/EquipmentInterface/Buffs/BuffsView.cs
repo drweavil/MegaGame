@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class BuffsView : MonoBehaviour {
 	public static BuffsView buffsView;
 	public RectTransform statsRect;
-	public List<Buff> currentBuffs;
+	public List<Buff> currentBuffs = new List<Buff>();
 	public List<BuffButton> buttons = new List<BuffButton> ();
 
 	public GameObject line1;
@@ -31,7 +31,10 @@ public class BuffsView : MonoBehaviour {
 	}
 
 	public static void RemoveBuff (Buff buff){
-		buffsView.currentBuffs.Remove (buff);
+		int removableBuffID = buffsView.currentBuffs.FindIndex (b => b.buffID == buff.buffID);
+		if (removableBuffID != -1) {
+			buffsView.currentBuffs.RemoveAt (removableBuffID);
+		}
 		RedrawBuffs ();
 	}
 

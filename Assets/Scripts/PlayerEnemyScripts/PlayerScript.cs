@@ -50,6 +50,11 @@ public class PlayerScript : MonoBehaviour {
 		background = GameObject.Find ("BackGround");
 		stats = GetComponent<Stats> ();
 		stats.isPlayerStats = true;
+		StartCoroutine(StartProcess.StartActionAfterFewFrames(20, () => {
+			Stats.NumberParams number = new Stats.NumberParams();
+			number.number = stats.GetMaximumHealth();
+			stats.RestoreHealth(number);
+		}));
 	}
 		
 	void Update () {

@@ -118,12 +118,14 @@ public class BackpackController : MonoBehaviour {
 
 
 
-		if (BackpackFilter.currentFilterID != 0) {
-			BackpackFilter.ReFindItems ();
-		}
+
 		if (withRedrawBackpackContent) {
 			if (InterfaceSystemController.interfaceSystemController.equipmentController.equipmentInterface.activeInHierarchy) {
-				backpackController.backpackView.RedrawBackpack ();	
+				if (BackpackFilter.currentFilterID != 0) {
+					BackpackFilter.RedrawFilters ();
+				} else {
+					backpackController.backpackView.RedrawBackpack ();	
+				}
 			}
 		}
 	}

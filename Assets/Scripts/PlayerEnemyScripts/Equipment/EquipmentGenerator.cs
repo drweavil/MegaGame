@@ -106,6 +106,7 @@ public class EquipmentGenerator : MonoBehaviour {
 		}
 			
 		rune.complexity = equip.complexity * (runePercent/100);
+		rune.SetMainStat ();
 		rune.SetIcon ();
 		return rune;
 	}

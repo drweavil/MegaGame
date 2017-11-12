@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System;
 
 public class MovementController : MonoBehaviour {
-	public static Vector2 speed = new Vector2 (2.5f, 1f);
+	public static Vector2 speed = new Vector2 (1.675f, 1f);
 	public static Vector2 walkSpeed = new Vector2 (1.25f, 1f);
 	public static Vector2 jumpSpeed = new Vector2 (0, 250f);
 
@@ -37,6 +38,7 @@ public class MovementController : MonoBehaviour {
 	public Transform leftPrecipiceCheck;
 	public Transform rightSlot;
 	public CharacterAPI rightCharacterSlot;
+	public List<CharacterAPI> rangeTargets = new List<CharacterAPI> ();
 	public Transform rightPrecipiceCheck;
 
 	public CharacterAPI characterAPI;
